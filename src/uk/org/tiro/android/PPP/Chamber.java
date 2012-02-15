@@ -1,0 +1,25 @@
+package uk.org.tiro.android.PPP;
+
+// Code taken from IBM Developerworks
+// http://www.ibm.com/developerworks/opensource/library/x-android/
+
+public enum Chamber {
+        MAIN ("Main Chamber"),
+	GENERAL ("General Committee"),
+	GRAND ("Grand Committee"),
+	SELECT ("Select Committee"),
+	WESTMINSTER ("Westminster Hall"),
+	OTHER ("Other");
+
+        private final String name;
+
+        Chamber(String name) {
+                this.name = name;
+        }
+
+        public String toString() { return name; }
+
+	public String toOrdinal() {
+		return Integer.toString(this.ordinal());
+	}
+}

@@ -1,6 +1,8 @@
 package uk.org.tiro.android.PPP;
 
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.CursorAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,25 +10,23 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import android.widget.CursorAdapter;
-
 import android.content.Context;
 import android.database.Cursor;
 
 import android.util.Log;
 
-public class DebatesFragment extends ListFragment {
+public class DebatesFragment extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-        CommonsDBHelper commonshelper = null;
-        LordsDBHelper lordshelper = null;
         CommonsDebatesAdaptor commonsadaptor = null;
         LordsDebatesAdaptor lordsadaptor = null;
+	ListView lv = null;
         Cursor model = null;
         House house;
 	Chamber chamber;
 	Integer date;
 
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
 		Bundle bundle = getArguments();
 
@@ -34,36 +34,9 @@ public class DebatesFragment extends ListFragment {
 		chamber = Chamber.values()[bundle.getInt("chamber")];
 		date = bundle.getInt("date");
 
+		getSupportLoaderManager().initLoader(0, null, this);
+
 		// grab house and chamber and date
-		if(house == House.COMMONS) {
-			if(date == 0) {
- 	                        model = commonshelper.getTodayDebatesChamber(chamber);
-        	                startManagingCursor(model);
-                	        commonsadaptor = new CommonsDebatesAdaptor(model);
-			} else if(date < 0) {
- 	                        model = commonshelper.getYesterdaysDebatesChamber(chamber);
-        	                startManagingCursor(model);
-                	        commonsadaptor = new CommonsDebatesAdaptor(model);
-			} else if(date > 0) {
- 	                        model = commonshelper.getTomorrowsDebatesChamber(chamber);
-        	                startManagingCursor(model);
-                	        commonsadaptor = new CommonsDebatesAdaptor(model);
-			}
-		} else {
-			if(date == 0) {
-                          model = lordshelper.getTodayDebatesChamber(chamber);
-                          startManagingCursor(model);
-                          lordsadaptor = new LordsDebatesAdaptor(model);
-			} else if(date < 0) {
-                          model = lordshelper.getYesterdaysDebatesChamber(chamber);
-                          startManagingCursor(model);
-                          lordsadaptor = new LordsDebatesAdaptor(model);
-			} else if(date > 0) {
-                          model = lordshelper.getTomorrowsDebatesChamber(chamber);
-                          startManagingCursor(model);
-                          lordsadaptor = new LordsDebatesAdaptor(model);
-			}
-		}
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,10 +49,11 @@ public class DebatesFragment extends ListFragment {
 		View debates = inflater.inflate(R.layout.debates, container,
 					false);
 
+		lv = (ListView)findViewById(R.id.list);
+
 		tv_house = (TextView)debates.findViewById(R.id.house);
 		if(house == House.COMMONS) {
 			tv_house.setText("House of Commons");
-			setListAdapter(commonsadaptor);
 		} else {
 			tv_house.setText("House of Lords");
 			setListAdapter(lordsadaptor);
@@ -98,6 +72,26 @@ public class DebatesFragment extends ListFragment {
 		tv_next.setText("Tomorrow");
 
 		return debates;
+	}
+
+
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		CursorLoader loader;
+
+		return(new DebatesCursorLoader(this, house, chamber, date));
+
+	}
+
+	public void onLoadFinished(Loader<Cursor>loader, Cursor cursor) {
+
+	     if(house == COMMONS) {
+ 	            commonsadaptor = new CommonsDebatesAdaptor(cursor);
+		    lv.setListAdapter(commonsadaptor);
+	     } else {
+ 	            lordsadaptor = new LordsDebatesAdaptor(cursor);
+		    lv.setListAdapter(lordsadaptor);
+	     }
+
 	}
 
     static class CommonsDebatesHolder {

@@ -12,7 +12,6 @@
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/debates.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/main.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_act.xml \
-/home/richardp/Projects/Phone/PPP/PPP/res/layout/debates_pager.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_my_politics.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_bill.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-hdpi/icon.png \

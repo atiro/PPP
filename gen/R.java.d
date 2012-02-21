@@ -6,6 +6,9 @@
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-ldpi/icon.png \
 /home/richardp/Projects/Phone/PPP/PPP/res/values/strings.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_debate.xml \
+/home/richardp/Projects/Phone/PPP/PPP/res/layout/main_fragment.xml \
+/home/richardp/Projects/Phone/PPP/PPP/res/layout/browse_fragment.xml \
+/home/richardp/Projects/Phone/PPP/PPP/res/layout/debates_fragment.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/bills.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/acts.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_news.xml \

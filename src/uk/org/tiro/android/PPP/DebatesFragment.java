@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.LoaderManager;
@@ -29,7 +30,7 @@ import android.content.Context;
 
 import android.util.Log;
 
-public class DebatesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DebatesFragment extends ListFragment {
 
 	private boolean detailsInline = false;
 
@@ -39,22 +40,52 @@ public class DebatesFragment extends ListFragment implements LoaderManager.Loade
 
 	ListView lv = null;
 
+	CommonsDBHelper commonshelper = null;
+	LordsDBHelper lordshelper = null;
 	LordsDebatesAdaptor lordsadaptor = null;
 	CommonsDebatesAdaptor commonsadaptor = null;
 
+	Cursor model = null;
+	Context cxt = null;
+
 	@Override
-	protected void onActivityCreated(Bundle savedInstanceState) {
+	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		Bundle args = getArguments();
 
-		house = House.values()[getIntent().getExtras().getInt("house")];
-		chamber = Chamber.values()[getIntent().getExtras().getInt("chamber")];
+		house = House.values()[args.getInt("house")];
+		chamber = Chamber.values()[args.getInt("chamber")];
 		date = 0;
 
 		// date
 
+		cxt = getActivity().getApplicationContext();
 
-		getSupportLoaderManager().initLoader(0, null, this);
+		if(house == House.COMMONS) {
+			if(date == 0) {
+			  model = commonshelper.getTodayDebatesChamber(chamber);
+ 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
+			} else if(date < 0) {
+			  model = commonshelper.getYesterdaysDebatesChamber(chamber);
+ 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
+			} else if(date > 0) {
+			  model = commonshelper.getTomorrowsDebatesChamber(chamber);
+ 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
+			}
+		} else {
+			if(date == 0) {
+			  model = lordshelper.getTodayDebatesChamber(chamber);
+ 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
+			} else if(date < 0) {
+			  model = lordshelper.getYesterdaysDebatesChamber(chamber);
+ 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
+			} else if(date > 0) {
+			  model = lordshelper.getTomorrowsDebatesChamber(chamber);
+ 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
+			}
+		}
+
 
 	}
 
@@ -64,29 +95,13 @@ public class DebatesFragment extends ListFragment implements LoaderManager.Loade
 
 		View v = inflater.inflate(R.layout.debates_fragment, container, false);
 		lv = (ListView) v.findViewById(android.R.id.list);
+		if(house == House.COMMONS) {
+		    lv.setAdapter(commonsadaptor);
+		} else {
+		    lv.setAdapter(lordsadaptor);
+		}
 
 		return v;
-	}
-
-
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return(new DebateCursorLoader(this, house, chamber, date));
-	}
-
-	public void onLoadFinished(Loader<Cursor>loader, Cursor cursor) {
-
-	     if(house == House.COMMONS) {
- 	            commonsadaptor = new CommonsDebatesAdaptor(cursor);
-		    lv.setAdapter(commonsadaptor);
-	     } else {
- 	            lordsadaptor = new LordsDebatesAdaptor(cursor);
-		    lv.setAdapter(lordsadaptor);
-	     }
-
-	}
-
-	public void onLoaderReset(Loader<Cursor> loader) {
-		lv.setAdapter(null);
 	}
 
 
@@ -135,22 +150,21 @@ public class DebatesFragment extends ListFragment implements LoaderManager.Loade
 
     class CommonsDebatesAdaptor extends CursorAdapter {
 
-        CommonsDebatesAdaptor(Cursor c) {
-		super(Debates.this, c);
+        CommonsDebatesAdaptor(Context context, Cursor c) {
+		super(context, c);
 		Log.v("PPP", "Creating Commons Debates Adapter");
         }
 
 	@Override
-	public void bindView(View row, Context ctct, Cursor c) {
+	public void bindView(View row, Context context, Cursor c) {
 		CommonsDebatesHolder holder=(CommonsDebatesHolder)row.getTag();
 
 		holder.populateFrom(c, commonshelper);
 	}
 
 	@Override
-	public View newView(Context ctxt, Cursor c, ViewGroup parent) {
-		LayoutInflater inflater = getLayoutInflater();
-		View row = inflater.inflate(R.layout.row_debate, parent, false);
+	public View newView(Context context, Cursor c, ViewGroup parent) {
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
 		CommonsDebatesHolder holder = new CommonsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);
@@ -159,22 +173,21 @@ public class DebatesFragment extends ListFragment implements LoaderManager.Loade
 
     class LordsDebatesAdaptor extends CursorAdapter {
 
-        LordsDebatesAdaptor(Cursor c) {
-		super(Debates.this, c);
+        LordsDebatesAdaptor(Context context, Cursor c) {
+		super(context, c);
 		Log.v("PPP", "Creating Lords Debates Adapter");
         }
 
 	@Override
-	public void bindView(View row, Context ctct, Cursor c) {
+	public void bindView(View row, Context context, Cursor c) {
 		LordsDebatesHolder holder=(LordsDebatesHolder)row.getTag();
 
 		holder.populateFrom(c, lordshelper);
 	}
 
 	@Override
-	public View newView(Context ctxt, Cursor c, ViewGroup parent) {
-		LayoutInflater inflater = getLayoutInflater();
-		View row = inflater.inflate(R.layout.row_debate, parent, false);
+	public View newView(Context context, Cursor c, ViewGroup parent) {
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
 		LordsDebatesHolder holder = new LordsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);

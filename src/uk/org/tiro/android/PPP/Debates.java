@@ -52,8 +52,6 @@ public class Debates extends FragmentActivity {
 
 		DebatesFragment debates = (DebatesFragment)getSupportFragmentManager().findFragmentById(R.id.debates);
 
-		getSupportLoaderManager().initLoader(0, null, this);
-
 	}
 
 }

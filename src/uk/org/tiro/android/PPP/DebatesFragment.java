@@ -52,17 +52,23 @@ public class DebatesFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Bundle args = getArguments();
+		Bundle args = this.getArguments();
 
-		house = House.values()[args.getInt("house")];
-		chamber = Chamber.values()[args.getInt("chamber")];
+		//house = House.values()[args.getInt("house")];
+		//chamber = Chamber.values()[args.getInt("chamber")];
+		house = House.COMMONS;
+		chamber = Chamber.MAIN;
 		date = 0;
+
+		Log.v("PPP", "creating DebatesFragment");
 
 		// date
 
 		cxt = getActivity().getApplicationContext();
 
 		if(house == House.COMMONS) {
+			commonshelper = new CommonsDBHelper(cxt).open();
+
 			if(date == 0) {
 			  model = commonshelper.getTodayDebatesChamber(chamber);
  	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
@@ -74,6 +80,8 @@ public class DebatesFragment extends ListFragment {
  	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
 			}
 		} else {
+			lordshelper = new LordsDBHelper(cxt).open();
+
 			if(date == 0) {
 			  model = lordshelper.getTodayDebatesChamber(chamber);
  	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);

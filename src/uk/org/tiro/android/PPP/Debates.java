@@ -39,6 +39,8 @@ public class Debates extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Bundle args;
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.debates);
 
@@ -50,7 +52,16 @@ public class Debates extends FragmentActivity {
 
 		BrowseFragment browse = (BrowseFragment)getSupportFragmentManager().findFragmentById(R.id.browse);
 
+		args = new Bundle();
+		args.putInt("house", house.ordinal());
+		args.putInt("chamber", chamber.ordinal());
+		args.putInt("date", 0);
+
+//		browse.setArguments(args);
+
 		DebatesFragment debates = (DebatesFragment)getSupportFragmentManager().findFragmentById(R.id.debates);
+//		debates.setArguments(args);
+
 
 	}
 

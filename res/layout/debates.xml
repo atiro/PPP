@@ -4,15 +4,14 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
+
   <fragment class="uk.org.tiro.android.PPP.BrowseFragment"
     android:id="@+id/browse"
-    android:layout_weight="1"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
   />
   <fragment class="uk.org.tiro.android.PPP.DebatesFragment"
     android:id="@+id/debates"
-    android:layout_weight="3"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
   />

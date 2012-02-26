@@ -119,7 +119,7 @@ class CommonsDBHelper {
 		String [] args = {chamber.toOrdinal()};
 
 		Log.v("PPP", "Querying debates from chamber " + args[0]);
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-3 day')) ORDER BY _id asc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc", args));
 	}
 
 	public Cursor getTomorrowsDebatesChamber(Chamber chamber) {

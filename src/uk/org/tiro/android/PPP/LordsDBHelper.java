@@ -121,7 +121,7 @@ class LordsDBHelper {
 
                 Log.v("PPP", "Querying debates from Lords chamber " + args[0]);
 
-                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-3 day')) ORDER BY _id asc", args));
+                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc", args));
         }
 
         public Cursor getTomorrowsDebatesChamber(Chamber chamber) {

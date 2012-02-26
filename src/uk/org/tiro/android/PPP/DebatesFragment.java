@@ -66,8 +66,30 @@ public class DebatesFragment extends ListFragment {
 
 		cxt = getActivity().getApplicationContext();
 
+		setList();
+
+	}
+
+	public void updateHouse(House house) {
+		this.house = house;
+		setList();
+	}
+
+	public void updateChamber(Chamber chamber) {
+		this.chamber = chamber;
+		setList();
+	}
+
+	public void updateDate(Integer date) {
+		this.date = date;
+		setList();
+	}
+
+	private void setList() {
 		if(house == House.COMMONS) {
 			commonshelper = new CommonsDBHelper(cxt).open();
+			if(model != null) { model.close(); }
+			if(commonsadaptor != null) { commonsadaptor = null; }
 
 			if(date == 0) {
 			  model = commonshelper.getTodayDebatesChamber(chamber);
@@ -79,8 +101,12 @@ public class DebatesFragment extends ListFragment {
 			  model = commonshelper.getTomorrowsDebatesChamber(chamber);
  	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
 			}
+
+
 		} else {
 			lordshelper = new LordsDBHelper(cxt).open();
+			if(model != null) { model.close(); }
+			if(lordsadaptor != null) { lordsadaptor = null; }
 
 			if(date == 0) {
 			  model = lordshelper.getTodayDebatesChamber(chamber);
@@ -92,13 +118,19 @@ public class DebatesFragment extends ListFragment {
 			  model = lordshelper.getTomorrowsDebatesChamber(chamber);
  	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
 			}
+
 		}
 
 		if(house == House.COMMONS) {
 	   	    Log.v("PPP", "Setting commons adaptor");
 		    setListAdapter(commonsadaptor);
+		    commonsadaptor.notifyDataSetChanged();
+		    commonshelper.close();
 		} else {
+	   	    Log.v("PPP", "Setting lords adaptor");
 		    setListAdapter(lordsadaptor);
+		    lordsadaptor.notifyDataSetChanged();
+		    lordshelper.close();
 		}
 
 	}

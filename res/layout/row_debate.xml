@@ -3,6 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
 	android:layout_width="fill_parent"
+	android:background="@drawable/curved_row"
+	android:cacheColorHint="@android:color/transparent"
 	android:layout_height="wrap_content">
 
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,9 +19,9 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="left"
-		android:background="#FFAAAAAA"
 		android:gravity="center"
 		android:typeface="monospace"
+		android:textColor="#000000"
 		android:textSize="12sp" />
 
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -35,8 +37,8 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="left"
 	  	android:layout_marginLeft="10dp"
-		android:background="#FFAAAAAA"
 		android:gravity="left"
+		android:textColor="#000000"
 		android:textSize="13sp" />
 
 	  <TextView
@@ -45,8 +47,8 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="left"
 	  	android:layout_marginLeft="10dp"
-		android:background="#FFAAAAAA"
 		android:gravity="left"
+		android:textColor="#000000"
 		android:textSize="10sp" />
 
 	  </LinearLayout>

@@ -1,5 +1,6 @@
 /home/richardp/Projects/Phone/PPP/PPP/gen/uk/org/tiro/android/PPP/R.java \
  : /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/text_select_handle_middle.png \
+/home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/curved_row.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/icon.png \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/list_my_politics.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/circle_count.xml \

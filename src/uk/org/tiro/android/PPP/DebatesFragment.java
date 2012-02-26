@@ -1,98 +1,152 @@
 package uk.org.tiro.android.PPP;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.CursorAdapter;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+
+import android.app.Activity;
+
+import android.database.Cursor;
+
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+
+import android.support.v4.app.ListFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.support.v4.app.LoaderManager;
+
 import android.view.View;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import android.widget.Gallery;
 import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 
 import android.content.Context;
-import android.database.Cursor;
+
+
 
 import android.util.Log;
 
-public class DebatesFragment extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DebatesFragment extends ListFragment {
 
-        CommonsDebatesAdaptor commonsadaptor = null;
-        LordsDebatesAdaptor lordsadaptor = null;
-	ListView lv = null;
-        Cursor model = null;
-        House house;
+	private boolean detailsInline = false;
+
+	House house;
 	Chamber chamber;
 	Integer date;
 
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	ListView lv = null;
 
-		Bundle bundle = getArguments();
+	CommonsDBHelper commonshelper = null;
+	LordsDBHelper lordshelper = null;
+	LordsDebatesAdaptor lordsadaptor = null;
+	CommonsDebatesAdaptor commonsadaptor = null;
 
-		house = House.values()[bundle.getInt("house")];
-		chamber = Chamber.values()[bundle.getInt("chamber")];
-		date = bundle.getInt("date");
+	Cursor model = null;
+	Context cxt = null;
 
-		getSupportLoaderManager().initLoader(0, null, this);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-		// grab house and chamber and date
+		Bundle args = this.getArguments();
+
+		//house = House.values()[args.getInt("house")];
+		//chamber = Chamber.values()[args.getInt("chamber")];
+		house = House.COMMONS;
+		chamber = Chamber.MAIN;
+		date = 0;
+
+		Log.v("PPP", "creating DebatesFragment");
+
+		// date
+
+		cxt = getActivity().getApplicationContext();
+
+		setList();
+
 	}
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				 Bundle savedInstanceState) {
+	public void updateHouse(House house) {
+		this.house = house;
+		setList();
+	}
 
-		TextView tv_house;
-		TextView tv_chamber;
-		TextView tv_now, tv_next, tv_prev;
+	public void updateChamber(Chamber chamber) {
+		this.chamber = chamber;
+		setList();
+	}
 
-		View debates = inflater.inflate(R.layout.debates, container,
-					false);
+	public void updateDate(Integer date) {
+		this.date = date;
+		setList();
+	}
 
-		lv = (ListView)findViewById(R.id.list);
-
-		tv_house = (TextView)debates.findViewById(R.id.house);
+	private void setList() {
 		if(house == House.COMMONS) {
-			tv_house.setText("House of Commons");
+			commonshelper = new CommonsDBHelper(cxt).open();
+			if(model != null) { model.close(); }
+			if(commonsadaptor != null) { commonsadaptor = null; }
+
+			if(date == 0) {
+			  model = commonshelper.getTodayDebatesChamber(chamber);
+ 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
+			} else if(date < 0) {
+			  model = commonshelper.getYesterdaysDebatesChamber(chamber);
+ 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
+			} else if(date > 0) {
+			  model = commonshelper.getTomorrowsDebatesChamber(chamber);
+ 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
+			}
+
+
 		} else {
-			tv_house.setText("House of Lords");
-			setListAdapter(lordsadaptor);
+			lordshelper = new LordsDBHelper(cxt).open();
+			if(model != null) { model.close(); }
+			if(lordsadaptor != null) { lordsadaptor = null; }
+
+			if(date == 0) {
+			  model = lordshelper.getTodayDebatesChamber(chamber);
+ 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
+			} else if(date < 0) {
+			  model = lordshelper.getYesterdaysDebatesChamber(chamber);
+ 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
+			} else if(date > 0) {
+			  model = lordshelper.getTomorrowsDebatesChamber(chamber);
+ 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
+			}
+
 		}
 
-		tv_chamber = (TextView)debates.findViewById(R.id.chamber);
-		tv_chamber.setText("Main Chamber");
-
-		tv_prev = (TextView)debates.findViewById(R.id.prev);
-		tv_prev.setText("Yesterday");
-		
-		tv_now = (TextView)debates.findViewById(R.id.now);
-		tv_now.setText("Today");
-
-		tv_next = (TextView)debates.findViewById(R.id.next);
-		tv_next.setText("Tomorrow");
-
-		return debates;
-	}
-
-
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		CursorLoader loader;
-
-		return(new DebatesCursorLoader(this, house, chamber, date));
+		if(house == House.COMMONS) {
+	   	    Log.v("PPP", "Setting commons adaptor");
+		    setListAdapter(commonsadaptor);
+		    commonsadaptor.notifyDataSetChanged();
+		    commonshelper.close();
+		} else {
+	   	    Log.v("PPP", "Setting lords adaptor");
+		    setListAdapter(lordsadaptor);
+		    lordsadaptor.notifyDataSetChanged();
+		    lordshelper.close();
+		}
 
 	}
 
-	public void onLoadFinished(Loader<Cursor>loader, Cursor cursor) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
+				Bundle savedInstanceState) {
 
-	     if(house == COMMONS) {
- 	            commonsadaptor = new CommonsDebatesAdaptor(cursor);
-		    lv.setListAdapter(commonsadaptor);
-	     } else {
- 	            lordsadaptor = new LordsDebatesAdaptor(cursor);
-		    lv.setListAdapter(lordsadaptor);
-	     }
+		View v = inflater.inflate(R.layout.debates_fragment, container, false);
+		lv = (ListView) v.findViewById(android.R.id.list);
+		Log.v("PPP", "Creating DebatesFragment view");
 
+
+		return v;
 	}
+
 
     static class CommonsDebatesHolder {
 	private TextView time = null;
@@ -139,22 +193,21 @@ public class DebatesFragment extends FragmentActivity implements LoaderManager.L
 
     class CommonsDebatesAdaptor extends CursorAdapter {
 
-        CommonsDebatesAdaptor(Cursor c) {
-		super(DebatesFragment.this, c);
+        CommonsDebatesAdaptor(Context context, Cursor c) {
+		super(context, c);
 		Log.v("PPP", "Creating Commons Debates Adapter");
         }
 
 	@Override
-	public void bindView(View row, Context ctct, Cursor c) {
+	public void bindView(View row, Context context, Cursor c) {
 		CommonsDebatesHolder holder=(CommonsDebatesHolder)row.getTag();
 
 		holder.populateFrom(c, commonshelper);
 	}
 
 	@Override
-	public View newView(Context ctxt, Cursor c, ViewGroup parent) {
-		LayoutInflater inflater = getLayoutInflater();
-		View row = inflater.inflate(R.layout.row_debate, parent, false);
+	public View newView(Context context, Cursor c, ViewGroup parent) {
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
 		CommonsDebatesHolder holder = new CommonsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);
@@ -163,27 +216,27 @@ public class DebatesFragment extends FragmentActivity implements LoaderManager.L
 
     class LordsDebatesAdaptor extends CursorAdapter {
 
-        LordsDebatesAdaptor(Cursor c) {
-		super(DebatesFragment.this, c);
+        LordsDebatesAdaptor(Context context, Cursor c) {
+		super(context, c);
 		Log.v("PPP", "Creating Lords Debates Adapter");
         }
 
 	@Override
-	public void bindView(View row, Context ctct, Cursor c) {
+	public void bindView(View row, Context context, Cursor c) {
 		LordsDebatesHolder holder=(LordsDebatesHolder)row.getTag();
 
 		holder.populateFrom(c, lordshelper);
 	}
 
 	@Override
-	public View newView(Context ctxt, Cursor c, ViewGroup parent) {
-		LayoutInflater inflater = getLayoutInflater();
-		View row = inflater.inflate(R.layout.row_debate, parent, false);
+	public View newView(Context context, Cursor c, ViewGroup parent) {
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
 		LordsDebatesHolder holder = new LordsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);
 	}
     }
 
-
 }
+
+

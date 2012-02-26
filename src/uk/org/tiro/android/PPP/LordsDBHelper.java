@@ -119,19 +119,21 @@ class LordsDBHelper {
         public Cursor getTodayDebatesChamber(Chamber chamber) {
                 String [] args = {chamber.toOrdinal()};
 
+                Log.v("PPP", "Querying debates from Lords chamber " + args[0]);
+
                 return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc", args));
         }
 
         public Cursor getTomorrowsDebatesChamber(Chamber chamber) {
                 String [] args = {chamber.toOrdinal()};
 
-                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+1 day'))) ORDER BY _id asc", args));
+                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+1 day')) ORDER BY _id asc", args));
         }
 
         public Cursor getYesterdaysDebatesChamber(Chamber chamber) {
                 String [] args = {chamber.toOrdinal()};
 
-                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-1 day'))) ORDER BY _id asc", args));
+                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-1 day')) ORDER BY _id asc", args));
         }
 
 

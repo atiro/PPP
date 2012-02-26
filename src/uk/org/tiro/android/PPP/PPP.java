@@ -315,6 +315,8 @@ public class PPP extends Activity
 
 //		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
 		CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_main_chamber.rss", "");
+		// Get select committees
+		// Get westminster hall
 	
 		debates = parser.parse();
 

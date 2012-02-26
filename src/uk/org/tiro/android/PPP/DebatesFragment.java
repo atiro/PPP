@@ -94,6 +94,12 @@ public class DebatesFragment extends ListFragment {
 			}
 		}
 
+		if(house == House.COMMONS) {
+	   	    Log.v("PPP", "Setting commons adaptor");
+		    setListAdapter(commonsadaptor);
+		} else {
+		    setListAdapter(lordsadaptor);
+		}
 
 	}
 
@@ -103,11 +109,8 @@ public class DebatesFragment extends ListFragment {
 
 		View v = inflater.inflate(R.layout.debates_fragment, container, false);
 		lv = (ListView) v.findViewById(android.R.id.list);
-		if(house == House.COMMONS) {
-		    lv.setAdapter(commonsadaptor);
-		} else {
-		    lv.setAdapter(lordsadaptor);
-		}
+		Log.v("PPP", "Creating DebatesFragment view");
+
 
 		return v;
 	}

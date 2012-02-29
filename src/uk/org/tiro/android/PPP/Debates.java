@@ -46,7 +46,7 @@ public class Debates extends FragmentActivity {
 
 		house = House.values()[getIntent().getExtras().getInt("house")];
 		chamber = Chamber.values()[getIntent().getExtras().getInt("chamber")];
-		date = 0;
+		date = -1;
 
 		// date
 
@@ -55,7 +55,7 @@ public class Debates extends FragmentActivity {
 		args = new Bundle();
 		args.putInt("house", house.ordinal());
 		args.putInt("chamber", chamber.ordinal());
-		args.putInt("date", 0);
+		args.putInt("date", -1);
 
 //		browse.setArguments(args);
 

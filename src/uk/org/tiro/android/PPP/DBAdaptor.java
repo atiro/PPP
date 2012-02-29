@@ -31,6 +31,12 @@ public class DBAdaptor {
 	private static final String CREATE_TABLE_COMMONS =
 		"CREATE TABLE commons (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER, relevant INTEGER);";
 
+	private static final String CREATE_TABLE_ALERTS = 
+		"CREATE TABLE alerts (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, debates INTEGER, committees INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
+
+	private static final String CREATE_TABLE_NEWSFEED =
+		"CREATE TABLE newsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, alert_id INTEGER, bill_id INTEGER, act_id INTEGER, lords_id INTEGER, commons_id INTEGER, highlight INTEGER, date INTEGER);";
+
 	private final Context context;
 	private DatabaseHelper DBHelper;
 	private SQLiteDatabase db;
@@ -53,6 +59,8 @@ public class DBAdaptor {
 			db.execSQL(CREATE_TABLE_LORDS);
 			db.execSQL(CREATE_TABLE_ACTS);
 			db.execSQL(CREATE_TABLE_BILLS);
+			db.execSQL(CREATE_TABLE_ALERTS);
+			db.execSQL(CREATE_TABLE_NEWSFEED);
 		}
 
 		@Override

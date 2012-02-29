@@ -24,7 +24,7 @@ import android.util.Log;
 public class PPP extends Activity
 {
 
-    private static final String[] items = {"Debates", "Meetings", "Bills", "Acts", "Stat. Instruments "};
+    private static final String[] items = {"Debates", "Committees", "Bills", "Acts", "Stat. Inst."};
 
     private static final String[] news = {"News Story 1", "News Story 2", "News Story 3", "News Story 4", "News Story 5"};
 
@@ -33,6 +33,7 @@ public class PPP extends Activity
     private static final String[] commons = {"Main Chamber", "Select Committees", "General Committee", "Westminster Hall"};
 
     private static final String[] lords = {"Main Chamber", "Grand Committee", "Select Committees"};
+    private static final String[] newsfeed = {"Alert 1", "Alert 2", "Alert 3", "Older"};
 
     private BillsDBHelper billshelper;
     private ActsDBHelper actshelper;
@@ -46,11 +47,12 @@ public class PPP extends Activity
     {
     	ListView list_my_pol, list_legislation;
 	ListView list_lords, list_commons;
+	ListView list_newsfeed;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-	list_my_pol = (ListView)findViewById(R.id.list_my_politics);
+	list_my_pol = (ListView)findViewById(R.id.list_watching);
 
 	list_my_pol.setAdapter(new MyPoliticsAdaptor() );
 
@@ -131,6 +133,12 @@ public class PPP extends Activity
 			}
 		});
 
+	list_newsfeed = (ListView)findViewById(R.id.list_newsfeed);
+		
+	list_newsfeed.setAdapter(new ArrayAdapter(this,
+				R.layout.row_news,
+				R.id.label,
+				newsfeed));
 	
 	dbadaptor = new DBAdaptor(this).open();
 
@@ -162,7 +170,23 @@ public class PPP extends Activity
 
 		TextView count = (TextView)row.findViewById(R.id.count);
 
-		count.setText("10");
+		if(position == 0) {
+		//	Integer commons_count = commonshelper.getAlertCount();
+		//	Integer lords_count = lordshelper.getAlertCount();
+		//	Integer total = commons_count + lords_count;
+		//	count.setText(total.toString());
+			count.setText("0");
+		} else if(position == 1) {
+			count.setText("0");
+		} else if(position == 2) {
+			Integer bill_count = billshelper.getAlertCount();
+			count.setText(bill_count.toString());
+		} else if(position == 3) {
+			Integer acts_count = actshelper.getAlertCount();
+			count.setText(acts_count.toString());
+		} else {
+			count.setText("0");
+		}
 
 		return(row);
 	}
@@ -188,7 +212,7 @@ public class PPP extends Activity
 			Integer acts_count = actshelper.getAllActsCount();
 			count.setText(acts_count.toString());
 		} else {
-			count.setText("6");
+			count.setText("-");
 		}
 
 		return(row);

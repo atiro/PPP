@@ -109,6 +109,18 @@ class ActsDBHelper {
 		return acts_count ;
 	}
 
+	public Integer getAlertCount() {
+		Integer count = -1;
+
+		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) FROM acts WHERE relevant = 1 AND new = 1", null);
+
+		c.moveToFirst();
+
+		count = c.getInt(0);
+
+		return count;
+	}
+
 	public int getNewActsCount() {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE new = 1", null);
 		return(c.getInt(0));

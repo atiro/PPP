@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFA1A1"
+    >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:layout_marginBottom="2dip">
+
+      <TextView 
+      	android:id="@+id/title_news"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:gravity="center"
+    	android:text="Legislation"
+	android:textColor="#ffffff" />
+
+      <ListView
+      	android:id="@+id/list_legislation"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:background="@drawable/list_my_politics"
+      />
+
+    </LinearLayout>
+
+  <TextView 
+      	android:id="@+id/title_commons"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:gravity="center"
+    	android:text="Calendar"
+	android:textColor="#ffffff" />
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:layout_marginBottom="2dip"
+    android:layout_height="wrap_content">
+
+      <TextView 
+      	android:id="@+id/title_commons"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_gravity="center"
+	android:gravity="center"
+    	android:text="House of Commons"
+	android:textColor="#ffffff" />
+
+      <ListView
+      	android:id="@+id/list_commons"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:background="@drawable/list_my_politics"
+      />
+
+    </LinearLayout>
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_marginLeft="5dip"
+    android:layout_marginRight="5dip"
+    android:layout_height="wrap_content">
+
+      <TextView 
+      	android:id="@+id/title_lords"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_gravity="center"
+	android:gravity="center"
+    	android:text="House of Lords"
+	android:textColor="#ffffff" />
+
+      <ListView
+      	android:id="@+id/list_lords"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:color="#f0e6e6e6"
+	android:background="@drawable/list_my_politics"
+      />
+
+    </LinearLayout>
+
+    <TextView 
+      	android:id="@+id/updated"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:gravity="center"
+    	android:text="Last Update: "
+	android:textColor="#000000" />
+
+  </LinearLayout>
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_marginLeft="5dip"
+      android:layout_marginRight="5dip"
+      android:layout_height="wrap_content">
+
+      <TextView 
+      	android:id="@+id/title_my_politics"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:gravity="center"
+    	android:text="Alerts"
+	android:textColor="#000000" />
+
+      <ListView
+      	android:id="@+id/list_watching"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/list_my_politics"
+      />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_marginLeft="5dip"
+      android:layout_marginRight="5dip"
+      android:layout_height="wrap_content">
+
+    <TextView 
+      	android:id="@+id/title_commons"
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:gravity="center"
+    	android:text="Politics Feed"
+	android:textColor="#000000" />
+
+      <ListView
+      	android:id="@+id/list_newsfeed"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/list_my_politics"
+      />
+    </LinearLayout>
+
+  </LinearLayout>
+
+</LinearLayout>
+

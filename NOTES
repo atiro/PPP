@@ -1,0 +1,12 @@
+Use AlarmManager (see AdvAndroid pg 232) to setup regular job updating
+bills and calendar and notify user of bills of interest, changes in bills
+they are following, and debates/meetingsof interest.
+
+STAGES - 
+
+	Second readnig committee - Cmmittee or 2nd reading or other stage ?
+	Commons Examiners - 
+
+DB QUERY
+
+	select title,date from commons where date = strftime('%s', strftime('%Y-%m-%d'));

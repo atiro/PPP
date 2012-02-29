@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+  <fragment class="uk.org.tiro.android.PPP.BrowseFragment"
+    android:id="@+id/browse"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+  />
+  <fragment class="uk.org.tiro.android.PPP.DebatesFragment"
+    android:id="@+id/debates"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+  />
+</LinearLayout>
+

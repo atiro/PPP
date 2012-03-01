@@ -20,22 +20,22 @@ public class DBAdaptor {
 	public static final int DATABASE_VERSION = 1;
 
 	private static final String CREATE_TABLE_BILLS =
-		"CREATE TABLE bills (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, house INTEGER, stage INTEGER, description TEXT, date INTEGER, guid TEXT, url TEXT, new INTEGER, relevant INTEGER);";
+		"CREATE TABLE bills (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, house INTEGER, stage INTEGER, description TEXT, date INTEGER, guid TEXT, url TEXT, new INTEGER);";
 
 	private static final String CREATE_TABLE_ACTS =
-		"CREATE TABLE acts (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, summary TEXT, date INTEGER, url TEXT, new INTEGER, relevant INTEGER);";
+		"CREATE TABLE acts (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, summary TEXT, date INTEGER, url TEXT, new INTEGER);";
 
 	private static final String CREATE_TABLE_LORDS =
-		"CREATE TABLE lords (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER, relevant INTEGER);";
+		"CREATE TABLE lords (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER);";
 
 	private static final String CREATE_TABLE_COMMONS =
-		"CREATE TABLE commons (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER, relevant INTEGER);";
+		"CREATE TABLE commons (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER);";
 
 	private static final String CREATE_TABLE_ALERTS = 
 		"CREATE TABLE alerts (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, debates INTEGER, committees INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
 	private static final String CREATE_TABLE_NEWSFEED =
-		"CREATE TABLE newsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, alert_id INTEGER, bill_id INTEGER, act_id INTEGER, lords_id INTEGER, commons_id INTEGER, highlight INTEGER, date INTEGER);";
+		"CREATE TABLE newsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, alert_id INTEGER, bill_id INTEGER, act_id INTEGER, lords_id INTEGER, commons_id INTEGER, highlight INTEGER, read INTEGER, date INTEGER);";
 
 	private final Context context;
 	private DatabaseHelper DBHelper;

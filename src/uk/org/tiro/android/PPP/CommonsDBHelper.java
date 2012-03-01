@@ -23,7 +23,6 @@ class CommonsDBHelper {
 	static final String GUID="guid";
 	static final String URL="url";
 	static final String NEW="new";
-	static final String RELEVANT="relevant";
 
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -95,7 +94,6 @@ class CommonsDBHelper {
 			}
 			cv.put(URL, new_debate.getURL());
 			cv.put(NEW, 1);
-			cv.put(RELEVANT, 0);
 
 			this.mDb.insert("commons", TITLE, cv);
 		}

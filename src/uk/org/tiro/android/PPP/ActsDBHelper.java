@@ -17,7 +17,7 @@ class ActsDBHelper {
 	static final String DATE="date";
 	static final String URL="url";
 	static final String NEW="new";
-	static final String RELEVANT="relevant";
+	static final String CHASE="chase";
 
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -79,7 +79,7 @@ class ActsDBHelper {
 //			cv.put(DATE, raw.getTime() / 1000);
 			cv.put(URL, new_act.getURL());
 			cv.put(NEW, 1);
-			cv.put(RELEVANT, 0); //TODO check if of interest
+			cv.put(CHASE, 0); //TODO check if of interest
 
 			this.mDb.insert("acts", TITLE, cv);
 	//	}
@@ -109,18 +109,6 @@ class ActsDBHelper {
 		return acts_count ;
 	}
 
-	public Integer getAlertCount() {
-		Integer count = -1;
-
-		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) FROM acts WHERE relevant = 1 AND new = 1", null);
-
-		c.moveToFirst();
-
-		count = c.getInt(0);
-
-		return count;
-	}
-
 	public int getNewActsCount() {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE new = 1", null);
 		return(c.getInt(0));
@@ -133,20 +121,20 @@ class ActsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE title LIKE ? ORDER BY date desc", args));
 	}
 
-	public Cursor getRelevantActs() {
-		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE relevant = 1 ORDER BY date desc", null));
+	public Cursor getChaseActs() {
+		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE chase = 1 ORDER BY date desc", null));
 	}
 
-	public int getRelevantActsCount() {
-		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE relevant = 1", null);
+	public int getChasedActsCount() {
+		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE chase = 1", null);
 		return(c.getInt(0));
 	}
 
-	public Cursor getRelevantActsFiltered(String match) {
+	public Cursor getChasedActsFiltered(String match) {
 		String filter = new String('%' + match + '%');
 		String [] args = {filter};
 
-		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE title LIKE ? AND relevant = 1 ORDER BY date desc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE title LIKE ? AND chase = 1 ORDER BY date desc", args));
 	}
 
 	private boolean checkActByURL(String url) {

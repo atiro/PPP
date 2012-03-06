@@ -126,18 +126,6 @@ class BillsDBHelper {
 		return count;
 	}
 
-	public Integer getAlertCount() {
-		Integer count = -1;
-
-		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) FROM bills WHERE relevant = 1 AND new = 1", null);
-
-		c.moveToFirst();
-
-		count = c.getInt(0);
-
-		return count;
-	}
-
 	private boolean checkBillByGuid(String guid) {
 		String [] args = {guid};
 

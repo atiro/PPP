@@ -24,7 +24,7 @@ import android.util.Log;
 public class PPP extends Activity
 {
 
-    private static final String[] items = {"Debates", "Committees", "Bills", "Acts", "Stat. Inst."};
+    private static final String[] alerts = {"Debates", "Committees", "Bills", "Acts", "Stat. Inst."};
 
     private static final String[] news = {"News Story 1", "News Story 2", "News Story 3", "News Story 4", "News Story 5"};
 
@@ -39,22 +39,40 @@ public class PPP extends Activity
     private ActsDBHelper actshelper;
     private LordsDBHelper lordshelper;
     private CommonsDBHelper commonshelper;
+    private AlertsDBHelper alertshelper;
     private DBAdaptor dbadaptor;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	ListView list_my_pol, list_legislation;
+    	ListView list_alerts, list_legislation;
 	ListView list_lords, list_commons;
 	ListView list_newsfeed;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-	list_my_pol = (ListView)findViewById(R.id.list_watching);
+	list_alerts = (ListView)findViewById(R.id.list_alerts);
 
-	list_my_pol.setAdapter(new MyPoliticsAdaptor() );
+	list_alerts.setAdapter(new AlertsAdaptor() );
+
+	list_alerts.setOnItemClickListener(
+		new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
+				// Launch Alert List 
+
+				if(pos == 3) {
+					Intent i = new Intent(PPP.this, Alerts.class);
+					startActivity(i);
+				} else if (pos == 4) {
+					// TODO add type to bundle
+					Intent i = new Intent(PPP.this, Alerts.class);
+					startActivity(i);
+				}
+			}
+		});
 
 	list_legislation = (ListView)findViewById(R.id.list_legislation);
 
@@ -157,12 +175,15 @@ public class PPP extends Activity
 	lordshelper = new LordsDBHelper(this).open();
 
 	new LordsUpdateTask().execute();
+
+	alertshelper = new AlertsDBHelper(this).open();
+
     }
 
 
-    class MyPoliticsAdaptor extends ArrayAdapter<String> {
-    	MyPoliticsAdaptor() {
-		super(PPP.this, R.layout.row_my_politics, R.id.label, items);
+    class AlertsAdaptor extends ArrayAdapter<String> {
+    	AlertsAdaptor() {
+		super(PPP.this, R.layout.row_alert_count, R.id.label, alerts);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -179,10 +200,10 @@ public class PPP extends Activity
 		} else if(position == 1) {
 			count.setText("0");
 		} else if(position == 2) {
-			Integer bill_count = billshelper.getAlertCount();
+			Integer bill_count = alertshelper.getBillAlertsCount();
 			count.setText(bill_count.toString());
 		} else if(position == 3) {
-			Integer acts_count = actshelper.getAlertCount();
+			Integer acts_count = alertshelper.getActAlertsCount();
 			count.setText(acts_count.toString());
 		} else {
 			count.setText("0");
@@ -194,7 +215,7 @@ public class PPP extends Activity
 
     class LegislationAdaptor extends ArrayAdapter<String> {
     	LegislationAdaptor() {
-		super(PPP.this, R.layout.row_my_politics, R.id.label, legislation);
+		super(PPP.this, R.layout.row_alert_count, R.id.label, legislation);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -219,9 +240,10 @@ public class PPP extends Activity
 	}
     }
 
+/*
     class NewsAdapter extends ArrayAdapter<String> {
     	NewsAdapter() {
-		super(PPP.this, R.layout.row_my_politics, R.id.label, items);
+		super(PPP.this, R.layout.row_alert_count, R.id.label, news);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -235,6 +257,7 @@ public class PPP extends Activity
 	}
     }
 
+*/
 
     class BillsUpdateTask extends AsyncTask<Object, Void, String> {
     	private List<Bill> bills;

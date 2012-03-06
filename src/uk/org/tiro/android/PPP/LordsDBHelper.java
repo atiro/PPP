@@ -134,18 +134,6 @@ class LordsDBHelper {
                 return(this.mDb.rawQuery("SELECT _id,title,committee,subject,location,chamber,url,date,time from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-1 day')) ORDER BY _id asc", args));
         }
 
-	public Integer getAlertCount() {
-		Integer count = -1;
-
-		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) FROM lords WHERE relevant = 1 AND new = 1", null);
-
-		c.moveToFirst();
-
-		count = c.getInt(0);
-
-		return count;
-	}
-
 	private boolean checkDebateByGuid(String guid) {
 		String [] args = {guid};
 

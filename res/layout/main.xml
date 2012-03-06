@@ -33,7 +33,7 @@
       	android:id="@+id/list_legislation"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
-	android:background="@drawable/list_my_politics"
+	android:background="@drawable/list_row"
       />
 
     </LinearLayout>
@@ -67,7 +67,7 @@
       	android:id="@+id/list_commons"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
-	android:background="@drawable/list_my_politics"
+	android:background="@drawable/list_row"
       />
 
     </LinearLayout>
@@ -93,7 +93,7 @@
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:color="#f0e6e6e6"
-	android:background="@drawable/list_my_politics"
+	android:background="@drawable/list_row"
       />
 
     </LinearLayout>
@@ -123,7 +123,7 @@
       android:layout_height="wrap_content">
 
       <TextView 
-      	android:id="@+id/title_my_politics"
+      	android:id="@+id/title_alerts"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:gravity="center"
@@ -131,10 +131,10 @@
 	android:textColor="#000000" />
 
       <ListView
-      	android:id="@+id/list_watching"
+      	android:id="@+id/list_alerts"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:background="@drawable/list_my_politics"
+	android:background="@drawable/list_row"
       />
 
     </LinearLayout>
@@ -158,7 +158,7 @@
       	android:id="@+id/list_newsfeed"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:background="@drawable/list_my_politics"
+	android:background="@drawable/list_row"
       />
     </LinearLayout>
 

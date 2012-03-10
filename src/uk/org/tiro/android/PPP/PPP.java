@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.content.Context;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -30,9 +32,8 @@ public class PPP extends Activity
 
     private static final String[] legislation= {"Draft Bills", "Current Bills", "Recent Acts", "Draft S.I.", "Stat. Inst."};
 
-    private static final String[] commons = {"Main Chamber", "Select Committees", "General Committee", "Westminster Hall"};
+    private static final String[] house = {"House of Commons", "House of Lords"};
 
-    private static final String[] lords = {"Main Chamber", "Grand Committee", "Select Committees"};
     private static final String[] newsfeed = {"Alert 1", "Alert 2", "Alert 3", "Older"};
 
     private BillsDBHelper billshelper;
@@ -47,7 +48,7 @@ public class PPP extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
     	ListView list_alerts, list_legislation;
-	ListView list_lords, list_commons;
+	ListView list_house;
 	ListView list_newsfeed;
 
         super.onCreate(savedInstanceState);
@@ -94,27 +95,22 @@ public class PPP extends Activity
 			}
 		});
 
-	list_commons = (ListView)findViewById(R.id.list_commons);
+	list_house = (ListView)findViewById(R.id.list_house);
 
-	list_commons.setAdapter(new ArrayAdapter(this,
+	list_house.setAdapter(new ArrayAdapter(this,
 				R.layout.row_news,
 				R.id.label,
-				commons));
+				house));
 
-	list_commons.setOnItemClickListener(
+	list_house.setOnItemClickListener(
 		new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
 				Bundle b = new Bundle();
-				b.putInt("house", House.COMMONS.ordinal());
 				if(pos == 0) {
-					b.putInt("chamber", Chamber.MAIN.ordinal());
+					b.putInt("house", House.COMMONS.ordinal());
 				} else if(pos == 1) {
-					b.putInt("chamber", Chamber.SELECT.ordinal());
-				} else if(pos == 2) {
-					b.putInt("chamber", Chamber.GENERAL.ordinal());
-				} else if(pos == 3) {
-					b.putInt("chamber", Chamber.WESTMINSTER.ordinal());
+					b.putInt("house", House.LORDS.ordinal());
 				}
 
 				Intent i = new Intent(PPP.this, Debates.class);
@@ -123,33 +119,6 @@ public class PPP extends Activity
 			}
 		});
 	
-
-	list_lords = (ListView)findViewById(R.id.list_lords);
-
-	list_lords.setAdapter(new ArrayAdapter(this,
-				R.layout.row_news,
-				R.id.label,
-				lords));
-
-	list_lords.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				Bundle b = new Bundle();
-				b.putInt("house", House.LORDS.ordinal());
-				if(pos == 0) {
-					b.putInt("chamber", Chamber.MAIN.ordinal());
-				} else if(pos == 1) {
-					b.putInt("chamber", Chamber.GRAND.ordinal());
-				} else if(pos == 2) {
-					b.putInt("chamber", Chamber.SELECT.ordinal());
-				}
-
-				Intent i = new Intent(PPP.this, Debates.class);
-				i.putExtras(b);
-				startActivity(i);
-			}
-		});
 
 	list_newsfeed = (ListView)findViewById(R.id.list_newsfeed);
 		
@@ -158,6 +127,9 @@ public class PPP extends Activity
 				R.id.label,
 				newsfeed));
 	
+	WakefulIntentService.scheduleAlarms(new AppListener(),
+					this, false);
+
 	dbadaptor = new DBAdaptor(this).open();
 
 	billshelper = new BillsDBHelper(this).open();

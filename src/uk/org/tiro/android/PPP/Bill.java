@@ -297,6 +297,26 @@ public class Bill implements Comparable<Bill> {
 	}
 
 
+	public boolean match(String match) {
+		Pattern p = Pattern.compile(match);
+
+		// First look in title
+
+		Matcher m = p.matcher(this.title);
+
+		if(m.find()) {
+			return true;
+		}
+
+		m  = p.matcher(this.description);
+
+		if(m.find()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public class ThreadSafeSimpleDateFormat {
 		private DateFormat df;
 

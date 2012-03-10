@@ -37,8 +37,8 @@ public class DBAdaptor {
 	private static final String CREATE_TABLE_PEOPLE = 
 		"CREATE TABLE people (_id INTEGER PRIMARY KEY AUTOINCREMENT, person TEXT, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
-	private static final String CREATE_TABLE_NEWSFEED =
-		"CREATE TABLE newsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, alert_id INTEGER, bill_id INTEGER, act_id INTEGER, lords_id INTEGER, commons_id INTEGER, highlight INTEGER, read INTEGER, date INTEGER);";
+	private static final String CREATE_TABLE_POLITICSFEED =
+		"CREATE TABLE politicsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT, alert_id INTEGER, bill_id INTEGER, act_id INTEGER, lords_id INTEGER, commons_id INTEGER, highlight INTEGER, read INTEGER, date INTEGER);";
 
 	private final Context context;
 	private DatabaseHelper DBHelper;

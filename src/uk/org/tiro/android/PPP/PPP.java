@@ -127,30 +127,19 @@ public class PPP extends Activity
 				R.id.label,
 				newsfeed));
 	
+	dbadaptor = new DBAdaptor(this).open();
+
 	WakefulIntentService.scheduleAlarms(new AppListener(),
 					this, false);
 
 	// And force it to run now as well
 
-	WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
 
-	dbadaptor = new DBAdaptor(this).open();
+	WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
 
 	billshelper = new BillsDBHelper(this).open();
 
-	new BillsUpdateTask().execute(); // Retrieve bills
-	
 	actshelper = new ActsDBHelper(this).open();
-
-	new ActsUpdateTask().execute(); // Retrieve acts
-
-	commonshelper = new CommonsDBHelper(this).open();
-
-	new CommonsUpdateTask().execute();
-
-	lordshelper = new LordsDBHelper(this).open();
-
-	new LordsUpdateTask().execute();
 
 	alertshelper = new AlertsDBHelper(this).open();
 
@@ -234,195 +223,6 @@ public class PPP extends Activity
     }
 
 */
-
-    class BillsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<Bill> bills;
-
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		BillsFeedParser parser = new BillsFeedParser("http://tiro.org.uk/mobile/AllBills.rss", "");
-	
-		bills = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		Cursor c = billshelper.getLatestBill(House.COMMONS);
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing bills in database");
-
-			for(Bill bill : bills) {
-				Log.v("PPP", "Inserting bill: " + bill.getTitle() );
-				billshelper.insert(bill);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Bills already in database, not adding");
-			// Handle updates
-		}
-
-		billshelper.close();
-	}
-   }
-
-    class ActsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<Act> acts;
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		ActsFeedParser parser = new ActsFeedParser("http://tiro.org.uk/mobile/legislation/acts.xml", "");
-	
-		acts = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		for(Act act : acts) {
-			Log.v("PPP", "Inserting act: " + act.getTitle() );
-			actshelper.insert(act);
-		}
-			/*
-		Cursor c = actshelper.getLatestAct();
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing acts in database");
-
-			for(Act act : acts) {
-				Log.v("PPP", "Inserting act: " + act.getTitle() );
-				actshelper.insert(act);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Acts already in database, not adding");
-			// Handle updates
-		}
-		*/
-
-		actshelper.close();
-	}
-   }
-
-    class CommonsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<CommonsDebate> debates;
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_main_chamber.rss", "");
-		// Get select committees
-		// Get westminster hall
-	
-		debates = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		for(CommonsDebate debate : debates) {
-			Log.v("PPP", "Inserting commons debate: " + debate.getTitle() );
-			commonshelper.insert(debate);
-		}
-			/*
-		Cursor c = actshelper.getLatestAct();
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing acts in database");
-
-			for(Act act : acts) {
-				Log.v("PPP", "Inserting act: " + act.getTitle() );
-				actshelper.insert(act);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Acts already in database, not adding");
-			// Handle updates
-		}
-		*/
-
-		commonshelper.close();
-	}
-   }
-
-    class LordsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<LordsDebate> debates;
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_main_chamber.rss", "");
-	
-		debates = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		for(LordsDebate debate : debates) {
-			Log.v("PPP", "Inserting lords debate: " + debate.getTitle() );
-			lordshelper.insert(debate);
-		}
-			/*
-		Cursor c = actshelper.getLatestAct();
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing acts in database");
-
-			for(Act act : acts) {
-				Log.v("PPP", "Inserting act: " + act.getTitle() );
-				actshelper.insert(act);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Acts already in database, not adding");
-			// Handle updates
-		}
-		*/
-
-		lordshelper.close();
-	}
-   }
 
 
 }

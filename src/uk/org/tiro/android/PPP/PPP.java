@@ -130,6 +130,10 @@ public class PPP extends Activity
 	WakefulIntentService.scheduleAlarms(new AppListener(),
 					this, false);
 
+	// And force it to run now as well
+
+	WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+
 	dbadaptor = new DBAdaptor(this).open();
 
 	billshelper = new BillsDBHelper(this).open();

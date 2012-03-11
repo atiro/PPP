@@ -122,6 +122,7 @@ class BillsDBHelper {
 
 		 while(c.isAfterLast() == false) {
 		 	bills.add(c.getInt(0));
+			c.moveToNext();
 		 }
 
 		return bills;

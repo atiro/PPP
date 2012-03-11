@@ -60,7 +60,7 @@ public class Bills extends ListActivity {
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 			adaptor.getFilter().filter(s);
-			model = billshelper.getAllBillsFiltered(House.COMMONS, s.toString());
+			model = billshelper.getAllBillsFiltered(s.toString());
 			adaptor = new BillsAdaptor(model);
 			setListAdapter(adaptor);
 		}

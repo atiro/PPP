@@ -63,15 +63,23 @@ public class PPP extends Activity
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
 				// Launch Alert List 
+				Bundle b = new Bundle();
 
-				if(pos == 3) {
-					Intent i = new Intent(PPP.this, Alerts.class);
-					startActivity(i);
-				} else if (pos == 4) {
-					// TODO add type to bundle
-					Intent i = new Intent(PPP.this, Alerts.class);
-					startActivity(i);
+				if(pos == 0) {
+					b.putInt("type", Alerts.DEBATES.ordinal());
+				} else if (pos == 1) {
+					b.putInt("type", Alerts.COMMITTEES.ordinal());
+				} else if (pos == 2) {
+					b.putInt("type", Alerts.BILLS.ordinal());
+				} else if (pos == 3) {
+					b.putInt("type", Alerts.ACTS.ordinal());
+				} else {
+					b.putInt("type", Alerts.STAT_INST.ordinal());
 				}
+
+				Intent i = new Intent(PPP.this, AlertsList.class);
+				i.putExtras(b);
+					startActivity(i);
 			}
 		});
 
@@ -135,7 +143,7 @@ public class PPP extends Activity
 	// And force it to run now as well
 
 
-	WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+	// WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
 
 	billshelper = new BillsDBHelper(this).open();
 

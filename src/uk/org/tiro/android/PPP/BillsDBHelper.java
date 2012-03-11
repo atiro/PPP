@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import android.util.Log;
 
@@ -102,11 +105,34 @@ class BillsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE house = ? ORDER BY date desc", args));
 	}
 
-	public Cursor getAllBillsFiltered(House house, String match) {
-		String filter = new String('%' + match + '%');
-		String [] args = {house.toOrdinal(), filter};
+	public Cursor getBill(Integer bill_id) {
+		String [] args = {bill_id.toString()};
 
-		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE house = ? AND title LIKE ? ORDER BY date desc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE _id = ?", args));
+	}
+
+
+	public List<Integer> getBillsFiltered(String match) {
+		String filter = new String('%' + match + '%');
+		String [] args = {filter, filter};
+		List<Integer> bills = new ArrayList<Integer>();
+
+		Cursor c = this.mDb.rawQuery("SELECT _id from bills WHERE title LIKE ? OR description LIKE ? ORDER BY date desc", args);
+		c.moveToFirst();
+
+		 while(c.isAfterLast() == false) {
+		 	bills.add(c.getInt(0));
+		 }
+
+		return bills;
+	}
+
+	public Cursor getAllBillsFiltered(String match) {
+		String filter = new String('%' + match + '%');
+		String [] args = {filter, filter};
+
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE title LIKE ? OR description LIKE ? ORDER BY date desc", args));
+
 	}
 
 	public Cursor getBillsByStage(House house, Stage stage) {

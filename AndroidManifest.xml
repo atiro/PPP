@@ -18,7 +18,7 @@
 	<activity android:name="Bills"/>
 	<activity android:name="Acts"/>
 	<activity android:name="Debates"/>
-	<activity android:name="Alerts"/>
+	<activity android:name="AlertsList"/>
 	<activity android:name="AlertNew"/>
 
 	<receiver android:name="com.commonsware.cwac.wakeful.AlarmReceiver">

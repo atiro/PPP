@@ -28,7 +28,7 @@
 
 		<meta-data
 			android:name="com.commonsware.cwac.wakeful"
-			android:resoucce="@xml/wakeful"/>
+			android:resource="@xml/wakeful"/>
 	</receiver>
 
 	<service android:name="PPPUpdate"/>

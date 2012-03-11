@@ -5,6 +5,7 @@
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/icon.png \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/circle_count.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-ldpi/icon.png \
+/home/richardp/Projects/Phone/PPP/PPP/res/xml/wakeful.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/values/strings.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_alert.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_debate.xml \

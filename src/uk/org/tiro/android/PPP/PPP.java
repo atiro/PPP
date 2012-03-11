@@ -129,7 +129,7 @@ public class PPP extends Activity
 	
 	dbadaptor = new DBAdaptor(this).open();
 
-	WakefulIntentService.scheduleAlarms(new AppListener(),
+	WakefulIntentService.scheduleAlarms(new PPPAlarm(),
 					this, false);
 
 	// And force it to run now as well

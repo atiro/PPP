@@ -64,7 +64,7 @@ public class DBAdaptor {
 			db.execSQL(CREATE_TABLE_BILLS);
 			db.execSQL(CREATE_TABLE_ALERTS);
 			db.execSQL(CREATE_TABLE_PEOPLE);
-			db.execSQL(CREATE_TABLE_NEWSFEED);
+			db.execSQL(CREATE_TABLE_POLITICSFEED);
 		}
 
 		@Override

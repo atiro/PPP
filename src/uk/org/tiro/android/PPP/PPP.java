@@ -145,6 +145,7 @@ public class PPP extends FragmentActivity
 
 	alertshelper = new AlertsDBHelper(this).open();
 
+	PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
     }
 
 

@@ -105,29 +105,20 @@
     android:layout_height="fill_parent"
     android:layout_weight="1">
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
-      android:layout_width="fill_parent"
-      android:layout_marginLeft="5dip"
-      android:layout_marginRight="5dip"
-      android:layout_height="wrap_content">
-
     <TextView 
-      	android:id="@+id/title_commons"
+      	android:id="@+id/title_politicsfeed"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:gravity="center"
     	android:text="Politics Feed"
 	android:textColor="#000000" />
 
-      <ListView
-      	android:id="@+id/list_newsfeed"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:background="@drawable/list_row"
-      />
-    </LinearLayout>
+  <fragment class="uk.org.tiro.android.PPP.PoliticsFeedFragment"
+      android:id="@+id/feed"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+  />
+
 
   </LinearLayout>
 

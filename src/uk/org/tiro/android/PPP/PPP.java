@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import android.support.v4.app.FragmentActivity;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.content.Context;
@@ -23,7 +25,7 @@ import java.util.Date;
 
 import android.util.Log;
 
-public class PPP extends Activity
+public class PPP extends FragmentActivity
 {
 
     private static final String[] alerts = {"Debates", "Committees", "Bills", "Acts", "Stat. Inst."};
@@ -49,7 +51,6 @@ public class PPP extends Activity
     {
     	ListView list_alerts, list_legislation;
 	ListView list_house;
-	ListView list_newsfeed;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -128,13 +129,6 @@ public class PPP extends Activity
 		});
 	
 
-	list_newsfeed = (ListView)findViewById(R.id.list_newsfeed);
-		
-	list_newsfeed.setAdapter(new ArrayAdapter(this,
-				R.layout.row_news,
-				R.id.label,
-				newsfeed));
-	
 	dbadaptor = new DBAdaptor(this).open();
 
 	WakefulIntentService.scheduleAlarms(new PPPAlarm(),

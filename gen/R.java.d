@@ -19,6 +19,8 @@
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/main.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/alerts.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_act.xml \
+/home/richardp/Projects/Phone/PPP/PPP/res/layout/politicsfeed_fragment.xml \
+/home/richardp/Projects/Phone/PPP/PPP/res/layout/row_item.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/alert_new.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/layout/row_bill.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-hdpi/icon.png \

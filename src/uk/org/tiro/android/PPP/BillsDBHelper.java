@@ -105,11 +105,18 @@ class BillsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE house = ? ORDER BY date desc", args));
 	}
 
+	public Cursor getBillByGUID(String guid) {
+		String [] args = {guid};
+
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE guid = ?", args));
+	}
+
 	public Cursor getBill(Integer bill_id) {
 		String [] args = {bill_id.toString()};
 
 		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE _id = ?", args));
 	}
+
 
 
 	public List<Integer> getBillsFiltered(String match) {

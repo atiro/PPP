@@ -34,8 +34,6 @@ public class PPP extends FragmentActivity
 
     private static final String[] legislation= {"Draft Bills", "Current Bills", "Recent Acts", "Draft S.I.", "Stat. Inst."};
 
-    private static final String[] house = {"House of Commons", "House of Lords"};
-
     private static final String[] newsfeed = {"Alert 1", "Alert 2", "Alert 3", "Older"};
 
     private BillsDBHelper billshelper;
@@ -50,7 +48,6 @@ public class PPP extends FragmentActivity
     public void onCreate(Bundle savedInstanceState)
     {
     	ListView list_alerts, list_legislation;
-	ListView list_house;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -104,30 +101,6 @@ public class PPP extends FragmentActivity
 			}
 		});
 
-	list_house = (ListView)findViewById(R.id.list_house);
-
-	list_house.setAdapter(new ArrayAdapter(this,
-				R.layout.row_news,
-				R.id.label,
-				house));
-
-	list_house.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				Bundle b = new Bundle();
-				if(pos == 0) {
-					b.putInt("house", House.COMMONS.ordinal());
-				} else if(pos == 1) {
-					b.putInt("house", House.LORDS.ordinal());
-				}
-
-				Intent i = new Intent(PPP.this, Debates.class);
-				i.putExtras(b);
-				startActivity(i);
-			}
-		});
-	
 
 	dbadaptor = new DBAdaptor(this).open();
 
@@ -146,6 +119,16 @@ public class PPP extends FragmentActivity
 	alertshelper = new AlertsDBHelper(this).open();
 
 	PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
+    }
+
+    public void viewCalendar(View v) {
+    		Intent i = new Intent(PPP.this, Debates.class);
+		startActivity(i);
+    }
+
+    public void addAlert(View v) {
+    		Intent i = new Intent(PPP.this, AlertNew.class);
+		startActivity(i);
     }
 
 

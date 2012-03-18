@@ -38,31 +38,6 @@
 
     </LinearLayout>
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_marginLeft="5dip"
-    android:layout_marginRight="5dip"
-    android:layout_marginBottom="2dip"
-    android:layout_height="wrap_content">
-
-      <TextView 
-      	android:id="@+id/title_commons"
-	android:layout_height="wrap_content"
-	android:layout_width="wrap_content"
-	android:layout_gravity="center"
-	android:gravity="center"
-    	android:text="Calendar"
-	android:textColor="#ffffff" />
-
-      <ListView
-      	android:id="@+id/list_house"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:background="@drawable/list_row"
-      />
-
-  </LinearLayout>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:orientation="vertical"
@@ -87,6 +62,26 @@
       />
 
     </LinearLayout>
+
+    <Button
+      	android:id="@+id/view_calendar"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_gravity="center"
+	android:gravity="center"
+    	android:text="Calendar"
+	android:onClick="viewCalendar"
+	android:textColor="#ffffff" />
+
+    <Button
+      	android:id="@+id/add_alert"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_gravity="center"
+	android:gravity="center"
+    	android:text="Add New Alert"
+	android:onClick="addAlert"
+	android:textColor="#ffffff"/>
 
     <TextView 
       	android:id="@+id/updated"

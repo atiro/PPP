@@ -26,7 +26,7 @@ import android.widget.ArrayAdapter;
 
 import android.content.Context;
 
-
+import android.content.Intent;
 
 import android.util.Log;
 
@@ -145,6 +145,25 @@ public class DebatesFragment extends ListFragment {
 
 
 		return v;
+	}
+
+	public void onListItemClick(ListView parent, View v, int position,
+					long id) {
+			String guid;
+
+			// Retrieve debate guid
+			model.moveToPosition(position);
+			if(house == House.COMMONS) {
+				guid = commonshelper.getGUID(model);
+			} else {
+				guid = lordshelper.getGUID(model);
+			}
+				
+			Intent i = new Intent(cxt, DebateView.class);
+			Bundle b = new Bundle();
+			b.putString("guid", "");
+			i.putExtras(b);
+			startActivity(i);
 	}
 
 

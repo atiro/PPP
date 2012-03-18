@@ -27,169 +27,41 @@ import android.util.Log;
 
 public class PPP extends FragmentActivity
 {
-
-    private static final String[] alerts = {"Debates", "Committees", "Bills", "Acts", "Stat. Inst."};
-
-    private static final String[] news = {"News Story 1", "News Story 2", "News Story 3", "News Story 4", "News Story 5"};
-
-    private static final String[] legislation= {"Draft Bills", "Current Bills", "Recent Acts", "Draft S.I.", "Stat. Inst."};
-
-    private static final String[] newsfeed = {"Alert 1", "Alert 2", "Alert 3", "Older"};
-
     private BillsDBHelper billshelper;
     private ActsDBHelper actshelper;
     private LordsDBHelper lordshelper;
     private CommonsDBHelper commonshelper;
-    private AlertsDBHelper alertshelper;
     private DBAdaptor dbadaptor;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	ListView list_alerts, list_legislation;
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-	list_alerts = (ListView)findViewById(R.id.list_alerts);
-
-	list_alerts.setAdapter(new AlertsAdaptor() );
-
-	list_alerts.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				// Launch Alert List 
-				Bundle b = new Bundle();
-
-				if(pos == 0) {
-					b.putInt("type", Alerts.DEBATES.ordinal());
-				} else if (pos == 1) {
-					b.putInt("type", Alerts.COMMITTEES.ordinal());
-				} else if (pos == 2) {
-					b.putInt("type", Alerts.BILLS.ordinal());
-				} else if (pos == 3) {
-					b.putInt("type", Alerts.ACTS.ordinal());
-				} else {
-					b.putInt("type", Alerts.STAT_INST.ordinal());
-				}
-
-				Intent i = new Intent(PPP.this, AlertsList.class);
-				i.putExtras(b);
-					startActivity(i);
-			}
-		});
-
-	list_legislation = (ListView)findViewById(R.id.list_legislation);
-
-	list_legislation.setAdapter(new LegislationAdaptor() );
-
-	list_legislation.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				// Launch Bills for all atm 
-
-				if(pos == 1) {
-					Intent i = new Intent(PPP.this, Bills.class);
-					startActivity(i);
-				} else if (pos == 2) {
-					Intent i = new Intent(PPP.this, Acts.class);
-					startActivity(i);
-				}
-			}
-		});
-
-
-	dbadaptor = new DBAdaptor(this).open();
+//        setContentView(R.layout.main);
 
 	WakefulIntentService.scheduleAlarms(new PPPAlarm(),
 					this, false);
 
 	// And force it to run now as well
 
-
 	// WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
 
-	billshelper = new BillsDBHelper(this).open();
+	//PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
 
-	actshelper = new ActsDBHelper(this).open();
+	// TODO start politicsfeed or calendar basedon settings
 
-	alertshelper = new AlertsDBHelper(this).open();
-
-	PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
-    }
-
-    public void viewCalendar(View v) {
-    		Intent i = new Intent(PPP.this, Debates.class);
-		startActivity(i);
-    }
-
-    public void addAlert(View v) {
-    		Intent i = new Intent(PPP.this, AlertNew.class);
-		startActivity(i);
+	Intent i = new Intent(this, Debates.class);
+	Bundle b = new Bundle();
+	b.putInt("house", House.COMMONS.ordinal());
+	b.putInt("chamber", Chamber.MAIN.ordinal());
+	i.putExtras(b);
+	startActivity(i);
     }
 
 
-    class AlertsAdaptor extends ArrayAdapter<String> {
-    	AlertsAdaptor() {
-		super(PPP.this, R.layout.row_alert_count, R.id.label, alerts);
-	}
-
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = super.getView(position, convertView, parent);
-
-		TextView count = (TextView)row.findViewById(R.id.count);
-
-		if(position == 0) {
-		//	Integer commons_count = commonshelper.getAlertCount();
-		//	Integer lords_count = lordshelper.getAlertCount();
-		//	Integer total = commons_count + lords_count;
-		//	count.setText(total.toString());
-			count.setText("0");
-		} else if(position == 1) {
-			count.setText("0");
-		} else if(position == 2) {
-			Integer bill_count = alertshelper.getBillAlertsCount();
-			count.setText(bill_count.toString());
-		} else if(position == 3) {
-			Integer acts_count = alertshelper.getActAlertsCount();
-			count.setText(acts_count.toString());
-		} else {
-			count.setText("0");
-		}
-
-		return(row);
-	}
-    }
-
-    class LegislationAdaptor extends ArrayAdapter<String> {
-    	LegislationAdaptor() {
-		super(PPP.this, R.layout.row_alert_count, R.id.label, legislation);
-	}
-
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = super.getView(position, convertView, parent);
-
-		TextView count = (TextView)row.findViewById(R.id.count);
-
-		if(position == 0) {
-			// TODO - no reliable feed yet for draft bills
-			count.setText("-");
-		} else if(position == 1) {
-			Integer bill_count = billshelper.getBillsCount();
-			count.setText(bill_count.toString());
-		} else if(position == 2) {
-			Integer acts_count = actshelper.getAllActsCount();
-			count.setText(acts_count.toString());
-		} else {
-			count.setText("-");
-		}
-
-		return(row);
-	}
-    }
 
 /*
     class NewsAdapter extends ArrayAdapter<String> {

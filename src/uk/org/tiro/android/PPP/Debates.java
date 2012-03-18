@@ -17,6 +17,11 @@ import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import android.view.Menu;
+import android.view.MenuItem;
+
+import android.content.Intent;
+
 import android.widget.Gallery;
 import android.widget.TextView;
 import android.widget.ListView;
@@ -30,6 +35,8 @@ import android.content.Context;
 import android.util.Log;
 
 public class Debates extends FragmentActivity {
+
+	private static final int MENU_LEGISLATION = Menu.FIRST+1;
 
 	private boolean detailsInline = false;
 
@@ -63,6 +70,20 @@ public class Debates extends FragmentActivity {
 //		debates.setArguments(args);
 
 
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, MENU_LEGISLATION, Menu.NONE, "Politics Newsfeed").setIcon(R.drawable.ic_menu_info_details);
+
+		return(super.onCreateOptionsMenu(menu));
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = new Intent(Debates.this, Legislation.class);
+		startActivity(i);
+		return(true);
 	}
 
 }

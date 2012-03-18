@@ -113,25 +113,21 @@ class CommonsDBHelper {
 
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date from commons WHERE title LIKE ? ORDER BY date desc", args));
 	}
-	public Cursor getTodayDebatesChamber(Chamber chamber) {
+	public Cursor getDebatesChamber(Chamber chamber, Integer date) {
 		String [] args = {chamber.toOrdinal()};
+		String date_offset;
+		String query;
 
+		if(date < 0) {
+			query = "SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-" + date + " day')) ORDER BY _id asc";
+		} else if(date > 0) {
+			query = "SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
+		} else {
+			query = "SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
+		}
+			
 		Log.v("PPP", "Querying debates from chamber " + args[0]);
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc", args));
-	}
-
-	public Cursor getTomorrowsDebatesChamber(Chamber chamber) {
-		String [] args = {chamber.toOrdinal()};
-
-		Log.v("PPP", "Querying tomorrows debates from chamber " + args[0]);
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+1 day')) ORDER BY _id asc", args));
-	}
-
-	public Cursor getYesterdaysDebatesChamber(Chamber chamber) {
-		String [] args = {chamber.toOrdinal()};
-
-		Log.v("PPP", "Querying yesterdays debates from chamber " + args[0]);
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-1 day')) ORDER BY _id asc", args));
+		return(this.mDb.rawQuery(query, args));
 	}
 
 	public Cursor getDebateByGUID(String guid) {

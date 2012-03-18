@@ -91,33 +91,16 @@ public class DebatesFragment extends ListFragment {
 			if(model != null) { model.close(); }
 			if(commonsadaptor != null) { commonsadaptor = null; }
 
-			if(date == 0) {
-			  model = commonshelper.getTodayDebatesChamber(chamber);
- 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
-			} else if(date < 0) {
-			  model = commonshelper.getYesterdaysDebatesChamber(chamber);
- 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
-			} else if(date > 0) {
-			  model = commonshelper.getTomorrowsDebatesChamber(chamber);
- 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
-			}
-
+			model = commonshelper.getDebatesChamber(chamber, date);
+ 	            	commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
 
 		} else {
 			lordshelper = new LordsDBHelper(cxt).open();
 			if(model != null) { model.close(); }
 			if(lordsadaptor != null) { lordsadaptor = null; }
 
-			if(date == 0) {
-			  model = lordshelper.getTodayDebatesChamber(chamber);
- 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
-			} else if(date < 0) {
-			  model = lordshelper.getYesterdaysDebatesChamber(chamber);
- 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
-			} else if(date > 0) {
-			  model = lordshelper.getTomorrowsDebatesChamber(chamber);
- 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
-			}
+			model = lordshelper.getDebatesChamber(chamber, date);
+ 	                lordsadaptor = new LordsDebatesAdaptor(cxt, model);
 
 		}
 

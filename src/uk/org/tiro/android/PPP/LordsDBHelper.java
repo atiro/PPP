@@ -114,18 +114,21 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid from lords WHERE title LIKE ? ORDER BY date desc", args));
 	}
 
-        public Cursor getTodayDebatesChamber(Chamber chamber) {
+        public Cursor getDebatesChamber(Chamber chamber, Integer date) {
                 String [] args = {chamber.toOrdinal()};
+		String query;
+
+		if(date < 0) {
+			query = "SELECT _id,title,committee,subject,date,time,guid from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-" + date + " day')) ORDER BY _id asc";
+		} else if(date > 0) {
+			query = "SELECT _id,title,committee,subject,date,time,guid from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
+		} else {
+                	query = "SELECT _id,title,committee,subject,date,time,guid from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
+		}
 
                 Log.v("PPP", "Querying debates from Lords chamber " + args[0]);
 
-                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc", args));
-        }
-
-        public Cursor getTomorrowsDebatesChamber(Chamber chamber) {
-                String [] args = {chamber.toOrdinal()};
-
-                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+1 day')) ORDER BY _id asc", args));
+                return(this.mDb.rawQuery(query, args));
         }
 
 	public Cursor getDebateByGUID(String guid) {
@@ -133,12 +136,6 @@ class LordsDBHelper {
 
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,guid from lords WHERE guid = ?", args));
 	}
-
-        public Cursor getYesterdaysDebatesChamber(Chamber chamber) {
-                String [] args = {chamber.toOrdinal()};
-
-                return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-1 day')) ORDER BY _id asc", args));
-        }
 
 	private boolean checkDebateByGuid(String guid) {
 		String [] args = {guid};

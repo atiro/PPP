@@ -71,13 +71,9 @@ public class CommonsFeedParser extends BaseFeedParser {
 
 		Element event = item.getChild(PARLY_NS, EVENT);
 
-		if(event != null) {
-			Log.v("PPP", "Got event for item");
-		}
-
                 event.getChild(PARLY_NS, CHAMBER).setEndTextElementListener(new EndTextElementListener(){
                         public void end(String body) { 
-					Log.v("ppp", "Setting chamber to :" + body);
+					//Log.v("ppp", "Setting chamber to :" + body);
 					currentDebate.setChamber(body);
                         }       
                 });
@@ -109,13 +105,13 @@ public class CommonsFeedParser extends BaseFeedParser {
 
 		event.getChild(PARLY_NS, DATE).setEndTextElementListener(new EndTextElementListener(){
 			public void end(String body) {
-				Log.v("ppp", "Setting date to :" + body);
+				//Log.v("ppp", "Setting date to :" + body);
 				currentDebate.setDate(body);
 			}
 		});
 		event.getChild(PARLY_NS, STARTTIME).setEndTextElementListener(new EndTextElementListener(){
 			public void end(String body) {
-				Log.v("ppp", "Setting time to :" + body);
+				//Log.v("ppp", "Setting time to :" + body);
 				currentDebate.setTime(body);
 			}
 		});

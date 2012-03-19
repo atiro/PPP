@@ -83,6 +83,7 @@ class CommonsDBHelper {
 			cv.put(COMMITTEE, new_debate.getCommittee());
 			cv.put(SUBJECT, new_debate.getSubject());
 			cv.put(LOCATION, new_debate.getLocation());
+			cv.put(WITNESSES, new_debate.getWitnesses());
 			cv.put(CHAMBER, new_debate.getChamber().toOrdinal());
 			cv.put(DATE, raw.getTime() / 1000);
 			cv.put(GUID, new_debate.getGUID());

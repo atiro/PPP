@@ -116,6 +116,13 @@ public class CommonsFeedParser extends BaseFeedParser {
 			}
 		});
 
+		event.getChild(PARLY_NS, WITNESSES).setEndTextElementListener(new EndTextElementListener(){
+			public void end(String body) {
+				//Log.v("ppp", "Setting witnesses to :" + body);
+				currentDebate.setWitnesses(body);
+			}
+		});
+
 		try {
 			Xml.parse(this.getInputStream(), this.encoding, root.getContentHandler());
 		} catch (Exception e) {

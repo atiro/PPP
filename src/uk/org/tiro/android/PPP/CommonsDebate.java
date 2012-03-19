@@ -15,6 +15,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 	private String guid = null;
 	private String url = null;
 	private String location = null;
+	private String witnesses = null;
 
 	private Date date = null;
 	private String time = null;
@@ -23,7 +24,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 			new ThreadSafeSimpleDateFormat("yyyy-MM-dd");
 
 	public CommonsDebate(Chamber chamber, String title, String committee,
-			String subject, String guid, String location, String url, Date date, String time ) {
+			String subject, String guid, String location, String url, Date date, String time, String witnesses ) {
 
 		this.title = title;
 		this.committee = committee;
@@ -31,6 +32,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 		this.chamber = chamber;
 		this.subject = subject;
 		this.location = location;
+		this.witnesses = witnesses;
 
 		this.guid = guid;
 		this.url = url;
@@ -47,6 +49,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 		this.guid = "";
 		this.location = "";
 		this.url = "";
+		this.witnesses = "";
 
 		this.date = null;
 		this.time = "";
@@ -61,6 +64,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 		this.guid = "";
 		this.location = "";
 		this.url = "";
+		this.witnesses = "";
 
 		this.date = null;
 		this.time = "";
@@ -157,6 +161,16 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 		return committee;
 	}
 
+	public void setWitnesses(String witnesses) {
+
+		this.witnesses = witnesses;
+	}
+
+	public String getWitnesses() {
+
+		return witnesses;
+	}
+
 	public void setChamber(String chamber) {
 
 		if(chamber.equals("Main Chamber")) {
@@ -186,7 +200,8 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 				     location,
 				     url,
 				     date,
-				     time);
+				     time,
+				     witnesses);
 
 	}
 
@@ -221,6 +236,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 		result = prime * result + ((guid == "") ? 0: guid.hashCode());
 
 		result = prime * result + ((title == "") ? 0 : title.hashCode());
+		result = prime * result + ((title == "") ? 0 : witnesses.hashCode());
 		result = prime * result + ((time == "") ? 0 : time.hashCode());
 
 		return result;
@@ -280,6 +296,13 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 			if(other.committee != null)
 				return false;
 		} else if(!committee.equals(other.committee)) {
+			return false;
+		}
+
+		if(witnesses == null) {
+			if(other.witnesses != null)
+				return false;
+		} else if(!witnesses.equals(other.witnesses)) {
 			return false;
 		}
 

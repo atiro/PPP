@@ -15,6 +15,7 @@ public class LordsDebate implements Comparable<LordsDebate> {
 	private String guid = null;
 	private String url = null;
 	private String location = null;
+	private String witnesses = null;
 
 	private Date date = null;
 	private String time = null;
@@ -23,7 +24,7 @@ public class LordsDebate implements Comparable<LordsDebate> {
 			new ThreadSafeSimpleDateFormat("yyyy-MM-dd");
 
 	public LordsDebate(Chamber chamber, String title, String committee,
-			String subject, String guid, String location, String url, Date date, String time ) {
+			String subject, String guid, String location, String url, Date date, String time, String witnesses ) {
 
 		this.title = title;
 		this.committee = committee;
@@ -31,6 +32,7 @@ public class LordsDebate implements Comparable<LordsDebate> {
 		this.chamber = chamber;
 		this.subject = subject;
 		this.location = location;
+		this.witnesses = witnesses ;
 
 		this.guid = guid;
 		this.url = url;
@@ -46,6 +48,7 @@ public class LordsDebate implements Comparable<LordsDebate> {
 
 		this.guid = "";
 		this.location = "";
+		this.witnesses = "";
 		this.url = "";
 		this.date = null;
 		this.time = " --- ";
@@ -59,6 +62,7 @@ public class LordsDebate implements Comparable<LordsDebate> {
 		this.guid = "";
 		this.location = "";
 		this.url = "";
+		this.witnesses = "";
 
 		this.date = null;
 		this.time = "";
@@ -112,6 +116,16 @@ public class LordsDebate implements Comparable<LordsDebate> {
 	public String getURL() {
 
 		return url;
+	}
+
+	public void setWitnesses(String witnesses) {
+
+		this.witnesses = witnesses;
+	}
+
+	public String getWitnesses() {
+
+		return witnesses;
 	}
 
 	public void setGUID(String guid) {
@@ -183,7 +197,8 @@ public class LordsDebate implements Comparable<LordsDebate> {
 				     location,
 				     url,
 				     date,
-				     time);
+				     time,
+				     witnesses);
 
 	}
 
@@ -218,6 +233,7 @@ public class LordsDebate implements Comparable<LordsDebate> {
 		result = prime * result + ((guid == "") ? 0: guid.hashCode());
 
 		result = prime * result + ((title == "") ? 0 : title.hashCode());
+		result = prime * result + ((witnesses == "") ? 0 : witnesses.hashCode());
 		result = prime * result + ((time == "") ? 0 : time.hashCode());
 
 		return result;
@@ -284,6 +300,13 @@ public class LordsDebate implements Comparable<LordsDebate> {
 			if(other.subject != null)
 				return false;
 		} else if(!subject.equals(other.subject)) {
+			return false;
+		}
+
+		if(witnesses == null) {
+			if(other.witnesses != null)
+				return false;
+		} else if(!witnesses.equals(other.witnesses)) {
 			return false;
 		}
 

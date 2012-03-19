@@ -5,10 +5,10 @@ package uk.org.tiro.android.PPP;
 
 public enum Chamber {
         MAIN ("Main Chamber"),
-	GENERAL ("General Committee"),
-	GRAND ("Grand Committee"),
 	SELECT ("Select Committee"),
 	WESTMINSTER ("Westminster Hall"),
+	GENERAL ("General Committee"),
+	GRAND ("Grand Committee"),
 	OTHER ("Other");
 
         private final String name;

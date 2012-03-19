@@ -112,6 +112,11 @@ public class LordsFeedParser extends BaseFeedParser {
 				currentDebate.setTime(body);
 			}
 		});
+		event.getChild(PARLY_NS, WITNESSES).setEndTextElementListener(new EndTextElementListener(){
+			public void end(String body) {
+				currentDebate.setWitnesses(body);
+			}
+		});
 
 		try {
 			Xml.parse(this.getInputStream(), this.encoding, root.getContentHandler());

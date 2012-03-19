@@ -27,10 +27,7 @@ import android.util.Log;
 
 public class PPP extends FragmentActivity
 {
-    private BillsDBHelper billshelper;
-    private ActsDBHelper actshelper;
-    private LordsDBHelper lordshelper;
-    private CommonsDBHelper commonshelper;
+
     private DBAdaptor dbadaptor;
 
     /** Called when the activity is first created. */
@@ -42,16 +39,19 @@ public class PPP extends FragmentActivity
 
 //        setContentView(R.layout.main);
 
-	WakefulIntentService.scheduleAlarms(new PPPAlarm(),
-					this, false);
+//	WakefulIntentService.scheduleAlarms(new PPPAlarm(),
+//					this, false);
 
 	// And force it to run now as well
 
-	// WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+	WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
 
 	//PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
 
 	// TODO start politicsfeed or calendar basedon settings
+
+	dbadaptor = new DBAdaptor(this).open();
+	dbadaptor.close();
 
 	Intent i = new Intent(this, Debates.class);
 	Bundle b = new Bundle();

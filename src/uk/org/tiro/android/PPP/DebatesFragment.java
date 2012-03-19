@@ -42,8 +42,11 @@ public class DebatesFragment extends ListFragment {
 
 	CommonsDBHelper commonshelper = null;
 	LordsDBHelper lordshelper = null;
+
 	LordsDebatesAdaptor lordsadaptor = null;
 	CommonsDebatesAdaptor commonsadaptor = null;
+
+	DBAdaptor dbadaptor = null;
 
 	Cursor model = null;
 	Context cxt = null;
@@ -65,6 +68,8 @@ public class DebatesFragment extends ListFragment {
 		// date
 
 		cxt = getActivity().getApplicationContext();
+
+		dbadaptor = new DBAdaptor(cxt).open();
 
 		setList();
 

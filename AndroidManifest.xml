@@ -22,6 +22,8 @@
 	<activity android:name="AlertsList"/>
 	<activity android:name="AlertNew"/>
 	<activity android:name="Legislation"/>
+	<activity android:name="DebateView"/>
+	<activity android:name="BillView"/>
 
 	<receiver android:name="com.commonsware.cwac.wakeful.AlarmReceiver">
 		<intent-filter>

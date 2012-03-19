@@ -74,7 +74,7 @@ public class Debates extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_LEGISLATION, Menu.NONE, "Politics Newsfeed").setIcon(R.drawable.ic_menu_info_details);
+		menu.add(Menu.NONE, MENU_LEGISLATION, Menu.NONE, "Politics Feed").setIcon(R.drawable.ic_menu_info_details);
 
 		return(super.onCreateOptionsMenu(menu));
 	}

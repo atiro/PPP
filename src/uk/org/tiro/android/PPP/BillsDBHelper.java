@@ -70,7 +70,7 @@ class BillsDBHelper {
 		// Check doesn't already exist by comparing URL, if so see
 		// if something has changed (moved a stage on)
 
-		if(checkBillByGuid(new_bill.getGUID())) {
+		if(checkBillByGUID(new_bill.getGUID())) {
 			// Get bill
 			//bill = getBill(new_bill.getURL());
 
@@ -160,7 +160,7 @@ class BillsDBHelper {
 		return count;
 	}
 
-	private boolean checkBillByGuid(String guid) {
+	private boolean checkBillByGUID(String guid) {
 		String [] args = {guid};
 
 		Log.v("PPP", "Checking existence of bill with guid: " + guid);

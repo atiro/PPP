@@ -66,10 +66,9 @@ class ActsDBHelper {
 		// Check doesn't already exist by comparing URL, if so see
 		// if something has changed (moved a stage on)
 
-	//	if(checkActByURL(new_act.getURL())) {
-	//		// TODO - What to do if already exists ?
-	//		Act double_act;
-	//	} else {
+		if(checkActByGUID(new_act.getGUID())) {
+			// TODO - What to do if already exists ?
+		} else {
 			// Add new act
 
 			Date raw = new_act.getRawDate();
@@ -82,7 +81,7 @@ class ActsDBHelper {
 			cv.put(CHASE, 0); //TODO check if of interest
 
 			this.mDb.insert("acts", TITLE, cv);
-	//	}
+		}
 	}
 
 	public Cursor getLatestAct() {
@@ -137,12 +136,12 @@ class ActsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE title LIKE ? AND chase = 1 ORDER BY date desc", args));
 	}
 
-	private boolean checkActByURL(String url) {
-		String [] args = {url};
+	private boolean checkActByGUID(String guid) {
+		String [] args = {guid};
 
-		Log.v("PPP", "Checking existence of act with url: " + url);
+		Log.v("PPP", "Checking existence of act with guid: " + guid);
 
-		Cursor r = this.mDb.rawQuery("SELECT _id from acts WHERE url = ?", args);
+		Cursor r = this.mDb.rawQuery("SELECT _id from acts WHERE guid = ?", args);
 
 		if(r.getCount() > 0) {
 			r.close();

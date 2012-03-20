@@ -23,7 +23,7 @@ public class DBAdaptor {
 		"CREATE TABLE bills (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, house INTEGER, stage INTEGER, description TEXT, date INTEGER, guid TEXT, url TEXT, new INTEGER, chase INTEGER);";
 
 	private static final String CREATE_TABLE_ACTS =
-		"CREATE TABLE acts (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, summary TEXT, date INTEGER, url TEXT, new INTEGER, chase INTEGER);";
+		"CREATE TABLE acts (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, summary TEXT, date INTEGER, url TEXT, guid TEXT, new INTEGER, chase INTEGER);";
 
 	private static final String CREATE_TABLE_LORDS =
 		"CREATE TABLE lords (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER);";

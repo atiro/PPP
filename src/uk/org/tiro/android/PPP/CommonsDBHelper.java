@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import android.util.Log;
 
@@ -69,7 +72,7 @@ class CommonsDBHelper {
 		// Check doesn't already exist by comparing URL, if so see
 		// if something has changed (moved a stage on)
 
-		if(checkDebateByGuid(new_debate.getGUID())) {
+		if(checkDebateByGUID(new_debate.getGUID())) {
 			// Getdebates  
 			//debates= getBill(new_bill.getURL());
 
@@ -114,6 +117,24 @@ class CommonsDBHelper {
 
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date from commons WHERE title LIKE ? ORDER BY date desc", args));
 	}
+
+
+        public List<Integer> getDebatesFiltered(String match) {
+                String filter = new String('%' + match + '%');
+		String [] args = {filter, filter};
+                List<Integer> debates = new ArrayList<Integer>();
+
+                Cursor c = this.mDb.rawQuery("SELECT _id from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+                c.moveToFirst();
+
+                 while(c.isAfterLast() == false) {
+                        debates.add(c.getInt(0));
+                        c.moveToNext();
+                 }
+
+                return debates;
+        }
+
 	public Cursor getDebatesChamber(Chamber chamber, Integer date) {
 		String [] args = {chamber.toOrdinal()};
 		String date_offset;
@@ -137,7 +158,14 @@ class CommonsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE guid = ?", args));
 	}
 
-	private boolean checkDebateByGuid(String guid) {
+	public Cursor getDebate(Integer debate_id) {
+                String [] args = {debate_id.toString()};
+
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE _id = ?", args));
+	}
+
+
+	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};
 
 		Log.v("PPP", "Checking existence of commons debate with guid: " + guid);

@@ -154,6 +154,14 @@ public class DebatesFragment extends ListFragment {
 			startActivity(i);
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		lordshelper.close();
+		commonshelper.close();
+	}
+
+
 
     static class CommonsDebatesHolder {
 	private TextView time = null;

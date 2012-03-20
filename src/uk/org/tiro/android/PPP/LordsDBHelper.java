@@ -69,7 +69,7 @@ class LordsDBHelper {
 		// Check doesn't already exist by comparing URL, if so see
 		// if something has changed (moved a stage on)
 
-		if(checkDebateByGuid(new_debate.getGUID())) {
+		if(checkDebateByGUID(new_debate.getGUID())) {
 			// Get bill
 			//bill = getBill(new_bill.getURL());
 
@@ -137,7 +137,7 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,guid from lords WHERE guid = ?", args));
 	}
 
-	private boolean checkDebateByGuid(String guid) {
+	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};
 
 		Log.v("PPP", "Checking existence of lords debate with guid: " + guid);

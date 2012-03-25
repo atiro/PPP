@@ -104,18 +104,18 @@ class CommonsDBHelper {
 	}
 
 	public Cursor getLatestDebate() {
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date from commons ORDER BY date desc LIMIT 1", null));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from commons ORDER BY date desc LIMIT 1", null));
 	}
 
 	public Cursor getAllDebates() {
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date from commons ORDER BY date desc", null));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from commons ORDER BY date desc", null));
 	}
 
 	public Cursor getAllDebatesFiltered(String match) {
 		String filter = new String('%' + match + '%');
 		String [] args = {filter};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date from commons WHERE title LIKE ? ORDER BY date desc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from commons WHERE title LIKE ? ORDER BY date desc", args));
 	}
 
 
@@ -141,27 +141,27 @@ class CommonsDBHelper {
 		String query;
 
 		if(date < 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '-" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
 		} else if(date > 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
 		} else {
-			query = "SELECT _id,title,committee,subject,date,time,guid from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
 		}
 			
-		Log.v("PPP", "Querying debates from chamber " + args[0]);
+		Log.v("PPP", "Querying debates from chamber:" + query);
 		return(this.mDb.rawQuery(query, args));
 	}
 
 	public Cursor getDebateByGUID(String guid) {
 		String [] args = {guid};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE guid = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE guid = ?", args));
 	}
 
 	public Cursor getDebate(Integer debate_id) {
                 String [] args = {debate_id.toString()};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid from commons WHERE _id = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE _id = ?", args));
 	}
 
 
@@ -193,14 +193,7 @@ class CommonsDBHelper {
 		return(c.getString(3));
 	}
 
-/*	public Chamber getChamber(Cursor c) {
-		Chamber chamber;
 
-		chamber = Chamber.values()[c.getInt(5)];
-		
-		return chamber;
-	}
-*/
 	public Date getDate(Cursor c) {
 
 		Long timestamp = c.getLong(4) * 1000;
@@ -216,5 +209,13 @@ class CommonsDBHelper {
 	public String getGUID(Cursor c) {
 		String guid = c.getString(6);
 		return guid;
+	}
+
+	public Chamber getChamber(Cursor c) {
+		Chamber chamber;
+
+		chamber = Chamber.values()[c.getInt(7)];
+		
+		return chamber;
 	}
 }

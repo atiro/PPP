@@ -7,8 +7,8 @@ public enum Chamber {
         MAIN ("Main Chamber"),
 	SELECT ("Select Committee"),
 	WESTMINSTER ("Westminster Hall"),
-	GENERAL ("General Committee"),
 	GRAND ("Grand Committee"),
+	GENERAL ("General Committee"),
 	OTHER ("Other");
 
         private final String name;

@@ -117,6 +117,9 @@ class BillsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE _id = ?", args));
 	}
 
+	public void markBillsOld() {
+		this.mDb.rawQuery("UPDATE bills SET new = 0", null);
+	}
 
 
 	public List<Integer> getBillsFiltered(String match) {
@@ -124,7 +127,7 @@ class BillsDBHelper {
 		String [] args = {filter, filter};
 		List<Integer> bills = new ArrayList<Integer>();
 
-		Cursor c = this.mDb.rawQuery("SELECT _id from bills WHERE title LIKE ? OR description LIKE ? ORDER BY date desc", args);
+		Cursor c = this.mDb.rawQuery("SELECT _id from bills WHERE title LIKE ? OR description LIKE ? AND new = 1 ORDER BY date desc", args);
 		c.moveToFirst();
 
 		 while(c.isAfterLast() == false) {

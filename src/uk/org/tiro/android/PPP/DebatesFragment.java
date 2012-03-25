@@ -23,6 +23,9 @@ import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.CursorAdapter;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import android.content.Context;
 
@@ -50,6 +53,7 @@ public class DebatesFragment extends ListFragment {
 
 	Cursor model = null;
 	Context cxt = null;
+	Context acxt = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class DebatesFragment extends ListFragment {
 		// date
 
 		cxt = getActivity().getApplicationContext();
+		acxt = getActivity();
 
 		dbadaptor = new DBAdaptor(cxt).open();
 
@@ -138,20 +143,48 @@ public class DebatesFragment extends ListFragment {
 	public void onListItemClick(ListView parent, View v, int position,
 					long id) {
 			String guid;
+			String title;
+			String subject;
 
 			// Retrieve debate guid
 			model.moveToPosition(position);
 			if(house == House.COMMONS) {
 				guid = commonshelper.getGUID(model);
+				title = commonshelper.getTitle(model);
+				subject = commonshelper.getSubject(model);
 			} else {
 				guid = lordshelper.getGUID(model);
+				title = lordshelper.getTitle(model);
+				subject = lordshelper.getTitle(model);
 			}
 				
+			new AlertDialog.Builder(acxt)
+				.setTitle(title)
+				.setMessage(subject)
+				.setNegativeButton("Share", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						Toast.makeText(acxt, "Share Options", Toast.LENGTH_SHORT).show();
+					}
+				})
+				.setNeutralButton("Follow", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						Toast.makeText(acxt, "Following", Toast.LENGTH_SHORT).show();
+					}
+				})
+				.setPositiveButton("Remind", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						Toast.makeText(acxt, "Reminder", Toast.LENGTH_SHORT).show();
+					}
+				})
+				.show();
+
+/*
 			Intent i = new Intent(cxt, DebateView.class);
 			Bundle b = new Bundle();
 			b.putString("guid", "");
 			i.putExtras(b);
 			startActivity(i);
+*/
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
+import java.util.TimeZone;
 
 public class CommonsDebate implements Comparable<CommonsDebate> {
 	private Chamber chamber;
@@ -38,6 +38,7 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 		this.url = url;
 		this.date = date;
 		this.time = time;
+
 	}
 
 	public CommonsDebate() {
@@ -329,6 +330,8 @@ public class CommonsDebate implements Comparable<CommonsDebate> {
 
 		public ThreadSafeSimpleDateFormat(String format) {
 			this.df = new SimpleDateFormat(format);
+			// Avoid problems with British Summer Time 
+			this.df.setTimeZone(TimeZone.getTimeZone("GMT"));
 		}
 
 		public synchronized String format(Date date) {

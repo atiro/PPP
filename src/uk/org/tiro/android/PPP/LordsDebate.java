@@ -4,6 +4,7 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 
 public class LordsDebate implements Comparable<LordsDebate> {
@@ -333,6 +334,9 @@ public class LordsDebate implements Comparable<LordsDebate> {
 
 		public ThreadSafeSimpleDateFormat(String format) {
 			this.df = new SimpleDateFormat(format);
+                       // Avoid problems with British Summer Time 
+                        this.df.setTimeZone(TimeZone.getTimeZone("GMT"));
+
 		}
 
 		public synchronized String format(Date date) {

@@ -23,6 +23,7 @@ public final class R {
         public static final int act_summary=0x7f060024;
         public static final int act_title=0x7f060023;
         public static final int add_alert=0x7f06000b;
+        public static final int alert=0x7f06002f;
         public static final int bill=0x7f06000c;
         public static final int bill_description=0x7f06002a;
         public static final int bill_stage=0x7f06002b;
@@ -53,7 +54,7 @@ public final class R {
         public static final int match_debates=0x7f060007;
         public static final int match_dsi=0x7f06000a;
         public static final int match_si=0x7f060009;
-        public static final int msg=0x7f06002f;
+        public static final int msg=0x7f060030;
         public static final int new_alert=0x7f060003;
         public static final int ok=0x7f060001;
         public static final int page_viewer=0x7f06001a;

@@ -96,6 +96,10 @@ class ActsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts ORDER BY date desc", null));
 	}
 
+        public void markActsOld() {
+                this.mDb.rawQuery("UPDATE acts SET new = 0", null);
+	}
+
 	public Integer getAllActsCount() {
 		Integer acts_count = -1;
 

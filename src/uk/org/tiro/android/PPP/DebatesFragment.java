@@ -190,8 +190,8 @@ public class DebatesFragment extends ListFragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		lordshelper.close();
-		commonshelper.close();
+		if(lordshelper != null) { lordshelper.close(); }
+		if(commonshelper != null) { commonshelper.close(); }
 	}
 
 

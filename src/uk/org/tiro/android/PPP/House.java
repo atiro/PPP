@@ -7,7 +7,7 @@ public enum House {
         COMMONS ("House of Commons", "Commons"),
         LORDS ("House of Lords", "Lords"),
 	BOTH ("Both Houses", "Both"),
-	NEITHER ("Neither House", "n/a");
+	NEITHER ("Neither House", "");
 
         private final String name;
         private final String short_name;

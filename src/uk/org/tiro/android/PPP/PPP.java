@@ -54,11 +54,14 @@ public class PPP extends FragmentActivity
 	dbadaptor.close();
 
 	Intent i = new Intent(this, Debates.class);
+	// Only in API 11 and above
+//	i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 	Bundle b = new Bundle();
 	b.putInt("house", House.COMMONS.ordinal());
 	b.putInt("chamber", Chamber.MAIN.ordinal());
 	i.putExtras(b);
 	startActivity(i);
+	finish();
     }
 
 

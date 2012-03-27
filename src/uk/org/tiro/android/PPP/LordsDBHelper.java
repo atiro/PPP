@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
+import java.text.DateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.ArrayList;
 
 
@@ -188,6 +190,20 @@ class LordsDBHelper {
 		Long timestamp = c.getLong(4) * 1000;
 
 		return(new Date(timestamp));
+	}
+
+	public String getDateShort(Cursor c) {
+		DateFormat df;
+		Date d;
+
+		Long timestamp = c.getLong(4) * 1000;
+
+		d= new Date(timestamp);
+
+		df = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.UK);
+
+		return(df.format(d));
+
 	}
 
 	public String getTime(Cursor c) {

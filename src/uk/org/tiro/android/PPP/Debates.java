@@ -86,4 +86,9 @@ public class Debates extends FragmentActivity {
 		return(true);
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
 }

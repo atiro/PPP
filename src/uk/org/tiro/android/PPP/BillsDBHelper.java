@@ -71,6 +71,7 @@ class BillsDBHelper {
 		// if something has changed (moved a stage on)
 
 		if(checkBillByGUID(new_bill.getGUID())) {
+			Log.v("PPP", "Bill already exists, skipping");
 			// Get bill
 			//bill = getBill(new_bill.getURL());
 
@@ -118,7 +119,7 @@ class BillsDBHelper {
 	}
 
 	public void markBillsOld() {
-		this.mDb.rawQuery("UPDATE bills SET new = 0", null);
+		this.mDb.rawQuery("UPDATE bills SET new=0", null);
 	}
 
 

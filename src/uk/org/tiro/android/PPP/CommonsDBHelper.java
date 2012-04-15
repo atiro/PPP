@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -81,10 +83,14 @@ class CommonsDBHelper {
 			// Add new debate
 
 			Date raw = new_debate.getRawDate();
+			String subject = null;
 
 			cv.put(TITLE, new_debate.getTitle());
 			cv.put(COMMITTEE, new_debate.getCommittee());
-			cv.put(SUBJECT, new_debate.getSubject());
+			subject = new_debate.getSubject();
+			if(subject != null && subject.trim() != "") {
+	  		  cv.put(SUBJECT, subject);
+			}
 			cv.put(LOCATION, new_debate.getLocation());
 			cv.put(WITNESSES, new_debate.getWitnesses());
 			cv.put(CHAMBER, new_debate.getChamber().toOrdinal());
@@ -193,6 +199,18 @@ class CommonsDBHelper {
 		return(c.getString(3));
 	}
 
+
+	public String getDateShort(Cursor c) {
+
+		long timestamp = c.getLong(4) * 1000;
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(timestamp);
+
+                SimpleDateFormat df = new SimpleDateFormat();
+                df.applyPattern("E, dd MMM yyyy");
+
+		return(df.format(cal.getTime()));
+	}
 
 	public Date getDate(Cursor c) {
 

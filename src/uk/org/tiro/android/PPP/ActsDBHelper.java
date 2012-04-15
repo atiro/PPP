@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+
 
 import android.util.Log;
 
@@ -96,10 +99,6 @@ class ActsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts ORDER BY date desc", null));
 	}
 
-        public void markActsOld() {
-                this.mDb.rawQuery("UPDATE acts SET new = 0", null);
-	}
-
 	public Integer getAllActsCount() {
 		Integer acts_count = -1;
 
@@ -116,6 +115,23 @@ class ActsDBHelper {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE new = 1", null);
 		return(c.getInt(0));
 	}
+
+
+        public List<Integer> getActsFiltered(String match) {
+                String filter = new String('%' + match + '%');
+                String [] args = {filter, filter};
+                List<Integer> acts = new ArrayList<Integer>();
+
+                Cursor c = this.mDb.rawQuery("SELECT _id from acts WHERE title LIKE ? OR summary LIKE ? AND new = 1 ORDER BY date desc", args);
+                c.moveToFirst();
+
+                 while(c.isAfterLast() == false) {
+                        acts.add(c.getInt(0));
+                        c.moveToNext();
+                 }
+
+                return acts;
+        }
 
 	public Cursor getAllActsFiltered(String match) {
 		String filter = new String('%' + match + '%');
@@ -139,6 +155,18 @@ class ActsDBHelper {
 
 		return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE title LIKE ? AND chase = 1 ORDER BY date desc", args));
 	}
+
+
+        public Cursor getAct(Integer act_id) {
+                String [] args = {act_id.toString()};
+
+                return(this.mDb.rawQuery("SELECT _id,title,summary,date,url from acts WHERE _id = ?", args));
+
+        }
+
+        public void markActsOld() {
+                this.mDb.rawQuery("UPDATE acts SET new = 0", null);
+        }
 
 	private boolean checkActByGUID(String guid) {
 		String [] args = {guid};

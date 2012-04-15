@@ -83,10 +83,14 @@ class LordsDBHelper {
 			// Add new bill
 
 			Date raw = new_debate.getRawDate();
+			String subject = null;
 
 			cv.put(TITLE, new_debate.getTitle());
 			cv.put(COMMITTEE, new_debate.getCommittee());
-			cv.put(SUBJECT, new_debate.getSubject());
+			subject = new_debate.getSubject();
+			if(subject != null && subject.trim() != "") {
+	  		  cv.put(SUBJECT, subject);
+			}
 			cv.put(LOCATION, new_debate.getLocation());
 			cv.put(CHAMBER, new_debate.getChamber().toOrdinal());
 			cv.put(DATE, raw.getTime() / 1000);

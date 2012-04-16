@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.LoaderManager;
 
+
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -142,9 +143,10 @@ public class DebatesFragment extends ListFragment {
 
 	public void onListItemClick(ListView parent, View v, int position,
 					long id) {
-			String guid;
-			String title;
-			String subject;
+			final String guid;
+			final String title;
+			final String subject;
+			final String content;
 
 			// Retrieve debate guid
 			model.moveToPosition(position);
@@ -158,17 +160,27 @@ public class DebatesFragment extends ListFragment {
 				subject = lordshelper.getTitle(model);
 			}
 				
+			content = subject;
+
 			new AlertDialog.Builder(acxt)
 				.setTitle(title)
 				.setMessage(subject)
 				.setNegativeButton("Share", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
-						Toast.makeText(acxt, "Share Options", Toast.LENGTH_SHORT).show();
+						Intent sendIntent = new Intent();
+						sendIntent.setAction(Intent.ACTION_SEND);
+						sendIntent.putExtra(Intent.EXTRA_TEXT, content);
+						sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+						sendIntent.setType("text/plain");
+						startActivity(Intent.createChooser(sendIntent, "Share with..."));
+
 					}
 				})
 				.setNeutralButton("Follow", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dlg, int sumthing) {
-						Toast.makeText(acxt, "Following", Toast.LENGTH_SHORT).show();
+					if(house == House.COMMONS) {
+						commonshelper.markChase(guid);
+					} else if (lords = House.LORDS) {
+						lordshelper.markChase(guid);
 					}
 				})
 				.setPositiveButton("Remind", new DialogInterface.OnClickListener() {

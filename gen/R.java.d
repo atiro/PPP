@@ -3,6 +3,7 @@
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/list_row.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/curved_row.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/icon.png \
+/home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/ic_menu_refresh.png \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/ic_menu_info_details.png \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/item_divider.xml \
 /home/richardp/Projects/Phone/PPP/PPP/res/drawable-mdpi/circle_count.xml \

@@ -161,6 +161,12 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from lords WHERE guid = ?", args));
 	}
 
+	public void markChase(String guid) {
+		String [] args = {guid};
+
+		this.mDb.rawQuery("UPDATE lords SET chase = 1 WHERE guid = ?", args);
+	}
+
 	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};
 

@@ -10,6 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 
 import android.support.v4.app.FragmentActivity;
 
@@ -29,6 +32,8 @@ public class PPP extends FragmentActivity
 {
 
     private DBAdaptor dbadaptor;
+    private SharedPreferences prefs;
+    private boolean first_run;
 
     /** Called when the activity is first created. */
     @Override
@@ -44,7 +49,18 @@ public class PPP extends FragmentActivity
 
 	// And force it to run now as well
 
-	WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+        Log.v("PPP", "Checking first run");
+	prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        first_run = prefs.getBoolean("firstRun", true);
+
+	if(first_run == true) {
+		WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putBoolean("firstRun", false);
+                edit.commit();
+	}
 
 	//PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
 

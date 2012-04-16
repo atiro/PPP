@@ -170,6 +170,11 @@ class CommonsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE _id = ?", args));
 	}
 
+	public void markChase(String guid) {
+		String [] args = {guid};
+
+		this.mDb.rawQuery("UPDATE commons SET chase = 1 WHERE guid = ?", args);
+	}
 
 	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};

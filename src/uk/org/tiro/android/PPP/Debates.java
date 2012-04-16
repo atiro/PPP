@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.LoaderManager;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -36,7 +37,8 @@ import android.util.Log;
 
 public class Debates extends FragmentActivity {
 
-	private static final int MENU_LEGISLATION = Menu.FIRST+1;
+	private static final int MENU_REFRESH = Menu.FIRST+1;
+	private static final int MENU_LEGISLATION = Menu.FIRST+2;
 
 	private boolean detailsInline = false;
 
@@ -74,6 +76,7 @@ public class Debates extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, MENU_REFRESH, Menu.NONE, "Refresh").setIcon(R.drawable.ic_menu_refresh);
 		menu.add(Menu.NONE, MENU_LEGISLATION, Menu.NONE, "Politics Feed").setIcon(R.drawable.ic_menu_info_details);
 
 		return(super.onCreateOptionsMenu(menu));
@@ -81,9 +84,17 @@ public class Debates extends FragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = new Intent(Debates.this, Legislation.class);
-		startActivity(i);
-		return(true);
+		switch(item.getItemId()) {
+			case MENU_REFRESH:
+				WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+				return(true);
+			case MENU_LEGISLATION:
+				Intent i = new Intent(Debates.this, Legislation.class);
+				startActivity(i);
+				return(true);
+		}
+
+		return(super.onOptionsItemSelected(item));
 	}
 
 	@Override

@@ -165,7 +165,7 @@ class ActsDBHelper {
         }
 
         public void markActsOld() {
-                this.mDb.rawQuery("UPDATE acts SET new = 0", null);
+                this.mDb.execSQL("UPDATE acts SET new = 0");
         }
 
 	private boolean checkActByGUID(String guid) {

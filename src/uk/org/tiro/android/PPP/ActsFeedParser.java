@@ -51,13 +51,11 @@ public class ActsFeedParser extends BaseFeedParser {
 
 		item.getChild(ATOM_NAMESPACE, ID).setEndTextElementListener(new EndTextElementListener(){
 			public void end(String body) {
-				Log.v("PPP", "Got act with id: " + body);
 				currentAct.setGUID(body);
 			}
 		});
 		item.getChild(ATOM_NAMESPACE, TITLE).setEndTextElementListener(new EndTextElementListener(){
 			public void end(String body) {
-				Log.v("PPP", "Got act with title: " + body);
 				currentAct.setTitle(body);
 			}
 		});

@@ -78,6 +78,7 @@ class BillsDBHelper {
 			//updateBill(bill, new_bill);
 		} else {
 			// Add new bill
+			Log.v("PPP", "New Bill, adding");
 
 			Date raw = new_bill.getRawDate();
 
@@ -119,7 +120,9 @@ class BillsDBHelper {
 	}
 
 	public void markBillsOld() {
-		this.mDb.rawQuery("UPDATE bills SET new=0", null);
+		this.mDb.execSQL("UPDATE bills SET new = 0");
+
+		Log.v("PPP", "Bills now all marked as old");
 	}
 
 

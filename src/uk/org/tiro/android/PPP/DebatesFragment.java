@@ -177,15 +177,18 @@ public class DebatesFragment extends ListFragment {
 					}
 				})
 				.setNeutralButton("Follow", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
 					if(house == House.COMMONS) {
 						commonshelper.markChase(guid);
-					} else if (lords = House.LORDS) {
+					} else if (house == House.LORDS) {
 						lordshelper.markChase(guid);
 					}
+				}
+
 				})
 				.setPositiveButton("Remind", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
-						Toast.makeText(acxt, "Reminder", Toast.LENGTH_SHORT).show();
+						Toast.makeText(acxt, "Reminder - TODO", Toast.LENGTH_SHORT).show();
 					}
 				})
 				.show();

@@ -19,8 +19,8 @@
 	<activity android:name="Bills"/>
 	<activity android:name="Acts"/>
 	<activity android:name="Debates"/>
-	<activity android:name="AlertsList"/>
-	<activity android:name="AlertNew"/>
+	<activity android:name="TriggersList"/>
+	<activity android:name="TriggerNew"/>
 	<activity android:name="Legislation"/>
 	<activity android:name="DebateView"/>
 	<activity android:name="BillView"/>

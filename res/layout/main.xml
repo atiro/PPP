@@ -47,15 +47,15 @@
       android:layout_height="wrap_content">
 
       <TextView 
-      	android:id="@+id/title_alerts"
+      	android:id="@+id/title_triggers"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:gravity="center"
-    	android:text="Alerts"
+    	android:text="Triggers"
 	android:textColor="#000000" />
 
       <ListView
-      	android:id="@+id/list_alerts"
+      	android:id="@+id/list_triggers"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:background="@drawable/list_row"
@@ -74,12 +74,12 @@
 	android:textColor="#ffffff" />
 
     <Button
-      	android:id="@+id/add_alert"
+      	android:id="@+id/add_trigger"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
 	android:layout_gravity="center"
 	android:gravity="center"
-    	android:text="Add New Alert"
+    	android:text="Add New Trigger"
 	android:onClick="addAlert"
 	android:textColor="#ffffff"/>
 

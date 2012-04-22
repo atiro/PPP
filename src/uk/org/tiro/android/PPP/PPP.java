@@ -13,6 +13,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import android.view.Window;
+
+
 
 import android.support.v4.app.FragmentActivity;
 
@@ -41,6 +44,8 @@ public class PPP extends FragmentActivity
     {
 
         super.onCreate(savedInstanceState);
+
+	this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 //        setContentView(R.layout.main);
 
@@ -85,7 +90,7 @@ public class PPP extends FragmentActivity
 /*
     class NewsAdapter extends ArrayAdapter<String> {
     	NewsAdapter() {
-		super(PPP.this, R.layout.row_alert_count, R.id.label, news);
+		super(PPP.this, R.layout.row_trigger_count, R.id.label, news);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {

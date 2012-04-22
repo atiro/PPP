@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.ArrayList;
@@ -90,6 +91,8 @@ class LordsDBHelper {
 			subject = new_debate.getSubject();
 			if(subject != null && subject.trim() != "") {
 	  		  cv.put(SUBJECT, subject);
+			} else {
+			  cv.put(SUBJECT, "");
 			}
 			cv.put(LOCATION, new_debate.getLocation());
 			cv.put(CHAMBER, new_debate.getChamber().toOrdinal());
@@ -203,16 +206,15 @@ class LordsDBHelper {
 	}
 
 	public String getDateShort(Cursor c) {
-		DateFormat df;
-		Date d;
+                long timestamp = c.getLong(4) * 1000;
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(timestamp);
 
-		Long timestamp = c.getLong(4) * 1000;
+                SimpleDateFormat df = new SimpleDateFormat();
+                df.applyPattern("E, dd MMM yyyy");
 
-		d= new Date(timestamp);
+                return(df.format(cal.getTime()));
 
-		df = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.UK);
-
-		return(df.format(d));
 
 	}
 

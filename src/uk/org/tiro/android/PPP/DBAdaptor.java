@@ -31,14 +31,14 @@ public class DBAdaptor {
 	private static final String CREATE_TABLE_COMMONS =
 		"CREATE TABLE commons (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER);";
 
-	private static final String CREATE_TABLE_ALERTS = 
-		"CREATE TABLE alerts (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, commons INTEGER, lords INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
+	private static final String CREATE_TABLE_TRIGGERS = 
+		"CREATE TABLE triggers (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, commons INTEGER, lords INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
 	private static final String CREATE_TABLE_PEOPLE = 
 		"CREATE TABLE people (_id INTEGER PRIMARY KEY AUTOINCREMENT, person TEXT, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
 	private static final String CREATE_TABLE_POLITICSFEED =
-		"CREATE TABLE politicsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT, match TEXT, alert_id INTEGER, alert_type INTEGER, item_id INTEGER, house INTEGER, highlight INTEGER, new INTEGER, read INTEGER, date INTEGER);";
+		"CREATE TABLE politicsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT, match TEXT, trigger_id INTEGER, trigger_type INTEGER, item_id INTEGER, house INTEGER, highlight INTEGER, new INTEGER, read INTEGER, date INTEGER);";
 
 	private final Context context;
 	private DatabaseHelper DBHelper;
@@ -62,7 +62,7 @@ public class DBAdaptor {
 			db.execSQL(CREATE_TABLE_LORDS);
 			db.execSQL(CREATE_TABLE_ACTS);
 			db.execSQL(CREATE_TABLE_BILLS);
-			db.execSQL(CREATE_TABLE_ALERTS);
+			db.execSQL(CREATE_TABLE_TRIGGERS);
 			db.execSQL(CREATE_TABLE_PEOPLE);
 			db.execSQL(CREATE_TABLE_POLITICSFEED);
 		}

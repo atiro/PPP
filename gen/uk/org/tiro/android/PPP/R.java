@@ -41,8 +41,8 @@ public final class R {
         public static final int feed=0x7f060018;
         public static final int house=0x7f06000a;
         public static final int house_gallery=0x7f060006;
-        public static final int ignorecase=0x7f060036;
-        public static final int ignoretitle=0x7f060035;
+        public static final int ignorecase=0x7f060034;
+        public static final int ignoretitle=0x7f060036;
         public static final int label=0x7f060024;
         public static final int label1=0x7f060028;
         public static final int label2=0x7f06002a;
@@ -61,7 +61,7 @@ public final class R {
         public static final int match_si=0x7f06002f;
         public static final int msg=0x7f060023;
         public static final int new_trigger=0x7f060029;
-        public static final int notify=0x7f060034;
+        public static final int notify=0x7f060035;
         public static final int ok=0x7f060037;
         public static final int page_viewer=0x7f06000f;
         public static final int search_box=0x7f060000;

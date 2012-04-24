@@ -52,6 +52,7 @@ class BillsDBHelper {
 	}
 
 	public BillsDBHelper open() throws SQLException {
+                Log.v("PPP", "Creating BillsDB Helper");
 		this.mDbHelper = new DatabaseHelper(this.mCtx);
 		this.mDb = this.mDbHelper.getWritableDatabase();
 		return this;
@@ -126,18 +127,29 @@ class BillsDBHelper {
 	}
 
 
-	public List<Integer> getBillsFiltered(String match) {
+	public List<Integer> getBillsFiltered(String match, boolean ignore_case) {
 		String filter = new String('%' + match + '%');
 		String [] args = {filter, filter};
 		List<Integer> bills = new ArrayList<Integer>();
+		Cursor c;
 
-		Cursor c = this.mDb.rawQuery("SELECT _id from bills WHERE title LIKE ? OR description LIKE ? AND new = 1 ORDER BY date desc", args);
+		if(ignore_case == false) {
+			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
+		} 
+
+		c = this.mDb.rawQuery("SELECT _id from bills WHERE title LIKE ? OR description LIKE ? AND new = 1 ORDER BY date desc", args);
+
+
 		c.moveToFirst();
 
 		 while(c.isAfterLast() == false) {
 		 	bills.add(c.getInt(0));
 			c.moveToNext();
 		 }
+
+		if(ignore_case == false) {
+			this.mDb.execSQL("PRAGMA case_sensitive_like = false");
+		} 
 
 		return bills;
 	}

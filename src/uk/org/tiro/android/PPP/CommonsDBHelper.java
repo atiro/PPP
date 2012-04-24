@@ -56,6 +56,7 @@ class CommonsDBHelper {
 	}
 
 	public CommonsDBHelper open() throws SQLException {
+		Log.v("PPP", "Creating CommonsDB Helper");
 		this.mDbHelper = new DatabaseHelper(this.mCtx);
 		this.mDb = this.mDbHelper.getWritableDatabase();
 		return this;
@@ -125,18 +126,30 @@ class CommonsDBHelper {
 	}
 
 
-        public List<Integer> getDebatesFiltered(String match) {
+        public List<Integer> getDebatesFiltered(String match, boolean ignore_case) {
                 String filter = new String('%' + match + '%');
 		String [] args = {filter, filter};
                 List<Integer> debates = new ArrayList<Integer>();
 
+		if(ignore_case == false) {
+			Log.v("PPP", "Enabling case sensitive likes");
+			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
+		}
+
                 Cursor c = this.mDb.rawQuery("SELECT _id from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+
+
                 c.moveToFirst();
 
                  while(c.isAfterLast() == false) {
                         debates.add(c.getInt(0));
                         c.moveToNext();
                  }
+
+		if(ignore_case == false) {
+			Log.v("PPP", "Disabling case sensitive likes");
+			this.mDb.execSQL("PRAGMA case_sensitive_like = false");
+		}
 
                 return debates;
         }

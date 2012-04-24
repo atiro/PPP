@@ -32,7 +32,7 @@ public class DBAdaptor {
 		"CREATE TABLE commons (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER);";
 
 	private static final String CREATE_TABLE_TRIGGERS = 
-		"CREATE TABLE triggers (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, commons INTEGER, lords INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
+		"CREATE TABLE triggers (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, commons INTEGER, lords INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, ignore_case INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
 	private static final String CREATE_TABLE_PEOPLE = 
 		"CREATE TABLE people (_id INTEGER PRIMARY KEY AUTOINCREMENT, person TEXT, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";

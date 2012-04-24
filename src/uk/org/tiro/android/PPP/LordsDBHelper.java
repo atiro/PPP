@@ -119,10 +119,14 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee, subject,date,guid,chamber from lords ORDER BY date desc", null));
 	}
 
-        public List<Integer> getDebatesFiltered(String match) {
+        public List<Integer> getDebatesFiltered(String match, boolean ignore_case) {
                 String filter = new String('%' + match + '%');
                 String [] args = {filter, filter};
                 List<Integer> debates = new ArrayList<Integer>();
+
+                if(ignore_case == false) {
+                        this.mDb.execSQL("PRAGMA case_sensitive_like = true");
+                }
 
                 Cursor c = this.mDb.rawQuery("SELECT _id from lords WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
                 c.moveToFirst();
@@ -131,6 +135,10 @@ class LordsDBHelper {
                         debates.add(c.getInt(0));
                         c.moveToNext();
                  }
+
+                if(ignore_case == false) {
+                        this.mDb.execSQL("PRAGMA case_sensitive_like = false");
+                }
 
                 return debates;
         }

@@ -117,10 +117,14 @@ class ActsDBHelper {
 	}
 
 
-        public List<Integer> getActsFiltered(String match) {
+        public List<Integer> getActsFiltered(String match, boolean ignore_case) {
                 String filter = new String('%' + match + '%');
                 String [] args = {filter, filter};
                 List<Integer> acts = new ArrayList<Integer>();
+
+                if(ignore_case == false) {
+                       this.mDb.execSQL("PRAGMA case_sensitive_like = true");
+                }
 
                 Cursor c = this.mDb.rawQuery("SELECT _id from acts WHERE title LIKE ? OR summary LIKE ? AND new = 1 ORDER BY date desc", args);
                 c.moveToFirst();
@@ -129,6 +133,10 @@ class ActsDBHelper {
                         acts.add(c.getInt(0));
                         c.moveToNext();
                  }
+
+                if(ignore_case == false) {
+                       this.mDb.execSQL("PRAGMA case_sensitive_like = false");
+                }
 
                 return acts;
         }

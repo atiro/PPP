@@ -111,32 +111,38 @@ class CommonsDBHelper {
 	}
 
 	public Cursor getLatestDebate() {
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from commons ORDER BY date desc LIMIT 1", null));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber,url from commons ORDER BY date desc LIMIT 1", null));
 	}
 
 	public Cursor getAllDebates() {
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from commons ORDER BY date desc", null));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber,url from commons ORDER BY date desc", null));
 	}
 
 	public Cursor getAllDebatesFiltered(String match) {
 		String filter = new String('%' + match + '%');
 		String [] args = {filter};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from commons WHERE title LIKE ? ORDER BY date desc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber,url from commons WHERE title LIKE ? ORDER BY date desc", args));
 	}
 
 
-        public List<Integer> getDebatesFiltered(String match, boolean ignore_case) {
+        public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name) {
                 String filter = new String('%' + match + '%');
 		String [] args = {filter, filter};
+		String [] short_args = {filter};
                 List<Integer> debates = new ArrayList<Integer>();
+		Cursor c;
 
 		if(ignore_case == false) {
 			Log.v("PPP", "Enabling case sensitive likes");
 			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
 		}
 
-                Cursor c = this.mDb.rawQuery("SELECT _id from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+		if(ignore_name == false) {
+ 	               c = this.mDb.rawQuery("SELECT _id from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+		} else {
+ 	               c = this.mDb.rawQuery("SELECT _id from commons WHERE subject LIKE ? ORDER BY date desc", short_args);
+		}
 
 
                 c.moveToFirst();
@@ -160,11 +166,11 @@ class CommonsDBHelper {
 		String query;
 
 		if(date < 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
 		} else if(date > 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
 		} else {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
 		}
 			
 		Log.v("PPP", "Querying debates from chamber:" + query);
@@ -174,13 +180,13 @@ class CommonsDBHelper {
 	public Cursor getDebateByGUID(String guid) {
 		String [] args = {guid};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE guid = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE guid = ?", args));
 	}
 
 	public Cursor getDebate(Integer debate_id) {
                 String [] args = {debate_id.toString()};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from commons WHERE _id = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE _id = ?", args));
 	}
 
 	public void markChase(String guid) {
@@ -254,4 +260,10 @@ class CommonsDBHelper {
 		
 		return chamber;
 	}
+
+	public String getURL(Cursor c) {
+		String url = c.getString(8);
+		return url;
+	}
+
 }

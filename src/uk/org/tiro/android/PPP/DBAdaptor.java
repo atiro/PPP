@@ -20,7 +20,7 @@ public class DBAdaptor {
 	public static final int DATABASE_VERSION = 1;
 
 	private static final String CREATE_TABLE_BILLS =
-		"CREATE TABLE bills (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, house INTEGER, stage INTEGER, description TEXT, date INTEGER, guid TEXT, url TEXT, new INTEGER, chase INTEGER);";
+		"CREATE TABLE bills (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, house INTEGER, stage INTEGER, description TEXT, date INTEGER, guid TEXT, url TEXT, new INTEGER, updated INTEGER);";
 
 	private static final String CREATE_TABLE_ACTS =
 		"CREATE TABLE acts (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, summary TEXT, date INTEGER, url TEXT, guid TEXT, new INTEGER, chase INTEGER);";
@@ -32,13 +32,13 @@ public class DBAdaptor {
 		"CREATE TABLE commons (_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, committee TEXT, subject TEXT, location TEXT, chamber INTEGER, witnesses TEXT, date INTEGER, time TEXT, url TEXT, guid TEXT, new INTEGER);";
 
 	private static final String CREATE_TABLE_TRIGGERS = 
-		"CREATE TABLE triggers (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, commons INTEGER, lords INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, ignore_case INTEGER, count INTEGER, last INTEGER, added INTEGER);";
+		"CREATE TABLE triggers (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, commons INTEGER, lords INTEGER, bills INTEGER, draft_bills INTEGER, acts INTEGER, stat_inst INTEGER, draft_stat_inst INTEGER, freq INTEGER, notify INTEGER, ignore_case INTEGER, ignore_name INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
 	private static final String CREATE_TABLE_PEOPLE = 
 		"CREATE TABLE people (_id INTEGER PRIMARY KEY AUTOINCREMENT, person TEXT, notify INTEGER, count INTEGER, last INTEGER, added INTEGER);";
 
 	private static final String CREATE_TABLE_POLITICSFEED =
-		"CREATE TABLE politicsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, msg TEXT, match TEXT, trigger_id INTEGER, trigger_type INTEGER, item_id INTEGER, house INTEGER, highlight INTEGER, new INTEGER, read INTEGER, date INTEGER);";
+		"CREATE TABLE politicsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, trigger_id INTEGER, trigger_type INTEGER, item_id INTEGER, house INTEGER, highlight INTEGER, new INTEGER, read INTEGER, date INTEGER);";
 
 	private final Context context;
 	private DatabaseHelper DBHelper;

@@ -112,23 +112,30 @@ class LordsDBHelper {
 	}
 
 	public Cursor getLatestDebate() {
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber from lords ORDER BY date desc LIMIT 1", null));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,guid,chamber,url from lords ORDER BY date desc LIMIT 1", null));
 	}
 
 	public Cursor getAllDebates() {
-		return(this.mDb.rawQuery("SELECT _id,title,committee, subject,date,guid,chamber from lords ORDER BY date desc", null));
+		return(this.mDb.rawQuery("SELECT _id,title,committee, subject,date,guid,chamber,url from lords ORDER BY date desc", null));
 	}
 
-        public List<Integer> getDebatesFiltered(String match, boolean ignore_case) {
+        public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name) {
                 String filter = new String('%' + match + '%');
                 String [] args = {filter, filter};
+                String [] short_args = {filter};
                 List<Integer> debates = new ArrayList<Integer>();
+		Cursor c;
 
                 if(ignore_case == false) {
                         this.mDb.execSQL("PRAGMA case_sensitive_like = true");
                 }
 
-                Cursor c = this.mDb.rawQuery("SELECT _id from lords WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+		if(ignore_name == false) {
+ 	               c = this.mDb.rawQuery("SELECT _id from lords WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+		} else {
+ 	               c = this.mDb.rawQuery("SELECT _id from lords WHERE subject LIKE ? ORDER BY date desc", short_args);
+		}
+
                 c.moveToFirst();
 
                  while(c.isAfterLast() == false) {
@@ -148,11 +155,11 @@ class LordsDBHelper {
 		String query;
 
 		if(date < 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
 		} else if(date > 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
 		} else {
-                	query = "SELECT _id,title,committee,subject,date,time,guid,chamber from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
+                	query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
 		}
 
                 Log.v("PPP", "Querying debates from Lords chamber " + args[0]);
@@ -163,13 +170,13 @@ class LordsDBHelper {
 	public Cursor getDebate(Integer id) {
 		String [] args = {id.toString()};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from lords WHERE _id = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE _id = ?", args));
 	}
 
 	public Cursor getDebateByGUID(String guid) {
 		String [] args = {guid};
 
-		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber from lords WHERE guid = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE guid = ?", args));
 	}
 
 	public void markChase(String guid) {
@@ -222,8 +229,6 @@ class LordsDBHelper {
                 df.applyPattern("E, dd MMM yyyy");
 
                 return(df.format(cal.getTime()));
-
-
 	}
 
 	public String getTime(Cursor c) {
@@ -243,6 +248,11 @@ class LordsDBHelper {
                 chamber = Chamber.values()[c.getInt(7)];
 
                 return chamber;
+        }
+
+        public String getURL(Cursor c) {
+               String url = c.getString(8);
+               return url;
         }
 
 }

@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.LoaderManager;
 
+import android.net.Uri;
 
 import android.view.View;
 import android.view.LayoutInflater;
@@ -147,6 +148,7 @@ public class DebatesFragment extends ListFragment {
 			final String title;
 			final String subject;
 			final String content;
+			final String url;
 
 			// Retrieve debate guid
 			model.moveToPosition(position);
@@ -154,10 +156,12 @@ public class DebatesFragment extends ListFragment {
 				guid = commonshelper.getGUID(model);
 				title = commonshelper.getTitle(model);
 				subject = commonshelper.getSubject(model);
+				url = commonshelper.getURL(model);
 			} else {
 				guid = lordshelper.getGUID(model);
 				title = lordshelper.getTitle(model);
 				subject = lordshelper.getTitle(model);
+				url = lordshelper.getURL(model);
 			}
 				
 			content = subject;
@@ -165,7 +169,14 @@ public class DebatesFragment extends ListFragment {
 			new AlertDialog.Builder(acxt)
 				.setTitle(title)
 				.setMessage(subject)
-				.setNegativeButton("Share", new DialogInterface.OnClickListener() {
+
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dlg,int sumthing) {
+                                                Toast.makeText(acxt, "Cancel",Toast.LENGTH_SHORT).show();
+                                        }
+                                })
+
+				.setPositiveButton("Share", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
 						Intent sendIntent = new Intent();
 						sendIntent.setAction(Intent.ACTION_SEND);
@@ -176,21 +187,22 @@ public class DebatesFragment extends ListFragment {
 
 					}
 				})
-				.setNeutralButton("Follow", new DialogInterface.OnClickListener() {
+				.setNeutralButton("View", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
-					if(house == House.COMMONS) {
-						commonshelper.markChase(guid);
-					} else if (house == House.LORDS) {
-						lordshelper.markChase(guid);
-					}
+						Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+						startActivity(sendIntent);
 				}
 
 				})
+				/*
+					TODO -- how to set reminderers ?
+						before or after ?
 				.setPositiveButton("Remind", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
 						Toast.makeText(acxt, "Reminder - TODO", Toast.LENGTH_SHORT).show();
 					}
 				})
+				*/
 				.show();
 
 /*
@@ -207,6 +219,7 @@ public class DebatesFragment extends ListFragment {
 		super.onDestroy();
 		if(lordshelper != null) { lordshelper.close(); }
 		if(commonshelper != null) { commonshelper.close(); }
+		dbadaptor.close();
 	}
 
 

@@ -140,6 +140,8 @@ public class Bill implements Comparable<Bill> {
 			stage = Stage.CONSIDERATION;
 		} else if(bill_stage.equals("Second reading committee")) {
 			stage = Stage.READING;
+		} else if(bill_stage.equals("Carry-over motion")) {
+			stage = Stage.CARRY;
 		} else {
 			stage = Stage.UNKNOWN;
 		}

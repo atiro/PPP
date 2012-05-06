@@ -11,6 +11,7 @@ public enum Stage {
 	EXAMINERS ( "Examiners" ),
 	CONSIDERATION ("Consideration of Amendments"),
 	READING ("Second Reading Committee" ),
+	CARRY ( "Carry-over motion" ),
 	UNKNOWN ("Unknown");
 
 

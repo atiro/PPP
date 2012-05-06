@@ -24,6 +24,7 @@ class BillsDBHelper {
 	static final String GUID="guid";
 	static final String URL="url";
 	static final String NEW="new";
+	static final String UPDATED="updated";
 
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -64,33 +65,46 @@ class BillsDBHelper {
 
 	public void insert(Bill new_bill) {
 
-		Bill bill;
-
-		ContentValues cv = new ContentValues();
-
 		// Check doesn't already exist by comparing URL, if so see
 		// if something has changed (moved a stage on)
 
 		if(checkBillByGUID(new_bill.getGUID())) {
-			Log.v("PPP", "Bill already exists, skipping");
-			// Get bill
-			//bill = getBill(new_bill.getURL());
+			Log.v("PPP", "Bill already exists, checking (guid: " + new_bill.getGUID());
+			// Most obvious is change in stage. Then house?. 
+			// TODO handle changes in year in GUID (permalink!?)
+			Cursor c = getBillByGUID(new_bill.getGUID());
+			c.moveToFirst();
+			Stage old_stage = getStage(c);
+			House old_house = getHouse(c);
 
-			//updateBill(bill, new_bill);
+			if(old_stage != new_bill.getStage()) {
+				String [] args = {new_bill.getStage().toOrdinal(), new_bill.getGUID() };
+				this.mDb.execSQL("UPDATE bills SET new = 1 AND updated = 1 AND stage = ? WHERE guid = ?", args);
+				Log.v("PPP", "Bill changed stage, updating");
+			}
+			if(old_house != new_bill.getHouse()) {
+				String [] args = {new_bill.getHouse().toOrdinal(), new_bill.getGUID() };
+				this.mDb.execSQL("UPDATE bills SET new = 1 AND updated = 1 AND house = ? WHERE guid = ?", args);
+				Log.v("PPP", "Bill changed house, updating");
+			}
+
+			// If neither, ignore.
 		} else {
 			// Add new bill
 			Log.v("PPP", "New Bill, adding");
 
-			Date raw = new_bill.getRawDate();
+			Date raw = new Date();
+			ContentValues cv = new ContentValues();
 
 			cv.put(TITLE, new_bill.getTitle());
 			cv.put(HOUSE, new_bill.getHouse().ordinal());
 			cv.put(STAGE, new_bill.getStage().ordinal());
 			cv.put(DESCRIPTION, new_bill.getDescription());
-//			cv.put(DATE, raw.getTime() / 1000);
+			cv.put(DATE, raw.getTime() / 1000);
 			cv.put(GUID, new_bill.getGUID());
 			cv.put(URL, new_bill.getURL());
 			cv.put(NEW, 1);
+			cv.put(UPDATED, 0);
 
 			this.mDb.insert("bills", TITLE, cv);
 		}
@@ -105,19 +119,19 @@ class BillsDBHelper {
 	public Cursor getAllBills(House house) {
 		String [] args = {house.toOrdinal()};
 
-		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE house = ? ORDER BY date desc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description,date,url from bills WHERE house = ? ORDER BY date desc", args));
 	}
 
 	public Cursor getBillByGUID(String guid) {
 		String [] args = {guid};
 
-		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE guid = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description,date,url from bills WHERE guid = ?", args));
 	}
 
 	public Cursor getBill(Integer bill_id) {
 		String [] args = {bill_id.toString()};
 
-		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE _id = ?", args));
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description,date,url from bills WHERE _id = ?", args));
 	}
 
 	public void markBillsOld() {
@@ -158,7 +172,7 @@ class BillsDBHelper {
 		String filter = new String('%' + match + '%');
 		String [] args = {filter, filter};
 
-		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description from bills WHERE title LIKE ? OR description LIKE ? ORDER BY date desc", args));
+		return(this.mDb.rawQuery("SELECT _id,title,house,stage,description,date,url from bills WHERE title LIKE ? OR description LIKE ? ORDER BY date desc", args));
 
 	}
 
@@ -229,10 +243,6 @@ class BillsDBHelper {
 
 	public String getURL(Cursor c) {
 		return(c.getString(6));
-	}
-
-	public String getGUID(Cursor c) {
-		return(c.getString(7));
 	}
 
 }

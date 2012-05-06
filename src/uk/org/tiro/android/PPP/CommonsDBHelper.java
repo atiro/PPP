@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.regex.Pattern;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -127,11 +128,13 @@ class CommonsDBHelper {
 
 
         public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name) {
-                String filter = new String('%' + match + '%');
+		String[] matches = match.split("\\s+");
+                String filter = new String('%' + matches[0] + '%');
 		String [] args = {filter, filter};
 		String [] short_args = {filter};
                 List<Integer> debates = new ArrayList<Integer>();
 		Cursor c;
+		String [] pat_matches;
 
 		if(ignore_case == false) {
 			Log.v("PPP", "Enabling case sensitive likes");
@@ -139,17 +142,67 @@ class CommonsDBHelper {
 		}
 
 		if(ignore_name == false) {
- 	               c = this.mDb.rawQuery("SELECT _id from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+ 	               c = this.mDb.rawQuery("SELECT _id,title,subject from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
 		} else {
- 	               c = this.mDb.rawQuery("SELECT _id from commons WHERE subject LIKE ? ORDER BY date desc", short_args);
+ 	               c = this.mDb.rawQuery("SELECT _id,subject from commons WHERE subject LIKE ? ORDER BY date desc", short_args);
 		}
-
 
                 c.moveToFirst();
 
+                if(matches.length > 1) {
+                    pat_matches = new String[matches.length - 1];
+                    System.arraycopy(matches, 1, pat_matches, 0, matches.length - 1);
+		} else {
+		   pat_matches = matches;
+		}
+
                  while(c.isAfterLast() == false) {
-                        debates.add(c.getInt(0));
-                        c.moveToNext();
+                  boolean matches_all = true;
+
+                  if(matches.length > 1) {
+                    for(String mat: pat_matches) {
+                        matches_all = false;
+                        Pattern pattern;
+			if(ignore_case) {
+			 pattern = Pattern.compile(".*" + mat + ".*", Pattern.CASE_INSENSITIVE);
+			} else {
+			 pattern = Pattern.compile(".*" + mat + ".*");
+			}
+
+			Log.v("PPP", "Matching word: " + mat);
+
+			if(ignore_name == false) {
+                    	   String title = c.getString(1);
+                    	   String subject = c.getString(2);
+
+                           if(pattern.matcher(title).matches()) {
+                                matches_all = true; 
+                                continue;
+                           }       
+
+                           if(pattern.matcher(subject).matches()) {
+                                matches_all = true; 
+                                continue;
+                           }
+			} else {
+                    	   String subject = c.getString(1);
+                           if(pattern.matcher(subject).matches()) {
+                                matches_all = true; 
+                                continue;
+                           }
+			}
+
+			Log.v("PPP", "Didn't match " + mat);
+                        break;
+                    }
+                  }
+
+		  if(matches_all == true) {
+			 Log.v("PPP", "Adding debate");
+ 	                 debates.add(c.getInt(0));
+		  }
+
+                  c.moveToNext();
                  }
 
 		if(ignore_case == false) {

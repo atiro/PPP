@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 
 
@@ -118,20 +119,58 @@ class ActsDBHelper {
 
 
         public List<Integer> getActsFiltered(String match, boolean ignore_case) {
+		String[] matches = match.split("\\s+");
                 String filter = new String('%' + match + '%');
                 String [] args = {filter, filter};
                 List<Integer> acts = new ArrayList<Integer>();
+		String [] pat_matches;
 
                 if(ignore_case == false) {
                        this.mDb.execSQL("PRAGMA case_sensitive_like = true");
                 }
 
-                Cursor c = this.mDb.rawQuery("SELECT _id from acts WHERE title LIKE ? OR summary LIKE ? AND new = 1 ORDER BY date desc", args);
+                Cursor c = this.mDb.rawQuery("SELECT _id,title,summary from acts WHERE title LIKE ? OR summary LIKE ? AND new = 1 ORDER BY date desc", args);
                 c.moveToFirst();
 
-                 while(c.isAfterLast() == false) {
-                        acts.add(c.getInt(0));
-                        c.moveToNext();
+                if(matches.length > 1) {
+                    pat_matches = new String[matches.length - 1];
+                    System.arraycopy(matches, 1, pat_matches, 0, matches.length - 1);
+		} else {
+		    pat_matches = matches;
+		}
+
+                while(c.isAfterLast() == false) {
+		   boolean matches_all = true;
+
+                  if(matches.length > 1) {
+                    String title = c.getString(1);
+                    String sum = c.getString(2);
+                    for(String mat: pat_matches) {
+                        matches_all = false;
+                        Pattern pattern;
+                        if(ignore_case) {
+                          pattern = Pattern.compile(".*" + mat + ".*", Pattern.CASE_INSENSITIVE);
+                        } else {
+                          pattern = Pattern.compile(".*" + mat + ".*");
+                        }
+                        if(pattern.matcher(title).matches()) {
+                                matches_all = true;
+                                continue;
+                        }
+                        if(pattern.matcher(sum).matches()) {
+                                matches_all = true;
+                                continue;
+                        }
+                        break;
+                    }
+                  }
+
+                  if(matches_all == true) {
+                    acts.add(c.getInt(0));
+                  }
+
+                  c.moveToNext();
+
                  }
 
                 if(ignore_case == false) {

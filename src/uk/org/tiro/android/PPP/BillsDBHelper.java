@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 
 
@@ -142,23 +143,68 @@ class BillsDBHelper {
 
 
 	public List<Integer> getBillsFiltered(String match, boolean ignore_case) {
-		String filter = new String('%' + match + '%');
+		String[] matches = match.split("\\s+");
+		String filter = new String('%' + matches[0] + '%');
 		String [] args = {filter, filter};
 		List<Integer> bills = new ArrayList<Integer>();
 		Cursor c;
+		String [] pat_matches;
+
+		Log.v("PPP", "DB Filtering on " + matches[0]);
 
 		if(ignore_case == false) {
 			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
 		} 
 
-		c = this.mDb.rawQuery("SELECT _id from bills WHERE title LIKE ? OR description LIKE ? AND new = 1 ORDER BY date desc", args);
-
+		c = this.mDb.rawQuery("SELECT _id,title,description from bills WHERE title LIKE ? OR description LIKE ? AND new = 1 ORDER BY date desc", args);
 
 		c.moveToFirst();
 
+		// Remove first word as DB already confirmed for us
+		// matches matches
+
+		if(matches.length > 1) {
+		    pat_matches = new String[matches.length - 1];
+		    System.arraycopy(matches, 1, pat_matches, 0, matches.length - 1);
+		} else {
+		    pat_matches = matches;
+		}
+
 		 while(c.isAfterLast() == false) {
-		 	bills.add(c.getInt(0));
-			c.moveToNext();
+		  boolean matches_all = true;
+
+		  if(matches.length > 1) {
+		    String title = c.getString(1);
+		    String desc = c.getString(2);
+		    for(String mat: pat_matches) {
+			Log.v("PPP", "Sub Filtering on " + mat);
+			matches_all = false;
+			Pattern pattern;
+			if(ignore_case) {
+			  pattern = Pattern.compile(".*" + mat + ".*", Pattern.CASE_INSENSITIVE);
+			} else {
+			  pattern = Pattern.compile(".*" + mat + ".*");
+			}
+			Log.v("PPP", "Title: " + title);
+			if(pattern.matcher(title).matches()) {
+				matches_all = true;
+				continue;
+			}
+			Log.v("PPP", "Desc: " + desc);
+			if(pattern.matcher(desc).matches()) {
+				matches_all = true;
+				continue;
+			}
+			Log.v("PPP", "Doesn't match");
+			break;
+		    }
+		  }
+
+		  if(matches_all == true) {
+		    bills.add(c.getInt(0));
+		  }
+
+		  c.moveToNext();
 		 }
 
 		if(ignore_case == false) {

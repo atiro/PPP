@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 
-
 import android.util.Log;
 
 class ActsDBHelper {
@@ -50,7 +49,7 @@ class ActsDBHelper {
 	}
 
 	public ActsDBHelper open() throws SQLException {
-		Log.v("PPP", "Creating ActsDB Helper");
+		//Log.v("PPP", "Creating ActsDB Helper");
 		this.mDbHelper = new DatabaseHelper(this.mCtx);
 		this.mDb = this.mDbHelper.getWritableDatabase();
 		return this;
@@ -218,7 +217,7 @@ class ActsDBHelper {
 	private boolean checkActByGUID(String guid) {
 		String [] args = {guid};
 
-		Log.v("PPP", "Checking existence of act with guid: " + guid);
+	//	Log.v("PPP", "Checking existence of act with guid: " + guid);
 
 		Cursor r = this.mDb.rawQuery("SELECT _id from acts WHERE guid = ?", args);
 

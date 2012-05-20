@@ -210,7 +210,6 @@ class LordsDBHelper {
                 	query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
 		}
 
-                Log.v("PPP", "Querying debates from Lords chamber " + args[0]);
 
                 return(this.mDb.rawQuery(query, args));
         }
@@ -236,7 +235,7 @@ class LordsDBHelper {
 	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};
 
-		Log.v("PPP", "Checking existence of lords debate with guid: " + guid);
+		//Log.v("PPP", "Checking existence of lords debate with guid: " + guid);
 
 		Cursor r = this.mDb.rawQuery("SELECT _id from lords WHERE guid = ?", args);
 

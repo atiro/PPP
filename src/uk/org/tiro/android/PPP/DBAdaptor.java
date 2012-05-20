@@ -45,7 +45,7 @@ public class DBAdaptor {
 	private SQLiteDatabase db;
 
 	public DBAdaptor(Context ctx) {
-		Log.v("PPP", "Creating DBAdaptor");
+		//Log.v("PPP", "Creating DBAdaptor");
 		this.context = ctx;
 		this.DBHelper = new DatabaseHelper(this.context);
 	}
@@ -57,7 +57,7 @@ public class DBAdaptor {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			Log.v("PPP", "Creating tables");
+			//	Log.v("PPP", "Creating tables");
 			db.execSQL(CREATE_TABLE_COMMONS);
 			db.execSQL(CREATE_TABLE_LORDS);
 			db.execSQL(CREATE_TABLE_ACTS);
@@ -74,7 +74,7 @@ public class DBAdaptor {
 	}
 
 	public DBAdaptor open() throws SQLException {
-		Log.v("PPP", "Opening DBAdaptor");
+		//Log.v("PPP", "Opening DBAdaptor");
 		this.db = this.DBHelper.getWritableDatabase();
 		return this;
 	}

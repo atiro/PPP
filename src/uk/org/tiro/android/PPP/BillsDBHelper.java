@@ -54,7 +54,7 @@ class BillsDBHelper {
 	}
 
 	public BillsDBHelper open() throws SQLException {
-                Log.v("PPP", "Creating BillsDB Helper");
+                //Log.v("PPP", "Creating BillsDB Helper");
 		this.mDbHelper = new DatabaseHelper(this.mCtx);
 		this.mDb = this.mDbHelper.getWritableDatabase();
 		return this;
@@ -70,7 +70,7 @@ class BillsDBHelper {
 		// if something has changed (moved a stage on)
 
 		if(checkBillByGUID(new_bill.getGUID())) {
-			Log.v("PPP", "Bill already exists, checking (guid: " + new_bill.getGUID());
+			//Log.v("PPP", "Bill already exists, checking (guid: " + new_bill.getGUID());
 			// Most obvious is change in stage. Then house?. 
 			// TODO handle changes in year in GUID (permalink!?)
 			Cursor c = getBillByGUID(new_bill.getGUID());
@@ -81,18 +81,18 @@ class BillsDBHelper {
 			if(old_stage != new_bill.getStage()) {
 				String [] args = {new_bill.getStage().toOrdinal(), new_bill.getGUID() };
 				this.mDb.execSQL("UPDATE bills SET new = 1 AND updated = 1 AND stage = ? WHERE guid = ?", args);
-				Log.v("PPP", "Bill changed stage, updating");
+				//Log.v("PPP", "Bill changed stage, updating");
 			}
 			if(old_house != new_bill.getHouse()) {
 				String [] args = {new_bill.getHouse().toOrdinal(), new_bill.getGUID() };
 				this.mDb.execSQL("UPDATE bills SET new = 1 AND updated = 1 AND house = ? WHERE guid = ?", args);
-				Log.v("PPP", "Bill changed house, updating");
+				//Log.v("PPP", "Bill changed house, updating");
 			}
 
 			// If neither, ignore.
 		} else {
 			// Add new bill
-			Log.v("PPP", "New Bill, adding");
+			//Log.v("PPP", "New Bill, adding");
 
 			Date raw = new Date();
 			ContentValues cv = new ContentValues();
@@ -138,7 +138,7 @@ class BillsDBHelper {
 	public void markBillsOld() {
 		this.mDb.execSQL("UPDATE bills SET new = 0");
 
-		Log.v("PPP", "Bills now all marked as old");
+		//Log.v("PPP", "Bills now all marked as old");
 	}
 
 
@@ -150,7 +150,7 @@ class BillsDBHelper {
 		Cursor c;
 		String [] pat_matches;
 
-		Log.v("PPP", "DB Filtering on " + matches[0]);
+		//Log.v("PPP", "DB Filtering on " + matches[0]);
 
 		if(ignore_case == false) {
 			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
@@ -177,7 +177,7 @@ class BillsDBHelper {
 		    String title = c.getString(1);
 		    String desc = c.getString(2);
 		    for(String mat: pat_matches) {
-			Log.v("PPP", "Sub Filtering on " + mat);
+			//Log.v("PPP", "Sub Filtering on " + mat);
 			matches_all = false;
 			Pattern pattern;
 			if(ignore_case) {
@@ -185,17 +185,17 @@ class BillsDBHelper {
 			} else {
 			  pattern = Pattern.compile(".*" + mat + ".*");
 			}
-			Log.v("PPP", "Title: " + title);
+			//Log.v("PPP", "Title: " + title);
 			if(pattern.matcher(title).matches()) {
 				matches_all = true;
 				continue;
 			}
-			Log.v("PPP", "Desc: " + desc);
+			//Log.v("PPP", "Desc: " + desc);
 			if(pattern.matcher(desc).matches()) {
 				matches_all = true;
 				continue;
 			}
-			Log.v("PPP", "Doesn't match");
+			//Log.v("PPP", "Doesn't match");
 			break;
 		    }
 		  }
@@ -242,7 +242,7 @@ class BillsDBHelper {
 	private boolean checkBillByGUID(String guid) {
 		String [] args = {guid};
 
-		Log.v("PPP", "Checking existence of bill with guid: " + guid);
+		//Log.v("PPP", "Checking existence of bill with guid: " + guid);
 
 		Cursor r = this.mDb.rawQuery("SELECT _id from bills WHERE guid = ?", args);
 

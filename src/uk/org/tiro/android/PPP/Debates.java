@@ -3,6 +3,7 @@ package uk.org.tiro.android.PPP;
 import android.os.Bundle;
 
 import android.app.Activity;
+import android.view.Window;
 
 import android.database.Cursor;
 
@@ -51,6 +52,9 @@ public class Debates extends FragmentActivity {
 		Bundle args;
 
 		super.onCreate(savedInstanceState);
+
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		setContentView(R.layout.debates);
 
 		house = House.values()[getIntent().getExtras().getInt("house")];

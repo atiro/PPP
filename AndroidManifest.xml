@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.org.tiro.android.PPP"
       android:versionCode="1"
-      android:versionName="1.0">
+      android:versionName="0.1-queens-speech">
+      <uses-sdk android:minSdkVersion="5" />
       <uses-permission android:name="android.permission.INTERNET"/>
       <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
       <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <application android:label="@string/app_name" android:icon="@drawable/icon">
+    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher_ppp">
         <activity android:name="PPP"
 		  android:theme="@android:style/Theme.NoDisplay"
                   android:label="@string/app_name">

@@ -14,8 +14,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import android.view.Window;
-
-
+import android.text.format.Time;
 
 import android.support.v4.app.FragmentActivity;
 
@@ -49,22 +48,26 @@ public class PPP extends FragmentActivity
 
 //        setContentView(R.layout.main);
 
-//	WakefulIntentService.scheduleAlarms(new PPPAlarm(),
-//					this, false);
 
 	// And force it to run now as well
 
-        Log.v("PPP", "Checking first run");
+        //Log.v("PPP", "Checking first run");
 	prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         first_run = prefs.getBoolean("firstRun", true);
 
 	if(first_run == true) {
-		WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+//		WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
 
                 SharedPreferences.Editor edit = prefs.edit();
                 edit.putBoolean("firstRun", false);
+		Time now = new Time();
+		now.setToNow();
+                edit.putLong("lastRun", now.toMillis(true));
                 edit.commit();
+
+		// Now schedule weekly update (if wi-fi available)
+		WakefulIntentService.scheduleAlarms(new PPPAlarm(), this, false);
 	}
 
 	//PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);

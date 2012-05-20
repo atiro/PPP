@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="horizontal"
 	android:layout_width="fill_parent"
-	android:background="@drawable/curved_row"
+	android:background="@drawable/curved_row_debate"
 	android:cacheColorHint="@android:color/transparent"
 	android:layout_height="wrap_content">
 

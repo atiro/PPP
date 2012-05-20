@@ -57,7 +57,7 @@ class CommonsDBHelper {
 	}
 
 	public CommonsDBHelper open() throws SQLException {
-		Log.v("PPP", "Creating CommonsDB Helper");
+//		Log.v("PPP", "Creating CommonsDB Helper");
 		this.mDbHelper = new DatabaseHelper(this.mCtx);
 		this.mDb = this.mDbHelper.getWritableDatabase();
 		return this;
@@ -137,7 +137,7 @@ class CommonsDBHelper {
 		String [] pat_matches;
 
 		if(ignore_case == false) {
-			Log.v("PPP", "Enabling case sensitive likes");
+			//Log.v("PPP", "Enabling case sensitive likes");
 			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
 		}
 
@@ -169,7 +169,7 @@ class CommonsDBHelper {
 			 pattern = Pattern.compile(".*" + mat + ".*");
 			}
 
-			Log.v("PPP", "Matching word: " + mat);
+			//Log.v("PPP", "Matching word: " + mat);
 
 			if(ignore_name == false) {
                     	   String title = c.getString(1);
@@ -192,13 +192,13 @@ class CommonsDBHelper {
                            }
 			}
 
-			Log.v("PPP", "Didn't match " + mat);
+			//Log.v("PPP", "Didn't match " + mat);
                         break;
                     }
                   }
 
 		  if(matches_all == true) {
-			 Log.v("PPP", "Adding debate");
+			 //Log.v("PPP", "Adding debate");
  	                 debates.add(c.getInt(0));
 		  }
 
@@ -206,7 +206,7 @@ class CommonsDBHelper {
                  }
 
 		if(ignore_case == false) {
-			Log.v("PPP", "Disabling case sensitive likes");
+			//Log.v("PPP", "Disabling case sensitive likes");
 			this.mDb.execSQL("PRAGMA case_sensitive_like = false");
 		}
 
@@ -226,7 +226,6 @@ class CommonsDBHelper {
 			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
 		}
 			
-		Log.v("PPP", "Querying debates from chamber:" + query);
 		return(this.mDb.rawQuery(query, args));
 	}
 
@@ -251,7 +250,7 @@ class CommonsDBHelper {
 	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};
 
-		Log.v("PPP", "Checking existence of commons debate with guid: " + guid);
+		//Log.v("PPP", "Checking existence of commons debate with guid: " + guid);
 
 		Cursor r = this.mDb.rawQuery("SELECT _id from commons WHERE guid = ?", args);
 

@@ -69,7 +69,7 @@ public class DebatesFragment extends ListFragment {
 		chamber = Chamber.MAIN;
 		date = 0;
 
-		Log.v("PPP", "creating DebatesFragment");
+		//Log.v("PPP", "creating DebatesFragment");
 
 		// date
 
@@ -117,12 +117,12 @@ public class DebatesFragment extends ListFragment {
 		}
 
 		if(house == House.COMMONS) {
-	   	    Log.v("PPP", "Setting commons adaptor");
+	   	    //Log.v("PPP", "Setting commons adaptor");
 		    setListAdapter(commonsadaptor);
 		    commonsadaptor.notifyDataSetChanged();
 		    commonshelper.close();
 		} else {
-	   	    Log.v("PPP", "Setting lords adaptor");
+	   	    //Log.v("PPP", "Setting lords adaptor");
 		    setListAdapter(lordsadaptor);
 		    lordsadaptor.notifyDataSetChanged();
 		    lordshelper.close();
@@ -136,7 +136,7 @@ public class DebatesFragment extends ListFragment {
 
 		View v = inflater.inflate(R.layout.debates_fragment, container, false);
 		lv = (ListView) v.findViewById(android.R.id.list);
-		Log.v("PPP", "Creating DebatesFragment view");
+		//Log.v("PPP", "Creating DebatesFragment view");
 
 
 		return v;
@@ -170,12 +170,7 @@ public class DebatesFragment extends ListFragment {
 				.setTitle(title)
 				.setMessage(subject)
 
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dlg,int sumthing) {
-                                                Toast.makeText(acxt, "Cancel",Toast.LENGTH_SHORT).show();
-                                        }
-                                })
-
+                                .setNegativeButton("Cancel", null)
 				.setPositiveButton("Share", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
 						Intent sendIntent = new Intent();
@@ -271,7 +266,7 @@ public class DebatesFragment extends ListFragment {
 
         CommonsDebatesAdaptor(Context context, Cursor c) {
 		super(context, c);
-		Log.v("PPP", "Creating Commons Debates Adapter");
+		//Log.v("PPP", "Creating Commons Debates Adapter");
         }
 
 	@Override
@@ -283,7 +278,7 @@ public class DebatesFragment extends ListFragment {
 
 	@Override
 	public View newView(Context context, Cursor c, ViewGroup parent) {
-		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate_commons, parent, false);
 		CommonsDebatesHolder holder = new CommonsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);
@@ -294,7 +289,7 @@ public class DebatesFragment extends ListFragment {
 
         LordsDebatesAdaptor(Context context, Cursor c) {
 		super(context, c);
-		Log.v("PPP", "Creating Lords Debates Adapter");
+		//Log.v("PPP", "Creating Lords Debates Adapter");
         }
 
 	@Override
@@ -306,7 +301,7 @@ public class DebatesFragment extends ListFragment {
 
 	@Override
 	public View newView(Context context, Cursor c, ViewGroup parent) {
-		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate_lords, parent, false);
 		LordsDebatesHolder holder = new LordsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);

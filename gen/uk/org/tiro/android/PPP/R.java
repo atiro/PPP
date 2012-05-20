@@ -13,12 +13,16 @@ public final class R {
     public static final class drawable {
         public static final int circle_count=0x7f020000;
         public static final int curved_row=0x7f020001;
-        public static final int ic_menu_info_details=0x7f020002;
-        public static final int ic_menu_refresh=0x7f020003;
-        public static final int icon=0x7f020004;
-        public static final int item_divider=0x7f020005;
-        public static final int list_row=0x7f020006;
-        public static final int text_select_handle_middle=0x7f020007;
+        public static final int curved_row_debate=0x7f020002;
+        public static final int curved_row_debate_commons=0x7f020003;
+        public static final int curved_row_debate_lords=0x7f020004;
+        public static final int ic_launcher_ppp=0x7f020005;
+        public static final int ic_menu_info_details=0x7f020006;
+        public static final int ic_menu_refresh=0x7f020007;
+        public static final int icon=0x7f020008;
+        public static final int item_divider=0x7f020009;
+        public static final int list_row=0x7f02000a;
+        public static final int text_select_handle_middle=0x7f02000b;
     }
     public static final class id {
         public static final int act_summary=0x7f06001a;
@@ -32,7 +36,7 @@ public final class R {
         public static final int chamber=0x7f06000b;
         public static final int chamber_gallery=0x7f060007;
         public static final int committee=0x7f06001f;
-        public static final int count=0x7f060027;
+        public static final int count=0x7f060028;
         public static final int date=0x7f06000c;
         public static final int date_gallery=0x7f060008;
         public static final int debate=0x7f060009;
@@ -41,28 +45,28 @@ public final class R {
         public static final int feed=0x7f060018;
         public static final int house=0x7f06000a;
         public static final int house_gallery=0x7f060006;
-        public static final int ignorecase=0x7f060034;
-        public static final int ignorename=0x7f060035;
+        public static final int ignorecase=0x7f060035;
+        public static final int ignorename=0x7f060036;
         public static final int label=0x7f060024;
-        public static final int label1=0x7f060028;
-        public static final int label2=0x7f06002a;
-        public static final int label3=0x7f060033;
-        public static final int last=0x7f060026;
+        public static final int label1=0x7f060029;
+        public static final int label2=0x7f06002b;
+        public static final int label3=0x7f060034;
+        public static final int last=0x7f060027;
         public static final int list_legislation=0x7f060011;
         public static final int list_triggers=0x7f060013;
         public static final int match=0x7f060025;
-        public static final int match_acts=0x7f06002d;
-        public static final int match_bills=0x7f06002b;
-        public static final int match_commons=0x7f06002c;
-        public static final int match_draft_bills=0x7f060031;
-        public static final int match_dsi=0x7f060030;
-        public static final int match_lords=0x7f06002e;
-        public static final int match_news=0x7f060032;
-        public static final int match_si=0x7f06002f;
+        public static final int match_acts=0x7f06002e;
+        public static final int match_bills=0x7f06002c;
+        public static final int match_commons=0x7f06002d;
+        public static final int match_draft_bills=0x7f060032;
+        public static final int match_dsi=0x7f060031;
+        public static final int match_lords=0x7f06002f;
+        public static final int match_news=0x7f060033;
+        public static final int match_si=0x7f060030;
         public static final int msg=0x7f060023;
-        public static final int new_trigger=0x7f060029;
-        public static final int notify=0x7f060036;
-        public static final int ok=0x7f060037;
+        public static final int new_trigger=0x7f06002a;
+        public static final int notify=0x7f060037;
+        public static final int ok=0x7f060038;
         public static final int page_viewer=0x7f06000f;
         public static final int search_box=0x7f060000;
         public static final int separator=0x7f060021;
@@ -75,6 +79,7 @@ public final class R {
         public static final int title_triggers=0x7f060012;
         public static final int trigger=0x7f060022;
         public static final int type=0x7f060005;
+        public static final int types=0x7f060026;
         public static final int updated=0x7f060016;
         public static final int view_calendar=0x7f060014;
     }
@@ -94,12 +99,14 @@ public final class R {
         public static final int row_act=0x7f03000c;
         public static final int row_bill=0x7f03000d;
         public static final int row_debate=0x7f03000e;
-        public static final int row_item=0x7f03000f;
-        public static final int row_news=0x7f030010;
-        public static final int row_trigger=0x7f030011;
-        public static final int row_trigger_count=0x7f030012;
-        public static final int trigger_new=0x7f030013;
-        public static final int triggers_fragment=0x7f030014;
+        public static final int row_debate_commons=0x7f03000f;
+        public static final int row_debate_lords=0x7f030010;
+        public static final int row_item=0x7f030011;
+        public static final int row_news=0x7f030012;
+        public static final int row_trigger=0x7f030013;
+        public static final int row_trigger_count=0x7f030014;
+        public static final int trigger_new=0x7f030015;
+        public static final int triggers_fragment=0x7f030016;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

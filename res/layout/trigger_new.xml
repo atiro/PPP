@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#FFAAAAAA">
+
+
+  <TextView android:id="@+id/label1"
+  	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="#000000"
+	android:text="Text to match:"/>
+
+  <EditText android:id="@+id/new_trigger"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"/>
+
+
+  <TextView android:id="@+id/label2"
+  	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="#000000"
+	android:text="Match on:"/>
+
+  
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="1">
+
+    <TableRow>
+
+  <CheckBox android:id="@+id/match_bills"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:checked="true"
+	android:layout_gravity="left"
+	android:layout_weight="1"
+	android:text="Bills"
+  />
+
+  <CheckBox android:id="@+id/match_commons"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:layout_gravity="left"
+	android:checked="true"
+	android:text="Commons"
+  />
+
+</TableRow>
+
+    <TableRow>
+
+  <CheckBox android:id="@+id/match_acts"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_gravity="left"
+	android:layout_weight="1"
+	android:checked="true"
+	android:text="Acts"
+  />
+
+  <CheckBox android:id="@+id/match_lords"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_gravity="left"
+	android:layout_weight="1"
+	android:checked="true"
+	android:text="Lords"
+  />
+
+    </TableRow>
+    <TableRow>
+
+  <CheckBox android:id="@+id/match_si"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_gravity="left"
+	android:layout_weight="1"
+	android:enabled="false"
+	android:text="Stat. Inst."
+  />
+
+  <CheckBox android:id="@+id/match_dsi"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:layout_gravity="left"
+	android:enabled="false"
+	android:text="Draft Stat. Inst."
+  />
+
+    </TableRow>
+
+    <TableRow>
+
+  <CheckBox android:id="@+id/match_draft_bills"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:layout_gravity="left"
+	android:enabled="false"
+	android:text="Draft Bills"
+  />
+
+  <CheckBox android:id="@+id/match_news"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:layout_gravity="left"
+	android:enabled="false"
+	android:text="Parliamentary News"
+  />
+
+    </TableRow>
+    </TableLayout>
+
+  <TextView android:id="@+id/label3"
+  	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="#000000"
+	android:text="Options"/>
+
+  <CheckBox android:id="@+id/ignorecase"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:checked="true"
+	android:text="Ignore Case"
+  />
+
+
+  <CheckBox android:id="@+id/ignorename"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:checked="true"
+	android:text="Ignore Committee Name"
+  />
+
+  <CheckBox android:id="@+id/notify"
+  	android:layout_width="wrap_content"
+  	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:enabled="false"
+	android:text="Notify on match"
+  />
+
+  <Button
+  	android:id="@+id/ok"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Add New Trigger"
+	android:gravity="center"
+	android:layout_gravity="bottom"
+	android:layout_below="@id/match_si"
+	android:onClick="okButton"
+  />
+
+
+</LinearLayout>

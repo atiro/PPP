@@ -1,0 +1,3 @@
+<WakefulIntentService
+	listener="uk.org.tiro.android.PPP.PPPAlarm"
+/>

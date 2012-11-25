@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FF000000"
+    >
+
+  <TextView
+  	android:text="Alerts"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:textSize="24sp"
+	android:gravity="center"
+  />
+
+  <ListView android:id="@android:id/list"
+  	android:layout_width="fill_parent"
+	android:layout_height="0dip"
+	android:layout_marginLeft="10dip"
+	android:layout_marginTop="15dip"
+	android:layout_weight="1"
+  />
+
+  <TextView
+  	android:id="@android:id/empty"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:text="\n\nPPP can alert you to upcoming debates that match your interests by looking for trigger words; these are scanned against debates, bills, select committee meetings and other business of Parliament (where feeds available).\n\nYou can add new alerts by clicking the button below.\n\n"/>
+
+  <Button android:id="@+id/add_trigger"
+  	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:gravity="center"
+	android:layout_gravity="center"
+	android:text="Add Alert"/>
+
+</LinearLayout>

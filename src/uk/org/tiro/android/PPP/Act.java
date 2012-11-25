@@ -10,24 +10,28 @@ public class Act implements Comparable<Act> {
 	private String title = null;
 	private String summary = null;
 	private String url = null;
+	private String guid = null;
 
 	private Date date = null;
 
 	ThreadSafeSimpleDateFormat FORMATTER =
 			new ThreadSafeSimpleDateFormat("yyyy-MMM-dd");
 
-	public Act(String title, String summary, String url, Date date) {
+	public Act(String title, String summary, String url, Date date,
+				String guid) {
 
 		this.title = title;
 		this.summary= summary;
 
 		this.url = url;
+		this.guid = guid;
 		this.date = date;
 	}
 
 	public Act() {
 		this.title = "";
 		this.summary = "";
+		this.guid = "";
 
 		this.url = "";
 		this.date = null;
@@ -54,6 +58,16 @@ public class Act implements Comparable<Act> {
 		return url;
 	}
 
+	public void setGUID(String guid) {
+
+		this.guid = guid;
+	}
+
+	public String getGUID() {
+
+		return guid;
+	}
+
 	public String getDate() {
 		return FORMATTER.format(this.date);
 	}
@@ -77,7 +91,8 @@ public class Act implements Comparable<Act> {
 		return new Act( title,
 				     summary,
 				     url,
-				     date);
+				     date,
+				     guid);
 
 	}
 
@@ -108,6 +123,7 @@ public class Act implements Comparable<Act> {
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((summary == null) ? 0 : summary.hashCode());
 		result = prime * result + ((url == null) ? 0: url.hashCode());
+		result = prime * result + ((guid == null) ? 0: guid.hashCode());
 
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 
@@ -140,6 +156,13 @@ public class Act implements Comparable<Act> {
 			if(other.url != null)
 				return false;
 		} else if(!url.equals(other.url)) {
+			return false;
+		}
+
+		if(guid == null) {
+			if(other.guid != null)
+				return false;
+		} else if(!guid.equals(other.guid)) {
 			return false;
 		}
 

@@ -4,6 +4,8 @@ import java.util.Date;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 
 public class Bill implements Comparable<Bill> {
@@ -138,6 +140,8 @@ public class Bill implements Comparable<Bill> {
 			stage = Stage.CONSIDERATION;
 		} else if(bill_stage.equals("Second reading committee")) {
 			stage = Stage.READING;
+		} else if(bill_stage.equals("Carry-over motion")) {
+			stage = Stage.CARRY;
 		} else {
 			stage = Stage.UNKNOWN;
 		}
@@ -296,6 +300,26 @@ public class Bill implements Comparable<Bill> {
 		return another.date.compareTo(date);
 	}
 
+
+	public boolean match(String match) {
+		Pattern p = Pattern.compile(match);
+
+		// First look in title
+
+		Matcher m = p.matcher(this.title);
+
+		if(m.find()) {
+			return true;
+		}
+
+		m  = p.matcher(this.description);
+
+		if(m.find()) {
+			return true;
+		}
+
+		return false;
+	}
 
 	public class ThreadSafeSimpleDateFormat {
 		private DateFormat df;

@@ -1,16 +1,17 @@
 package uk.org.tiro.android.PPP;
 
 public enum Stage {
-	FIRSTREADING ( "1st Reading" ),
-	SECONDREADING ( "2nd Reading" ),
-	COMMITTEE ( "Committee Stage" ),
-	REPORT ( "Report Stage" ),
-	THIRDREADING ( "3rd Reading" ),
-	PROGRAMME ( "Programme Motion" ),
-	ROYAL ( "Royal Ascent" ),
+	FIRSTREADING ( "1st\nReading" ),
+	SECONDREADING ( "2nd\nReading" ),
+	COMMITTEE ( "Committee\nStage" ),
+	REPORT ( "Report\nStage" ),
+	THIRDREADING ( "3rd\nReading" ),
+	PROGRAMME ( "Programme\nMotion" ),
+	ROYAL ( "Royal\nAscent" ),
 	EXAMINERS ( "Examiners" ),
-	CONSIDERATION ("Consideration of Amendments"),
-	READING ("Second Reading Committee" ),
+	CONSIDERATION ("Consideration\nof\nAmendments"),
+	READING ("Second\nReading\nCommittee" ),
+	CARRY ( "Carry-over\nmotion" ),
 	UNKNOWN ("Unknown");
 
 

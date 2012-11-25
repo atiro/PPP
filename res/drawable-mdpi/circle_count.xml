@@ -5,11 +5,11 @@
     android:radius="10dip"/>
 
   <solid
-    android:color="#FFC77777" />
+    android:color="#1230A9" />
 
   <stroke
     android:width="2dip"
-    android:color="#FFFF0000" />
+    android:color="#5675C9" />
 
   <padding
     android:left="2dip"

@@ -10,10 +10,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+
+import android.view.Window;
+import android.text.format.Time;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.content.Context;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,207 +37,158 @@ import java.util.Date;
 
 import android.util.Log;
 
-public class PPP extends Activity
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+public class PPP extends SherlockFragmentActivity 
 {
 
-    private static final String[] items = {"Debates", "Committees", "Bills", "Acts", "Stat. Inst."};
-
-    private static final String[] news = {"News Story 1", "News Story 2", "News Story 3", "News Story 4", "News Story 5"};
-
-    private static final String[] legislation= {"Draft Bills", "Current Bills", "Recent Acts", "Draft S.I.", "Stat. Inst."};
-
-    private static final String[] commons = {"Main Chamber", "Select Committees", "General Committee", "Westminster Hall"};
-
-    private static final String[] lords = {"Main Chamber", "Grand Committee", "Select Committees"};
-    private static final String[] newsfeed = {"Alert 1", "Alert 2", "Alert 3", "Older"};
-
-    private BillsDBHelper billshelper;
-    private ActsDBHelper actshelper;
-    private LordsDBHelper lordshelper;
-    private CommonsDBHelper commonshelper;
     private DBAdaptor dbadaptor;
+    private SharedPreferences prefs;
+    private boolean first_run;
+    private static final int MENU_REFRESH = Menu.FIRST+1;
+    private static final int MENU_ABOUT = Menu.FIRST+2;
+
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-    	ListView list_my_pol, list_legislation;
-	ListView list_lords, list_commons;
-	ListView list_newsfeed;
+
+	setTheme(R.style.Theme_Sherlock);
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-	list_my_pol = (ListView)findViewById(R.id.list_watching);
+//	this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-	list_my_pol.setAdapter(new MyPoliticsAdaptor() );
+	setContentView(R.layout.ppp_main);
 
-	list_legislation = (ListView)findViewById(R.id.list_legislation);
+ 	getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	getSupportActionBar().setDisplayShowHomeEnabled(false);
+	getSupportActionBar().setDisplayShowTitleEnabled(false);
+	getSupportActionBar().setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE|ActionBar.DISPLAY_USE_LOGO);
 
-	list_legislation.setAdapter(new LegislationAdaptor() );
+//        setContentView(R.layout.main);
 
-	list_legislation.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				// Launch Bills for all atm 
+	// And force it to run now as well
 
-				if(pos == 1) {
-					Intent i = new Intent(PPP.this, Bills.class);
-					startActivity(i);
-				} else if (pos == 2) {
-					Intent i = new Intent(PPP.this, Acts.class);
-					startActivity(i);
-				}
-			}
-		});
+        Log.v("PPP", "Checking first run");
+	prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-	list_commons = (ListView)findViewById(R.id.list_commons);
+        first_run = prefs.getBoolean("firstRun", true);
 
-	list_commons.setAdapter(new ArrayAdapter(this,
-				R.layout.row_news,
-				R.id.label,
-				commons));
+	if(first_run == true) {
+        	Log.v("PPP", "First run");
 
-	list_commons.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				Bundle b = new Bundle();
-				b.putInt("house", House.COMMONS.ordinal());
-				if(pos == 0) {
-					b.putInt("chamber", Chamber.MAIN.ordinal());
-				} else if(pos == 1) {
-					b.putInt("chamber", Chamber.SELECT.ordinal());
-				} else if(pos == 2) {
-					b.putInt("chamber", Chamber.GENERAL.ordinal());
-				} else if(pos == 3) {
-					b.putInt("chamber", Chamber.WESTMINSTER.ordinal());
-				}
+		WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putBoolean("firstRun", false);
+		Time now = new Time();
+		now.setToNow();
+                edit.putLong("lastRun", now.toMillis(true));
+                edit.commit();
 
-				Intent i = new Intent(PPP.this, Debates.class);
-				i.putExtras(b);
-				startActivity(i);
-			}
-		});
-	
+		// Now schedule weekly update (if wi-fi available)
+		WakefulIntentService.scheduleAlarms(new PPPAlarm(), this, false);
 
-	list_lords = (ListView)findViewById(R.id.list_lords);
+		new AlertDialog.Builder(this)
+			.setTitle("Welcome")
+			.setMessage("This app is intented to allow you to follow Debates, Bills, and Acts of Parliament that match your interests. \n\nAs this is the first time you have run the app, it will need a few moments to initialise and download the various Parliamentary RSS feeds.\n\n Please do contact the developer with any thoughts on how to improve the app.\n")
+				.setNeutralButton("Aye", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg,
+int sumthing) {
+					}
+				})
+				.show();
 
-	list_lords.setAdapter(new ArrayAdapter(this,
-				R.layout.row_news,
-				R.id.label,
-				lords));
+	}
 
-	list_lords.setOnItemClickListener(
-		new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int pos, long id) {
-				Bundle b = new Bundle();
-				b.putInt("house", House.LORDS.ordinal());
-				if(pos == 0) {
-					b.putInt("chamber", Chamber.MAIN.ordinal());
-				} else if(pos == 1) {
-					b.putInt("chamber", Chamber.GRAND.ordinal());
-				} else if(pos == 2) {
-					b.putInt("chamber", Chamber.SELECT.ordinal());
-				}
+	//PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
 
-				Intent i = new Intent(PPP.this, Debates.class);
-				i.putExtras(b);
-				startActivity(i);
-			}
-		});
+	// TODO start politicsfeed or calendar basedon settings
 
-	list_newsfeed = (ListView)findViewById(R.id.list_newsfeed);
-		
-	list_newsfeed.setAdapter(new ArrayAdapter(this,
-				R.layout.row_news,
-				R.id.label,
-				newsfeed));
-	
 	dbadaptor = new DBAdaptor(this).open();
+	dbadaptor.close();
+       	Log.v("PPP", "Created DB");
 
-	billshelper = new BillsDBHelper(this).open();
+//	ActionBar bar = getActionBar();
 
-	new BillsUpdateTask().execute(); // Retrieve bills
-	
-	actshelper = new ActsDBHelper(this).open();
 
-	new ActsUpdateTask().execute(); // Retrieve acts
+	String tabs[] = new String[] { "Upcoming", "Debates", "Bills", "Acts", "Settings" };
+	//String tabs[] = new String[] { "Debates" };
+	Fragment frags[] = new Fragment[] { new PoliticsFeedFragment(),
+					    new Debates(),
+					    new BillsListFragment(),
+					    new ActsListFragment(),
+					    new TriggersListFragment() };
 
-	commonshelper = new CommonsDBHelper(this).open();
+	int i = 0;
+	for(String tabname: tabs) {
+       		Log.v("PPP", "Creating Tab" + tabname);
+		ActionBar bar = getSupportActionBar();
+		ActionBar.Tab tab = bar.newTab();
+		tab.setText(tabname);
+		tab.setTabListener( new PPPTabListener(this, frags[i]));
+		bar.addTab(tab);
+		i+=1;
+	}
 
-	new CommonsUpdateTask().execute();
 
-	lordshelper = new LordsDBHelper(this).open();
-
-	new LordsUpdateTask().execute();
+//	Intent i = new Intent(this, Debates.class);
+	// Only in API 11 and above
+//	i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//	Bundle b = new Bundle();
+//	b.putInt("house", House.COMMONS.ordinal());
+//	b.putInt("chamber", Chamber.MAIN.ordinal());
+//	i.putExtras(b);
+//	startActivity(i);
+//	finish();
     }
 
 
-    class MyPoliticsAdaptor extends ArrayAdapter<String> {
-    	MyPoliticsAdaptor() {
-		super(PPP.this, R.layout.row_my_politics, R.id.label, items);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, MENU_REFRESH, Menu.NONE, "Refresh").setIcon(
+R.drawable.ic_menu_refresh);
+		menu.add(Menu.NONE, MENU_ABOUT, Menu.NONE, "About"
+).setIcon(R.drawable.ic_menu_info_details);
+
+		return(super.onCreateOptionsMenu(menu));
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = super.getView(position, convertView, parent);
-
-		TextView count = (TextView)row.findViewById(R.id.count);
-
-		if(position == 0) {
-		//	Integer commons_count = commonshelper.getAlertCount();
-		//	Integer lords_count = lordshelper.getAlertCount();
-		//	Integer total = commons_count + lords_count;
-		//	count.setText(total.toString());
-			count.setText("0");
-		} else if(position == 1) {
-			count.setText("0");
-		} else if(position == 2) {
-			Integer bill_count = billshelper.getAlertCount();
-			count.setText(bill_count.toString());
-		} else if(position == 3) {
-			Integer acts_count = actshelper.getAlertCount();
-			count.setText(acts_count.toString());
-		} else {
-			count.setText("0");
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+			case MENU_REFRESH:
+				WakefulIntentService.sendWakefulWork(this, PPPUpdate.class);
+				return(true);
+			case MENU_ABOUT:
+			new AlertDialog.Builder(this)
+				.setTitle("About PPP")
+			.setMessage("Written by Richard Palmer <richard@tiro.org.uk> using:\n\n   Parliament RSS Feeds\n\n   ActionBarSherlock by Jake Wharton\n\n    CommonsGuy components by Mark Murphy\n\n")
+				.setNeutralButton("Aye", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg,
+int sumthing) {
+					}
+				})
+				.show();
+//				return(true);
 		}
 
-		return(row);
-	}
-    }
-
-    class LegislationAdaptor extends ArrayAdapter<String> {
-    	LegislationAdaptor() {
-		super(PPP.this, R.layout.row_my_politics, R.id.label, legislation);
+		return(super.onOptionsItemSelected(item));
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = super.getView(position, convertView, parent);
 
-		TextView count = (TextView)row.findViewById(R.id.count);
-
-		if(position == 0) {
-			// TODO - no reliable feed yet for draft bills
-			count.setText("-");
-		} else if(position == 1) {
-			Integer bill_count = billshelper.getBillsCount();
-			count.setText(bill_count.toString());
-		} else if(position == 2) {
-			Integer acts_count = actshelper.getAllActsCount();
-			count.setText(acts_count.toString());
-		} else {
-			count.setText("-");
-		}
-
-		return(row);
-	}
-    }
-
+/*
     class NewsAdapter extends ArrayAdapter<String> {
     	NewsAdapter() {
-		super(PPP.this, R.layout.row_my_politics, R.id.label, items);
+		super(PPP.this, R.layout.row_trigger_count, R.id.label, news);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -235,196 +202,44 @@ public class PPP extends Activity
 	}
     }
 
+*/
 
-    class BillsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<Bill> bills;
+   private class PPPTabListener implements TabListener {
+   	private PPP pAct;
+	private Fragment pFrag;
 
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		BillsFeedParser parser = new BillsFeedParser("http://tiro.org.uk/mobile/AllBills.rss", "");
-	
-		bills = parser.parse();
-
-		return rss;
+	public PPPTabListener(PPP act, Fragment frag) {
+		pAct = act;
+		pFrag = frag;
 	}
 
+        @Override
+        public void onTabReselected(Tab tab, FragmentTransaction transaction) {
+   	}
+
+        @Override
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		FragmentManager fragMgr = getSupportFragmentManager();
+		FragmentTransaction xaction = fragMgr.beginTransaction();
+
+		xaction.replace(R.id.content, pFrag, null);
+		xaction.commit();
+	}
+   	
 	@Override
-	protected void onPostExecute(String rss) {
+	public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
+		FragmentManager fragMgr = getSupportFragmentManager();
+		FragmentTransaction xaction = fragMgr.beginTransaction();
 
-		Cursor c = billshelper.getLatestBill(House.COMMONS);
+		Fragment frag = (Fragment)fragMgr.findFragmentById(R.id.content);
 
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing bills in database");
-
-			for(Bill bill : bills) {
-				Log.v("PPP", "Inserting bill: " + bill.getTitle() );
-				billshelper.insert(bill);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Bills already in database, not adding");
-			// Handle updates
+		if(frag != null) {
+			xaction.remove(frag);
 		}
+		xaction.commit();
 
-		billshelper.close();
 	}
-   }
-
-    class ActsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<Act> acts;
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		ActsFeedParser parser = new ActsFeedParser("http://tiro.org.uk/mobile/legislation/acts.xml", "");
-	
-		acts = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		for(Act act : acts) {
-			Log.v("PPP", "Inserting act: " + act.getTitle() );
-			actshelper.insert(act);
-		}
-			/*
-		Cursor c = actshelper.getLatestAct();
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing acts in database");
-
-			for(Act act : acts) {
-				Log.v("PPP", "Inserting act: " + act.getTitle() );
-				actshelper.insert(act);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Acts already in database, not adding");
-			// Handle updates
-		}
-		*/
-
-		actshelper.close();
-	}
-   }
-
-    class CommonsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<CommonsDebate> debates;
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_main_chamber.rss", "");
-		// Get select committees
-		// Get westminster hall
-	
-		debates = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		for(CommonsDebate debate : debates) {
-			Log.v("PPP", "Inserting commons debate: " + debate.getTitle() );
-			commonshelper.insert(debate);
-		}
-			/*
-		Cursor c = actshelper.getLatestAct();
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing acts in database");
-
-			for(Act act : acts) {
-				Log.v("PPP", "Inserting act: " + act.getTitle() );
-				actshelper.insert(act);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Acts already in database, not adding");
-			// Handle updates
-		}
-		*/
-
-		commonshelper.close();
-	}
-   }
-
-    class LordsUpdateTask extends AsyncTask<Object, Void, String> {
-    	private List<LordsDebate> debates;
-
-	@Override
-	protected String doInBackground(Object... args) {
-
-		String rss= "boo";
-
-//		publishProgress();
-
-//		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
-		LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_main_chamber.rss", "");
-	
-		debates = parser.parse();
-
-		return rss;
-	}
-
-	@Override
-	protected void onPostExecute(String rss) {
-
-		for(LordsDebate debate : debates) {
-			Log.v("PPP", "Inserting lords debate: " + debate.getTitle() );
-			lordshelper.insert(debate);
-		}
-			/*
-		Cursor c = actshelper.getLatestAct();
-
-		if(c.getCount() == 0) {
-			// No current entries so easy job - insert all
-			Log.v("PPP", "No existing acts in database");
-
-			for(Act act : acts) {
-				Log.v("PPP", "Inserting act: " + act.getTitle() );
-				actshelper.insert(act);
-			}
-
-			c.close();
-		} else {
-			Log.v("PPP", "Acts already in database, not adding");
-			// Handle updates
-		}
-		*/
-
-		lordshelper.close();
-	}
-   }
-
+  }
 
 }
 

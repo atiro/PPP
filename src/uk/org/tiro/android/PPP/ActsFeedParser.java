@@ -42,25 +42,31 @@ public class ActsFeedParser extends BaseFeedParser {
 
 		item.setEndElementListener(new EndElementListener() {
 			public void end() {
-				Log.v("PPP", "End of Act: " + currentAct.getTitle());
+				//Log.v("PPP", "End of Act: " + currentAct.getTitle());
 				Act copy = currentAct.copy();
-				Log.v("PPP", "Added act to list: " + copy.getTitle());
+				// Log.v("PPP", "Added act to list: " + copy.getTitle());
 				acts.add(copy);
 			}
 		});
 
+		item.getChild(ATOM_NAMESPACE, ID).setEndTextElementListener(new EndTextElementListener(){
+			public void end(String body) {
+				currentAct.setGUID(body);
+                                currentAct.setURL(body);
+			}
+		});
 		item.getChild(ATOM_NAMESPACE, TITLE).setEndTextElementListener(new EndTextElementListener(){
 			public void end(String body) {
-				Log.v("PPP", "Got act with title: " + body);
 				currentAct.setTitle(body);
 			}
 		});
 
-		item.getChild(ATOM_NAMESPACE, LINK).setEndTextElementListener(new EndTextElementListener(){
+/*		item.getChild(ATOM_NAMESPACE, LINK).setEndTextElementListener(new EndTextElementListener(){
                         public void end(String body) {
                                 currentAct.setURL(body);
 			}
 		});
+		*/
 
 		item.getChild(ATOM_NAMESPACE, SUMMARY).setEndTextElementListener(new EndTextElementListener(){
 			public void end(String body) {

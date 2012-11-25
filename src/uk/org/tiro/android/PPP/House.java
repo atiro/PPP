@@ -4,18 +4,21 @@ package uk.org.tiro.android.PPP;
 // http://www.ibm.com/developerworks/opensource/library/x-android/
 
 public enum House {
-        COMMONS ("House of Commons"),
-        LORDS ("House of Lords"),
-	BOTH ("Both Houses"),
-	NEITHER ("Neither House");
+        COMMONS ("House of Commons", "Commons"),
+        LORDS ("House of Lords", "Lords"),
+	BOTH ("Both Houses", "Both"),
+	NEITHER ("Neither House", "");
 
         private final String name;
+        private final String short_name;
 
-        House(String name) {
+        House(String name, String short_name) {
                 this.name = name;
+		this.short_name = short_name;
         }
 
         public String toString() { return name; }
+        public String toShort() { return short_name; }
 
 	public String toOrdinal() {
 		return Integer.toString(this.ordinal());

@@ -33,77 +33,62 @@
       	android:id="@+id/list_legislation"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
-	android:background="@drawable/list_my_politics"
+	android:background="@drawable/list_row"
       />
 
     </LinearLayout>
 
-  <TextView 
-      	android:id="@+id/title_commons"
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="vertical"
+      android:layout_width="fill_parent"
+      android:layout_marginLeft="5dip"
+      android:layout_marginRight="5dip"
+      android:layout_height="wrap_content">
+
+      <TextView 
+      	android:id="@+id/title_triggers"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
+	android:gravity="center"
+    	android:text="Triggers"
+	android:textColor="#000000" />
+
+      <ListView
+      	android:id="@+id/list_triggers"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/list_row"
+      />
+
+    </LinearLayout>
+
+    <Button
+      	android:id="@+id/view_calendar"
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:layout_gravity="center"
 	android:gravity="center"
     	android:text="Calendar"
+	android:onClick="viewCalendar"
 	android:textColor="#ffffff" />
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_marginLeft="5dip"
-    android:layout_marginRight="5dip"
-    android:layout_marginBottom="2dip"
-    android:layout_height="wrap_content">
-
-      <TextView 
-      	android:id="@+id/title_commons"
+    <Button
+      	android:id="@+id/add_trigger"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
 	android:layout_gravity="center"
 	android:gravity="center"
-    	android:text="House of Commons"
-	android:textColor="#ffffff" />
-
-      <ListView
-      	android:id="@+id/list_commons"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:background="@drawable/list_my_politics"
-      />
-
-    </LinearLayout>
-
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_marginLeft="5dip"
-    android:layout_marginRight="5dip"
-    android:layout_height="wrap_content">
-
-      <TextView 
-      	android:id="@+id/title_lords"
-	android:layout_height="wrap_content"
-	android:layout_width="wrap_content"
-	android:layout_gravity="center"
-	android:gravity="center"
-    	android:text="House of Lords"
-	android:textColor="#ffffff" />
-
-      <ListView
-      	android:id="@+id/list_lords"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:color="#f0e6e6e6"
-	android:background="@drawable/list_my_politics"
-      />
-
-    </LinearLayout>
+    	android:text="Add New Trigger"
+	android:onClick="addAlert"
+	android:textColor="#ffffff"/>
 
     <TextView 
       	android:id="@+id/updated"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:gravity="center"
-    	android:text="Last Update: "
+    	android:text="Last Updated: "
 	android:textColor="#000000" />
 
   </LinearLayout>
@@ -115,52 +100,20 @@
     android:layout_height="fill_parent"
     android:layout_weight="1">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
-      android:layout_width="fill_parent"
-      android:layout_marginLeft="5dip"
-      android:layout_marginRight="5dip"
-      android:layout_height="wrap_content">
-
-      <TextView 
-      	android:id="@+id/title_my_politics"
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:gravity="center"
-    	android:text="Alerts"
-	android:textColor="#000000" />
-
-      <ListView
-      	android:id="@+id/list_watching"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:background="@drawable/list_my_politics"
-      />
-
-    </LinearLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
-      android:layout_width="fill_parent"
-      android:layout_marginLeft="5dip"
-      android:layout_marginRight="5dip"
-      android:layout_height="wrap_content">
-
     <TextView 
-      	android:id="@+id/title_commons"
+      	android:id="@+id/title_politicsfeed"
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
 	android:gravity="center"
     	android:text="Politics Feed"
 	android:textColor="#000000" />
 
-      <ListView
-      	android:id="@+id/list_newsfeed"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:background="@drawable/list_my_politics"
-      />
-    </LinearLayout>
+  <fragment class="uk.org.tiro.android.PPP.PoliticsFeedFragment"
+      android:id="@+id/feed"
+      android:layout_width="fill_parent"
+      android:layout_height="fill_parent"
+  />
+
 
   </LinearLayout>
 

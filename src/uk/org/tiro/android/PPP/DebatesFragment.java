@@ -14,6 +14,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.LoaderManager;
 
+import android.net.Uri;
+
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -23,14 +25,19 @@ import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.CursorAdapter;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import android.content.Context;
 
-
+import android.content.Intent;
 
 import android.util.Log;
 
-public class DebatesFragment extends ListFragment {
+import com.actionbarsherlock.app.SherlockListFragment;
+
+public class DebatesFragment extends SherlockListFragment {
 
 	private boolean detailsInline = false;
 
@@ -42,29 +49,37 @@ public class DebatesFragment extends ListFragment {
 
 	CommonsDBHelper commonshelper = null;
 	LordsDBHelper lordshelper = null;
+
 	LordsDebatesAdaptor lordsadaptor = null;
 	CommonsDebatesAdaptor commonsadaptor = null;
 
+	DBAdaptor dbadaptor = null;
+
 	Cursor model = null;
 	Context cxt = null;
+	Context acxt = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+//		setTheme(R.style.Theme_Sherlock);
 		super.onActivityCreated(savedInstanceState);
 
-		Bundle args = this.getArguments();
+	//	Bundle args = this.getArguments();
 
-		//house = House.values()[args.getInt("house")];
-		//chamber = Chamber.values()[args.getInt("chamber")];
+	//	house = House.values()[args.getInt("house")];
+	//	chamber = Chamber.values()[args.getInt("chamber")];
 		house = House.COMMONS;
 		chamber = Chamber.MAIN;
 		date = 0;
 
-		Log.v("PPP", "creating DebatesFragment");
+		//Log.v("PPP", "creating DebatesFragment");
 
 		// date
 
 		cxt = getActivity().getApplicationContext();
+		acxt = getActivity();
+
+		dbadaptor = new DBAdaptor(cxt).open();
 
 		setList();
 
@@ -91,43 +106,26 @@ public class DebatesFragment extends ListFragment {
 			if(model != null) { model.close(); }
 			if(commonsadaptor != null) { commonsadaptor = null; }
 
-			if(date == 0) {
-			  model = commonshelper.getTodayDebatesChamber(chamber);
- 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
-			} else if(date < 0) {
-			  model = commonshelper.getYesterdaysDebatesChamber(chamber);
- 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
-			} else if(date > 0) {
-			  model = commonshelper.getTomorrowsDebatesChamber(chamber);
- 	            	  commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
-			}
-
+			model = commonshelper.getDebatesChamber(chamber, date);
+ 	            	commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
 
 		} else {
 			lordshelper = new LordsDBHelper(cxt).open();
 			if(model != null) { model.close(); }
 			if(lordsadaptor != null) { lordsadaptor = null; }
 
-			if(date == 0) {
-			  model = lordshelper.getTodayDebatesChamber(chamber);
- 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
-			} else if(date < 0) {
-			  model = lordshelper.getYesterdaysDebatesChamber(chamber);
- 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
-			} else if(date > 0) {
-			  model = lordshelper.getTomorrowsDebatesChamber(chamber);
- 	                  lordsadaptor = new LordsDebatesAdaptor(cxt, model);
-			}
+			model = lordshelper.getDebatesChamber(chamber, date);
+ 	                lordsadaptor = new LordsDebatesAdaptor(cxt, model);
 
 		}
 
 		if(house == House.COMMONS) {
-	   	    Log.v("PPP", "Setting commons adaptor");
+	   	    //Log.v("PPP", "Setting commons adaptor");
 		    setListAdapter(commonsadaptor);
 		    commonsadaptor.notifyDataSetChanged();
 		    commonshelper.close();
 		} else {
-	   	    Log.v("PPP", "Setting lords adaptor");
+	   	    //Log.v("PPP", "Setting lords adaptor");
 		    setListAdapter(lordsadaptor);
 		    lordsadaptor.notifyDataSetChanged();
 		    lordshelper.close();
@@ -141,11 +139,87 @@ public class DebatesFragment extends ListFragment {
 
 		View v = inflater.inflate(R.layout.debates_fragment, container, false);
 		lv = (ListView) v.findViewById(android.R.id.list);
-		Log.v("PPP", "Creating DebatesFragment view");
+		//Log.v("PPP", "Creating DebatesFragment view");
 
 
 		return v;
 	}
+
+	public void onListItemClick(ListView parent, View v, int position,
+					long id) {
+			final String guid;
+			final String title;
+			final String subject;
+			final String content;
+			final String url;
+
+			// Retrieve debate guid
+			model.moveToPosition(position);
+			if(house == House.COMMONS) {
+				guid = commonshelper.getGUID(model);
+				title = commonshelper.getTitle(model);
+				subject = commonshelper.getSubject(model);
+				url = commonshelper.getURL(model);
+			} else {
+				guid = lordshelper.getGUID(model);
+				title = lordshelper.getTitle(model);
+				subject = lordshelper.getTitle(model);
+				url = lordshelper.getURL(model);
+			}
+				
+			content = subject;
+
+			new AlertDialog.Builder(acxt)
+				.setTitle(title)
+				.setMessage(subject)
+
+                                .setNegativeButton("Cancel", null)
+				.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						Intent sendIntent = new Intent();
+						sendIntent.setAction(Intent.ACTION_SEND);
+						sendIntent.putExtra(Intent.EXTRA_TEXT, content);
+						sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+						sendIntent.setType("text/plain");
+						startActivity(Intent.createChooser(sendIntent, "Share with..."));
+
+					}
+				})
+				.setNeutralButton("View", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+						startActivity(sendIntent);
+				}
+
+				})
+				/*
+					TODO -- how to set reminderers ?
+						before or after ?
+				.setPositiveButton("Remind", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						Toast.makeText(acxt, "Reminder - TODO", Toast.LENGTH_SHORT).show();
+					}
+				})
+				*/
+				.show();
+
+/*
+			Intent i = new Intent(cxt, DebateView.class);
+			Bundle b = new Bundle();
+			b.putString("guid", "");
+			i.putExtras(b);
+			startActivity(i);
+*/
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(lordshelper != null) { lordshelper.close(); }
+		if(commonshelper != null) { commonshelper.close(); }
+		dbadaptor.close();
+	}
+
 
 
     static class CommonsDebatesHolder {
@@ -195,7 +269,7 @@ public class DebatesFragment extends ListFragment {
 
         CommonsDebatesAdaptor(Context context, Cursor c) {
 		super(context, c);
-		Log.v("PPP", "Creating Commons Debates Adapter");
+		//Log.v("PPP", "Creating Commons Debates Adapter");
         }
 
 	@Override
@@ -207,7 +281,7 @@ public class DebatesFragment extends ListFragment {
 
 	@Override
 	public View newView(Context context, Cursor c, ViewGroup parent) {
-		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate_commons, parent, false);
 		CommonsDebatesHolder holder = new CommonsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);
@@ -218,7 +292,7 @@ public class DebatesFragment extends ListFragment {
 
         LordsDebatesAdaptor(Context context, Cursor c) {
 		super(context, c);
-		Log.v("PPP", "Creating Lords Debates Adapter");
+		//Log.v("PPP", "Creating Lords Debates Adapter");
         }
 
 	@Override
@@ -230,7 +304,7 @@ public class DebatesFragment extends ListFragment {
 
 	@Override
 	public View newView(Context context, Cursor c, ViewGroup parent) {
-		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate, parent, false);
+		View row = LayoutInflater.from(getActivity()).inflate(R.layout.row_debate_lords, parent, false);
 		LordsDebatesHolder holder = new LordsDebatesHolder(row);
 		row.setTag(holder);
 		return(row);

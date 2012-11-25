@@ -267,6 +267,13 @@ class LordsDBHelper {
 		return(new Date(timestamp));
 	}
 
+        public Long getDateLong(Cursor c) {
+
+                Long timestamp = c.getLong(4);
+
+                return(timestamp);
+	}
+
 	public String getDateShort(Cursor c) {
                 long timestamp = c.getLong(4) * 1000;
                 Calendar cal = Calendar.getInstance();

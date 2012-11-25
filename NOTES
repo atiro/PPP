@@ -10,3 +10,32 @@ STAGES -
 DB QUERY
 
 	select title,date from commons where date = strftime('%s', strftime('%Y-%m-%d'));
+
+
+TODO
+
+
+	DONE - Switch news feed tab to show feed by event date. If bill/act, show on date first found.
+
+	Show new debates in more prominent colours if just added
+
+	Let a reminder be setup for the outcome of a debate pointing to the
+	theyworkforyou website to read it.
+
+	Notifications of coming debate so you can watch it on parliament.tv
+
+
+	COnfig
+
+		- Follow politicians
+		- Triggers
+		- Follow a bill (need bill ID)
+
+
+	DONE - Add About Menu
+
+	Add Forced refresh
+
+	Add Thanks - Doing
+
+	Reports Tab - Needs reports rss feed

@@ -35,7 +35,9 @@ import android.content.Intent;
 
 import android.util.Log;
 
-public class DebatesFragment extends ListFragment {
+import com.actionbarsherlock.app.SherlockListFragment;
+
+public class DebatesFragment extends SherlockListFragment {
 
 	private boolean detailsInline = false;
 
@@ -59,12 +61,13 @@ public class DebatesFragment extends ListFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+//		setTheme(R.style.Theme_Sherlock);
 		super.onActivityCreated(savedInstanceState);
 
-		Bundle args = this.getArguments();
+	//	Bundle args = this.getArguments();
 
-		//house = House.values()[args.getInt("house")];
-		//chamber = Chamber.values()[args.getInt("chamber")];
+	//	house = House.values()[args.getInt("house")];
+	//	chamber = Chamber.values()[args.getInt("chamber")];
 		house = House.COMMONS;
 		chamber = Chamber.MAIN;
 		date = 0;

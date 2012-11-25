@@ -2,18 +2,28 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
+  android:background="#000000"
   android:layout_width="fill_parent"
+  android:id="@+id/main_frag_container"
   android:layout_height="fill_parent">
 
-  <fragment class="uk.org.tiro.android.PPP.BrowseFragment"
-    android:id="@+id/browse"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-  />
-  <fragment class="uk.org.tiro.android.PPP.DebatesFragment"
-    android:id="@+id/debates"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-  />
+<!--
+  <LinearLayout
+	android:orientation="horizontal"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+  	android:id="@+id/debates_frag_container"
+	android:layout_weight="0.05"
+  >
+
+  </LinearLayout>
+
+  <FrameLayout
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_weight="1.0">
+  </FrameLayout>
+	  -->
+
 </LinearLayout>
 

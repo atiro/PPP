@@ -295,6 +295,13 @@ class CommonsDBHelper {
 		return(new Date(timestamp));
 	}
 
+	public Long getDateLong(Cursor c) {
+
+		Long timestamp = c.getLong(4);
+
+		return(timestamp);
+	}
+
 	public String getTime(Cursor c) {
 		String time = c.getString(5);
 		return time;

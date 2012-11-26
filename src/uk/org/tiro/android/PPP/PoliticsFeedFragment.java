@@ -42,6 +42,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import android.graphics.Color;
 
 import android.util.Log;
 
@@ -104,12 +105,19 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		WakefulIntentService.sendWakefulWork(cxt, PPPRefresh.class);
+		//WakefulIntentService.sendWakefulWork(cxt, PPPRefresh.class);
 		model.requery();
 		// TODO Memory leak from old adaptor ?
 		feedadaptor = new PoliticsFeedAdaptor(cxt, model);
 		setListAdapter(feedadaptor);
 		//lv.invalidateViews();
+	}
+
+	public void refresh() {
+		model.requery();
+		// TODO Memory leak from old adaptor ?
+		feedadaptor = new PoliticsFeedAdaptor(cxt, model);
+		setListAdapter(feedadaptor);
 	}
 
 	public void onListItemClick(ListView parent, View v, int position,
@@ -180,10 +188,9 @@ OnClickListener() {
 		trigger.setText(helper.getMatch(c));
 
 		if(latest > 0) {
-			trigger.setTextColor(0xFF0000);
-		} else {
-			trigger.setTextColor(0xFFFFFF);
+			trigger.setTextColor(Color.parseColor("#FF0000"));
 		}
+
 		msg.setText(helper.getMessage(c));
 		type.setText(helper.getTriggerType(c) + " " + helper.getHouse(c));
 	}

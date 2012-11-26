@@ -32,10 +32,13 @@ public class PPPUpdate extends WakefulIntentService {
 		// add to feed matches
 		// notify matches marked as important
 
+	Log.v("PPP", "Updating PPP Feeds");
+
 	dbadaptor = new DBAdaptor(this).open();
 	triggershelper = new TriggersDBHelper(this).open();
 	feedhelper = new PoliticsFeedDBHelper(this).open();
 
+	feedhelper.markFeedOld();
 
 	// Do first as first thing on display
 
@@ -149,7 +152,6 @@ public class PPPUpdate extends WakefulIntentService {
 			//Log.v("PPP", "Inserting commons debate: " + debate.getTitle() );
 			commonshelper.insert(debate);
 		}
-
 
                 triggers = triggershelper.com_debates_triggers();
 

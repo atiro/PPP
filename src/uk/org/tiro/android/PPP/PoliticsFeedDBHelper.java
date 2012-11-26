@@ -317,7 +317,7 @@ class PoliticsFeedDBHelper {
 			// date by adding half-day leeway.
 			Long today = (c.getTimeInMillis() / 1000) - 43200;
 			String[] args = {today.toString()};
-		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE date >= ? ORDER BY DATE desc, _id desc", args));
+		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE date >= ? ORDER BY DATE asc, _id asc", args));
 	}
 
 	public Integer getPoliticsFeedCount() {
@@ -496,6 +496,10 @@ class PoliticsFeedDBHelper {
 		//Log.v("PPP", "Clearing feed of trigger: " + trigger_id);
 
 		this.mDb.delete("politicsfeed", "trigger_id = ?", args);
+	}
+
+	public void markFeedOld() {
+		this.mDb.execSQL("UPDATE politicsfeed SET new = 0");
 	}
 
 

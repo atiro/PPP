@@ -44,6 +44,10 @@ public class BrowseFragment extends SherlockFragment {
 	Gallery chamber_gallery = null;
 	Gallery day_gallery = null;
 
+	House browse_house = null;
+	Chamber browse_chamber = null;
+	Integer browse_date = 0;
+
 	Context c = null;
 
 	@Override
@@ -53,23 +57,28 @@ public class BrowseFragment extends SherlockFragment {
 		View v = inflater.inflate(R.layout.browse_fragment, container, false);
 		Context c = getActivity().getApplicationContext();
 
+		
 		ArrayAdapter<String> house_adaptor = new ArrayAdapter<String>(c, android.R.layout.simple_gallery_item, houses);
 		ArrayAdapter<String> chamber_adaptor = new ArrayAdapter<String>(c, android.R.layout.simple_gallery_item, chambers_commons);
 
 		// TODO - move to correct position ?
 
+		Log.v("PPP", "Creating BrowseFragment");
+
 		house_gallery = (Gallery)v.findViewById(R.id.house_gallery);
 		house_gallery.setAdapter(house_adaptor);
+		if(browse_house == House.LORDS) {
+			house_gallery.setSelection(1);
+		}
 		house_gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
+
 			@Override
 			public void onItemSelected(AdapterView<?> adapter, View view, final int position, long id) {
-				House house = House.COMMONS;
-			
-				house = house.values()[position];
+				browse_house = House.values()[position];
 
 				DebatesFragment debates = (DebatesFragment)getFragmentManager().findFragmentByTag("debates");
 				
-				debates.updateHouse(house);
+				debates.updateHouse(browse_house);
 			}
 
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -78,18 +87,20 @@ public class BrowseFragment extends SherlockFragment {
 
 		chamber_gallery = (Gallery)v.findViewById(R.id.chamber_gallery);
 		chamber_gallery.setAdapter(chamber_adaptor);
+		if(browse_chamber != null) {
+			chamber_gallery.setSelection(browse_chamber.ordinal());
+		}
+
 		chamber_gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapter, View view, final int position, long id) {
-				Chamber chamber = Chamber.MAIN;
-
-				chamber = chamber.values()[position];
+				browse_chamber = Chamber.values()[position];
 				
 				//Log.v("PPP", "Setting chamber to " + chamber.toString());
 
 				DebatesFragment debates = (DebatesFragment)getFragmentManager().findFragmentByTag("debates");
 				
-				debates.updateChamber(chamber);
+				debates.updateChamber(browse_chamber);
 			}
 
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -99,9 +110,17 @@ public class BrowseFragment extends SherlockFragment {
 		// Handle dates to append/prepend to Today/Tom/Yes
 
 		for(int i = -14; i < -1; i++) {
+			String month;
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DAY_OF_YEAR, i);
-			String month = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK);
+			// Taken from http://blog.imaginea.com/calendar-get-display-name-jdk5/
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+				month = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK);
+			} else {
+				DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
+				String[] months = dateFormatSymbols.getShortMonths();
+				month = months[cal.get(Calendar.MONTH)];
+			}
 			int day = cal.get(Calendar.DAY_OF_MONTH);
 			String date = day + " " + month;
 			days.add(date);
@@ -110,9 +129,17 @@ public class BrowseFragment extends SherlockFragment {
 		days.add("Today");
 		days.add("Tomorrow");
 		for(int i = 2; i < 14; i++) {
+			String month;
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DAY_OF_YEAR, i);
-			String month = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK);
+			// Taken from http://blog.imaginea.com/calendar-get-display-name-jdk5/
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+				month = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.UK);
+			} else {
+				DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
+				String[] months = dateFormatSymbols.getShortMonths();
+				month = months[cal.get(Calendar.MONTH)];
+			}
 			int day = cal.get(Calendar.DAY_OF_MONTH);
 			String date = day + " " + month;
 			days.add(date);
@@ -127,12 +154,12 @@ public class BrowseFragment extends SherlockFragment {
 		day_gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapter, View view, final int position, long id) {
-				Integer date = position - 14;
+				browse_date = position - 14;
 				
 				//Log.v("PPP", "Setting day to " + date.toString());
 				DebatesFragment debates = (DebatesFragment)getFragmentManager().findFragmentByTag("debates");
 				
-				debates.updateDate(date);
+				debates.updateDate(browse_date);
 			}
 
 			public void onNothingSelected(AdapterView<?> parent) {

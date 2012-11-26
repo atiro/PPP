@@ -97,7 +97,7 @@ public class BillsListFragment extends SherlockListFragment {
 
 		new AlertDialog.Builder(acxt)
 			.setMessage(msg)
-			.setPositiveButton("Cancel", null)
+			.setPositiveButton("Rhubarb", null)
 			.show();
 	}
 

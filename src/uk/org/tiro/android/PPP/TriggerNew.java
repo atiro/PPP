@@ -153,6 +153,15 @@ public class TriggerNew extends Activity {
 		finish();
 
 	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(triggershelper != null) {
+			triggershelper.close();
+		}
+	}
+
 }
 
 

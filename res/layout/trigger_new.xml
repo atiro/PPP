@@ -34,7 +34,7 @@
   <CheckBox android:id="@+id/match_bills"
   	android:layout_width="wrap_content"
   	android:layout_height="wrap_content"
-	android:checked="true"
+	android:checked="false"
 	android:layout_gravity="left"
 	android:layout_weight="1"
 	android:text="Bills"
@@ -58,7 +58,7 @@
   	android:layout_height="wrap_content"
 	android:layout_gravity="left"
 	android:layout_weight="1"
-	android:checked="true"
+	android:checked="false"
 	android:text="Acts"
   />
 

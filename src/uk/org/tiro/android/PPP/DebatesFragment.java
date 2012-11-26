@@ -147,6 +147,8 @@ public class DebatesFragment extends SherlockListFragment {
 
 	public void onListItemClick(ListView parent, View v, int position,
 					long id) {
+		        final PoliticsFeedDBHelper feedhelper;
+			final int debate;
 			final String guid;
 			final String title;
 			final String subject;
@@ -156,11 +158,13 @@ public class DebatesFragment extends SherlockListFragment {
 			// Retrieve debate guid
 			model.moveToPosition(position);
 			if(house == House.COMMONS) {
+				debate = commonshelper.getId(model);
 				guid = commonshelper.getGUID(model);
 				title = commonshelper.getTitle(model);
 				subject = commonshelper.getSubject(model);
 				url = commonshelper.getURL(model);
 			} else {
+				debate = commonshelper.getId(model);
 				guid = lordshelper.getGUID(model);
 				title = lordshelper.getTitle(model);
 				subject = lordshelper.getTitle(model);
@@ -168,20 +172,24 @@ public class DebatesFragment extends SherlockListFragment {
 			}
 				
 			content = subject;
+			feedhelper = new PoliticsFeedDBHelper(acxt).open();
 
 			new AlertDialog.Builder(acxt)
 				.setTitle(title)
 				.setMessage(subject)
 
                                 .setNegativeButton("Cancel", null)
-				.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+				.setPositiveButton("Alert", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
-						Intent sendIntent = new Intent();
-						sendIntent.setAction(Intent.ACTION_SEND);
-						sendIntent.putExtra(Intent.EXTRA_TEXT, content);
-						sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-						sendIntent.setType("text/plain");
-						startActivity(Intent.createChooser(sendIntent, "Share with..."));
+
+
+						// Insert into politicsfeed.
+						if(house == House.COMMONS) {
+							feedhelper.insert_commons_debate("", 0L, debate, true);
+						} else {
+							feedhelper.insert_lords_debate("", 0L, debate, true);
+						}
+						Toast.makeText(acxt, "Added", Toast.LENGTH_SHORT).show();
 
 					}
 				})

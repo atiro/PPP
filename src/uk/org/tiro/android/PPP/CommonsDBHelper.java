@@ -262,6 +262,10 @@ class CommonsDBHelper {
 			return false;
 		}
 		}
+
+	public int getId(Cursor c) {
+		return(c.getInt(0));
+	}
 	
 	public String getTitle(Cursor c) {
 		return(c.getString(1));

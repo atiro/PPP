@@ -92,6 +92,7 @@ public class PPP extends SherlockFragmentActivity
 		Time now = new Time();
 		now.setToNow();
                 edit.putLong("lastRun", now.toMillis(true));
+                edit.putInt("version", 4); // TODO get from manifest ?
                 edit.commit();
 
 		// Now schedule weekly update (if wi-fi available)
@@ -99,7 +100,7 @@ public class PPP extends SherlockFragmentActivity
 
 		new AlertDialog.Builder(this)
 			.setTitle("Welcome")
-			.setMessage("This app is intented to allow you to follow Debates, Bills, and Acts of Parliament that match your interests. \n\nAs this is the first time you have run the app, it will need a few moments to initialise and download the various Parliamentary RSS feeds.\n\n Please do contact the developer with any thoughts on how to improve the app.\n")
+			.setMessage("This app is intented to allow you to follow Debates, Bills, and Acts of Parliament that match your interests. \n\nAs this is the first time you have run the app, it will need a few moments to initialise and download the various data feeds provided by Parliament.\n\n")
 				.setNeutralButton("Aye", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg,
 int sumthing) {
@@ -107,6 +108,13 @@ int sumthing) {
 				})
 				.show();
 
+	} else { // TODO get current version and display update message
+                SharedPreferences.Editor edit = prefs.edit();
+		Time now = new Time();
+		now.setToNow();
+                edit.putLong("lastRun", now.toMillis(true));
+                edit.putInt("version", 4); // TODO get from manifest ?
+                edit.commit();
 	}
 
 	//PoliticsFeedFragment feed = (PoliticsFeedFragment)getSupportFragmentManager().findFragmentById(R.id.feed);
@@ -120,7 +128,7 @@ int sumthing) {
 //	ActionBar bar = getActionBar();
 
 
-	String tabs[] = new String[] { "Upcoming", "Debates", "Bills", "Acts", "Settings" };
+	String tabs[] = new String[] { "Calendar", "Debates", "Bills", "Acts", "Alerts" };
 	//String tabs[] = new String[] { "Debates" };
 	Fragment frags[] = new Fragment[] { new PoliticsFeedFragment(),
 					    new Debates(),
@@ -204,6 +212,11 @@ int sumthing) {
 
 */
 
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+                super.onSaveInstanceState(outState);
+	}
+
    private class PPPTabListener implements TabListener {
    	private PPP pAct;
 	private Fragment pFrag;
@@ -222,7 +235,7 @@ int sumthing) {
 		FragmentManager fragMgr = getSupportFragmentManager();
 		FragmentTransaction xaction = fragMgr.beginTransaction();
 
-		xaction.replace(R.id.content, pFrag, null);
+		xaction.add(R.id.content, pFrag, null);
 		xaction.commit();
 	}
    	

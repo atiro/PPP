@@ -53,15 +53,17 @@ public class Debates extends SherlockFragment {
 	Integer date;
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		Bundle args;
+	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 
-//		house = House.values()[getIntent().getExtras().getInt("house")];
-//		chamber = Chamber.values()[getIntent().getExtras().getInt("chamber")];
-		house = House.COMMONS;
-		chamber = Chamber.MAIN;
+		if(savedInstanceState != null) {
+			house = House.values()[savedInstanceState.getInt("house")];
+			chamber = Chamber.values()[savedInstanceState.getInt("chamber")];
+		} else {
+			house = House.COMMONS;
+			chamber = Chamber.MAIN;
+		}
 		date = 0;
 
 		// date
@@ -84,16 +86,37 @@ public class Debates extends SherlockFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 			Bundle savedInstanceState) {
+		Bundle args;
 
 	View v = inflater.inflate(R.layout.debates, container, false);
 
 	FragmentManager fm = getActivity().getSupportFragmentManager();
 	FragmentTransaction ft = fm.beginTransaction();
 
+	Log.v("PPP", "Debates onCreateView");
+
+	if(savedInstanceState != null) {
+		Log.v("PPP", "Debates onCreateView - Retrieving state");
+		house = House.values()[savedInstanceState.getInt("house")];
+		chamber = Chamber.values()[savedInstanceState.getInt("chamber")];
+		date = savedInstanceState.getInt("date");
+	} 
+
+	Log.v("PPP", "Debates onCreateView Day = " + date);
+
 	BrowseFragment browseFrag = new BrowseFragment();
+	args = new Bundle();
+	args.putInt("house", house.ordinal());
+	args.putInt("chamber", chamber.ordinal());
+	args.putInt("date", date);
+
+	browseFrag.setArguments(args);
+	browseFrag.setRetainInstance(true);
+
 	ft.add(R.id.main_frag_container, browseFrag, "browse");
 	DebatesFragment debatesFrag = new DebatesFragment();
 	ft.add(R.id.main_frag_container, debatesFrag, "debates");
+	debatesFrag.setRetainInstance(true);
 
 	ft.commit();
 
@@ -124,6 +147,31 @@ public class Debates extends SherlockFragment {
 //		return(super.onOptionsItemSelected(item));
 //	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("house", house.ordinal());
+		outState.putInt("chamber", chamber.ordinal());
+		outState.putInt("date", date);
+	}
+
+/*
+	@Override
+	public void onRestoreInstanceState(Bundle outState) {
+		super.onRestoreInstanceState(outState);
+		outState.putInt("house", house.ordinal());
+		outState.putInt("chamber", chamber.ordinal());
+		outState.putInt("date", date);
+		if(savedInstanceState != null) {
+		Log.v("PPP", "Debates onCreateView - Retrieving state");
+		house = House.values()[savedInstanceState.getInt("house")];
+		chamber = Chamber.values()[savedInstanceState.getInt("chamber")];
+		date = savedInstanceState.getInt("date");
+	} 
+
+	}
+	*/
+		
 	@Override
 	public void onDestroy() {
 		super.onDestroy();

@@ -179,7 +179,7 @@ public class DebatesFragment extends SherlockListFragment {
 				.setMessage(subject)
 
                                 .setNegativeButton("Cancel", null)
-				.setPositiveButton("Alert", new DialogInterface.OnClickListener() {
+				.setNeutralButton("Monitor", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
 
 
@@ -193,6 +193,7 @@ public class DebatesFragment extends SherlockListFragment {
 
 					}
 				})
+				/*
 				.setNeutralButton("View", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
 						Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -200,6 +201,8 @@ public class DebatesFragment extends SherlockListFragment {
 				}
 
 				})
+				*/
+
 				/*
 					TODO -- how to set reminderers ?
 						before or after ?

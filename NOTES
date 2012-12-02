@@ -45,3 +45,45 @@ TODO
 	Add News tab
 
 	Fix the sport/transport problem
+
+	Add Scrapbook tab for recording past events, reports, etc (counterpart
+	to calendar/diary tab). o
+
+	Tabs - Scrapbook, Calendar
+   	       News, Debates, Bills, Acts, Reports,
+	       Settings (Alerts, Notifications, Tabs Displayed)
+
+      Scrapbook  - Saved events and links to outcomes (hansard, reports, bills, acts)
+      		 - Saved reports
+
+
+
+ROADMAP
+
+	0.2... Improve calendar display (new items) - What is metaphor Calendar or Newsfeed ? Think how will relate to scrapbook
+	       Allow to scroll backwards (neverending list?)
+	   ... Improve sport/transport problem
+	   ... Fix/Handle dns lookup crash more gracefully
+	0.3 - Notifications
+	0.3... Move settings to options menu
+	   ... "Follow" MP/Lord (text matching)
+	   ... Add Parliament News tab
+	0.4 - Scrapbook
+	   ... Link to Hansard/TWFY for debates
+	0.5 - Add Reports Tab if possible
+	
+	      Better styling
+
+	1.0 - ...
+
+	Tablet layout - scrapbook open on left all time, other tabs viewing
+			on right, can see additions to scrapbook as made.
+
+	Future - FollowMyLocalMP - Automatically find your local MP based on
+				   GPS and follow them in debates.
+
+		- Regional/Local Council feeds ? )
+
+		- European Parliament Version
+
+	

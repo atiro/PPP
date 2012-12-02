@@ -427,15 +427,13 @@ class PoliticsFeedDBHelper {
 			  d.moveToFirst();
 			  msg = "'" + commonshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + commonshelper.getTitle(d) + "' on ";
-			  msg += commonshelper.getDateShort(d);
+			  msg += "'" + commonshelper.getTitle(d);
 			} else {
 			  Cursor d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + lordshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + lordshelper.getTitle(d) + "' on ";
-			  msg += lordshelper.getDateShort(d);
+			  msg += "'" + lordshelper.getTitle(d);
 			}
 		} else if (trigger == Trigger.SELECT) {
 			// Need to get house
@@ -451,8 +449,7 @@ class PoliticsFeedDBHelper {
 			    msg = "'" + commonshelper.getSubject(d) + "'";
 			    msg += " will be discussed at the ";
 			  }
-			  msg += commonshelper.getTitle(d) + " committee on ";
-			  msg += commonshelper.getDateShort(d);
+			  msg += commonshelper.getTitle(d) + " committee";
 			} else {
 			  Cursor d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
@@ -463,27 +460,23 @@ class PoliticsFeedDBHelper {
 			    msg = "'" + lordshelper.getSubject(d) + "'";
 			    msg += " will be discussed at the ";
 			  }
-			  msg += lordshelper.getTitle(d) + " committee on ";
-			  msg += lordshelper.getDateShort(d);
+			  msg += lordshelper.getTitle(d) + " committee";
 			}
 		} else if (trigger == Trigger.WESTMINSTER) {
 			Cursor d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
-			msg += " will be debated on ";
-			msg += commonshelper.getDateShort(d);
+			msg += " will be debated";
 		} else if (trigger == Trigger.GRAND) {
 			Cursor d = lordshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + lordshelper.getTitle(d) + "'";
-			msg += " will be debated on ";
-			msg += lordshelper.getDateShort(d);
+			msg += " will be debated";
 		} else if (trigger == Trigger.GENERAL) {
 			Cursor d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getTitle(d) + "'";
-			msg += " will be discussed on ";
-			msg += commonshelper.getDateShort(d);
+			msg += " will be discussed";
 		}
 
 		// SI, Draft SI, Reports...

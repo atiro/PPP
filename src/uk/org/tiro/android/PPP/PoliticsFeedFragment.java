@@ -188,11 +188,18 @@ OnClickListener() {
 		trigger.setText(helper.getMatch(c));
 
 		if(latest > 0) {
-			trigger.setTextColor(Color.parseColor("#FF0000"));
+			row.setBackgroundColor(Color.parseColor("#3F3F3F"));
+		} else {
+			row.setBackgroundColor(Color.parseColor("#000000"));
 		}
 
 		msg.setText(helper.getMessage(c));
 		type.setText(helper.getTriggerType(c) + " " + helper.getHouse(c));
+		if(helper.getHouseRaw(c) == House.COMMONS) {
+			type.setTextColor(Color.parseColor("#62B367"));
+		} else {
+			type.setTextColor(Color.parseColor("#DA5254"));
+		}
 	}
 
     }

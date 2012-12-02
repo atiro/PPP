@@ -7,6 +7,7 @@ package uk.org.tiro.android.PPP;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.net.UnknownHostException;
 
 import android.sax.Element;
 import android.sax.StartElementListener;
@@ -125,6 +126,8 @@ public class CommonsFeedParser extends BaseFeedParser {
 
 		try {
 			Xml.parse(this.getInputStream(), this.encoding, root.getContentHandler());
+		} catch (UnknownHostException e) {
+			return null;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

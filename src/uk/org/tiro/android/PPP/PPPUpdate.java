@@ -1,8 +1,13 @@
 package uk.org.tiro.android.PPP;
 
 import android.content.Intent;
+import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.TaskStackBuilder;
+import android.app.PendingIntent;
+import android.app.NotificationManager;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
@@ -15,6 +20,7 @@ public class PPPUpdate extends WakefulIntentService {
 	private DBAdaptor dbadaptor;
 	private TriggersDBHelper triggershelper;
 	private PoliticsFeedDBHelper feedhelper;
+	private int pppId = 1;
 
 	private int alerts = 0;
 
@@ -42,6 +48,9 @@ public class PPPUpdate extends WakefulIntentService {
 
 	// Do first as first thing on display
 
+	// If no network connection can't report anything as not sure if running
+	// from app or scheduled run. Need to have a "Last Updated" notice
+	// somewhere
 
 	com_selectupdate();
 	lords_selectupdate();
@@ -76,7 +85,25 @@ public class PPPUpdate extends WakefulIntentService {
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
- 		       .setContentText(alerts + " new matching debates");		  }
+ 		       .setContentText(alerts + " new matching debates");
+		       
+		       /*
+		Intent pppIntent = new Intent(this, PPP.class);
+
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+		stackBuilder.addParentStack(PPP.class);
+		stackBuilder.addNextIntent(pppIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+		mBuilder.setContentIntent(resultPendingIntent);
+		*/
+		NotificationManager mNotificationManager =
+			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(pppId, mBuilder.getNotification());
+      }
+
+
+
+
 		
 	}
 
@@ -87,6 +114,9 @@ public class PPPUpdate extends WakefulIntentService {
 		BillsFeedParser parser = new BillsFeedParser("http://services.parliament.uk/bills/AllBills.rss", "");
 //		BillsFeedParser parser = new BillsFeedParser("http://tiro.org.uk/mobile/AllBills.rss", "");
 
+		if(parser == null) {
+			return;
+		}
 
 		bills = parser.parse();
 
@@ -125,6 +155,10 @@ public class PPPUpdate extends WakefulIntentService {
 	 // ActsFeedParser parser = new ActsFeedParser("http://tiro.org.uk/mobile/legislation/acts.xml", "");
 	  ActsFeedParser parser = new ActsFeedParser("http://www.legislation.gov.uk/new/ukpga/data.feed", "");
 	
+	  if(parser == null) {
+		return;
+	  }
+
 	  acts = parser.parse();
 
 	  for(Act act : acts) {
@@ -142,6 +176,10 @@ public class PPPUpdate extends WakefulIntentService {
 	List<String> triggers = new ArrayList<String>();
 	CommonsDBHelper commonshelper = new CommonsDBHelper(this).open();
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_main_chamber.rss", "");
+
+	  	if(parser == null) {
+			return;
+	  	}	
 
 		// Get select committees
 		// Get westminster hall
@@ -176,6 +214,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_select_committee.rss", "");
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_select_committee.rss", "");
 
+	if(parser == null) {
+		return;
+	}
 	// Get select committees
 	// Get westminster hall
 	
@@ -196,6 +237,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_main_chamber.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_main_chamber.rss", "");
 	
+	if(parser == null) {
+		return;
+	}
 		// TODO sleect & grant committees
 
 	debates = parser.parse();
@@ -214,6 +258,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_select_committee.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_select_committee.rss", "");
 	
+	if(parser == null) {
+		return;
+	}
 		// TODO sleect & grant committees
 
 	debates = parser.parse();
@@ -232,6 +279,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_westminster_hall.rss", "");
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_westminster_hall.rss", "");
 
+	if(parser == null) {
+		return;
+	}
 		// Get select committees
 		// Get westminster hall
 	
@@ -251,6 +301,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_general_committee.rss", "");
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_general_committee.rss", "");
 
+	if(parser == null) {
+		return;
+	}
 		// Get select committees
 		// Get westminster hall
 	
@@ -270,6 +323,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_grand_committee.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_grand_committee.rss", "");
 	
+	if(parser == null) {
+		return;
+	}
 		// TODO sleect & grant committees
 
 	debates = parser.parse();

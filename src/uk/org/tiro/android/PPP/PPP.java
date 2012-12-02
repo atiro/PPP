@@ -220,6 +220,7 @@ int sumthing) {
    private class PPPTabListener implements TabListener {
    	private PPP pAct;
 	private Fragment pFrag;
+	private boolean firstDisplay = true;
 
 	public PPPTabListener(PPP act, Fragment frag) {
 		pAct = act;
@@ -235,9 +236,27 @@ int sumthing) {
 		FragmentManager fragMgr = getSupportFragmentManager();
 		FragmentTransaction xaction = fragMgr.beginTransaction();
 
-		xaction.add(R.id.content, pFrag, null);
+		if(firstDisplay == true) {
+			int pos = tab.getPosition();
+			if(pos == 0) {
+			  xaction.add(R.id.content, pFrag, "Calendar");
+			} else if(pos == 1) {
+			  xaction.add(R.id.content, pFrag, "Debates");
+			} else if(pos == 2) {
+			  xaction.add(R.id.content, pFrag, "Bills");
+			} else if(pos == 3) {
+			  xaction.add(R.id.content, pFrag, "Acts");
+			} else if(pos == 4) {
+			  xaction.add(R.id.content, pFrag, "Alerts");
+			}
+			firstDisplay = false;
+		} else {
+			xaction.attach(pFrag);
+		}
+
 		xaction.commit();
 	}
+
    	
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
@@ -247,7 +266,7 @@ int sumthing) {
 		Fragment frag = (Fragment)fragMgr.findFragmentById(R.id.content);
 
 		if(frag != null) {
-			xaction.remove(frag);
+			xaction.detach(frag);
 		}
 		xaction.commit();
 

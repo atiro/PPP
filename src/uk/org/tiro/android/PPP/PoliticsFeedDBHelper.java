@@ -414,7 +414,7 @@ class PoliticsFeedDBHelper {
 		if(trigger == Trigger.ACT) {
 			Cursor d = actshelper.getAct(getItemID(c));
 			d.moveToFirst(); // TODO check got result
-			msg = actshelper.getTitle(d) + " is now an act";
+			msg = actshelper.getTitle(d) + " is now an Act.";
 		} else if (trigger == Trigger.BILL) {
 			Cursor d = billshelper.getBill(getItemID(c));
 			d.moveToFirst(); // TODO check got result
@@ -427,13 +427,13 @@ class PoliticsFeedDBHelper {
 			  d.moveToFirst();
 			  msg = "'" + commonshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + commonshelper.getTitle(d);
+			  msg += "'" + commonshelper.getTitle(d) + ".";
 			} else {
 			  Cursor d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + lordshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + lordshelper.getTitle(d);
+			  msg += "'" + lordshelper.getTitle(d) + ".";
 			}
 		} else if (trigger == Trigger.SELECT) {
 			// Need to get house
@@ -449,7 +449,7 @@ class PoliticsFeedDBHelper {
 			    msg = "'" + commonshelper.getSubject(d) + "'";
 			    msg += " will be discussed at the ";
 			  }
-			  msg += commonshelper.getTitle(d) + " committee";
+			  msg += commonshelper.getTitle(d) + " committee.";
 			} else {
 			  Cursor d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
@@ -460,23 +460,24 @@ class PoliticsFeedDBHelper {
 			    msg = "'" + lordshelper.getSubject(d) + "'";
 			    msg += " will be discussed at the ";
 			  }
-			  msg += lordshelper.getTitle(d) + " committee";
+			  msg += lordshelper.getTitle(d) + " committee.";
 			}
 		} else if (trigger == Trigger.WESTMINSTER) {
 			Cursor d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
-			msg += " will be debated";
+			msg += " will be debated.";
 		} else if (trigger == Trigger.GRAND) {
 			Cursor d = lordshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + lordshelper.getTitle(d) + "'";
-			msg += " will be debated";
+			msg += " will be debated.";
 		} else if (trigger == Trigger.GENERAL) {
 			Cursor d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
-			msg = "'" + commonshelper.getTitle(d) + "'";
-			msg += " will be discussed";
+			msg = "'" + commonshelper.getSubject(d) + "'";
+			msg += " will be discussed by the ";
+			msg += commonshelper.getCommittee(d) + "."
 		}
 
 		// SI, Draft SI, Reports...

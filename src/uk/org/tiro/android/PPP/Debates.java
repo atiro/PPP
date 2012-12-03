@@ -111,12 +111,13 @@ public class Debates extends SherlockFragment {
 	args.putInt("date", date);
 
 	browseFrag.setArguments(args);
-	browseFrag.setRetainInstance(true);
+//	browseFrag.setRetainInstance(true);
 
 	ft.add(R.id.main_frag_container, browseFrag, "browse");
 	DebatesFragment debatesFrag = new DebatesFragment();
 	ft.add(R.id.main_frag_container, debatesFrag, "debates");
-	debatesFrag.setRetainInstance(true);
+//	debatesFrag.setRetainInstance(true);
+
 
 	ft.commit();
 

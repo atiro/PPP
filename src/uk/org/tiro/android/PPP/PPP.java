@@ -221,6 +221,7 @@ int sumthing) {
    	private PPP pAct;
 	private Fragment pFrag;
 	private boolean firstDisplay = true;
+	private String[] tabNames = new String[] {"Calendar", "Debates", "Bills", "Acts", "alerts"};
 
 	public PPPTabListener(PPP act, Fragment frag) {
 		pAct = act;
@@ -238,7 +239,10 @@ int sumthing) {
 
 		if(firstDisplay == true) {
 			int pos = tab.getPosition();
-			if(pos == 0) {
+			Fragment preInitFragment = (Fragment)fragMgr.findFragmentByTag(tabNames[pos]);
+			if(preInitFragment != null) {
+				xaction.attach(preInitFragment);
+			} else if(pos == 0) {
 			  xaction.add(R.id.content, pFrag, "Calendar");
 			} else if(pos == 1) {
 			  xaction.add(R.id.content, pFrag, "Debates");

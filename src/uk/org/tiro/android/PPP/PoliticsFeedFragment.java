@@ -98,7 +98,9 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		feedhelper.close();
+		if(feedhelper != null) {
+			feedhelper.close();
+		}
 	}
 
 

@@ -105,8 +105,12 @@ public class BillsListFragment extends SherlockListFragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		billshelper.close();
-		filterText.removeTextChangedListener(filterTextWatcher);
+		if(billshelper != null) {
+			billshelper.close();
+		}
+		if(filterText != null) {
+			filterText.removeTextChangedListener(filterTextWatcher);
+		}
 	}
 	
 

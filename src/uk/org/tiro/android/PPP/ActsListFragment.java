@@ -142,8 +142,12 @@ public class ActsListFragment extends SherlockListFragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		actshelper.close();
-		filterText.removeTextChangedListener(filterTextWatcher);
+		if(actshelper != null) {
+			actshelper.close();
+		}
+		if(filterText != null) {
+			filterText.removeTextChangedListener(filterTextWatcher);
+		}
 	}
 	
 

@@ -427,13 +427,13 @@ class PoliticsFeedDBHelper {
 			  d.moveToFirst();
 			  msg = "'" + commonshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + commonshelper.getTitle(d) + ".";
+			  msg += "'" + commonshelper.getTitle(d) + "'.";
 			} else {
 			  Cursor d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + lordshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + lordshelper.getTitle(d) + ".";
+			  msg += "'" + lordshelper.getTitle(d) + ";.";
 			}
 		} else if (trigger == Trigger.SELECT) {
 			// Need to get house
@@ -477,7 +477,7 @@ class PoliticsFeedDBHelper {
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
 			msg += " will be discussed by the ";
-			msg += commonshelper.getCommittee(d) + "."
+			msg += commonshelper.getCommittee(d) + ".";
 		}
 
 		// SI, Draft SI, Reports...

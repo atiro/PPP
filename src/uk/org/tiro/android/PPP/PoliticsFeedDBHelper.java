@@ -328,6 +328,39 @@ class PoliticsFeedDBHelper {
 		return nf_count ;
 	}
 
+	public Cursor getPoliticsToday() {
+			Calendar c = Calendar.getInstance();
+			c.set(Calendar.HOUR, 0);
+			c.set(Calendar.MINUTE, 0);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			// Try to ensure we include bills/acts with today's
+			// date by adding half-day leeway.
+			Long today = (c.getTimeInMillis() / 1000);
+			Long tomorrow = today + 86399;
+			String[] args = {today.toString(), tomorrow.toString()};
+			return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE date >= ? AND date < ? ORDER BY DATE asc, _id asc", args));
+	}
+
+	public Integer getPoliticsTodayCount() {
+		Integer nf_count = -1;
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Long today = (cal.getTimeInMillis() / 1000);
+		Long tomorrow = today + 86399;
+		String[] args = {today.toString(), tomorrow.toString()};
+		// Try to ensure we include bills/acts with today's
+		// date by adding half-day leeway.
+		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= ? AND date < ?", args);
+		c.moveToFirst();
+		nf_count = c.getInt(0);
+		return nf_count ;
+	}
+
+
 /*
 	public Cursor getpoliticsfeedFiltered(String match) {
 		String filter = new String('%' + match + '%');

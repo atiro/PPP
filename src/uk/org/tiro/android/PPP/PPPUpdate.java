@@ -24,6 +24,7 @@ public class PPPUpdate extends WakefulIntentService {
 
 	private int alerts = 0;
 	private int readable_debates = 0;
+	private int notify_debates = 0;
 
 	public PPPUpdate() {
 		super("PPPUpdate");
@@ -119,6 +120,27 @@ public class PPPUpdate extends WakefulIntentService {
 		mNotificationManager.notify(pppId, mBuilder.getNotification());
 	}
       	
+	// Finally, notify user about any debates today they've marked as
+	// being notified about (TODO at moment all today's debates in planner
+	// are retrieved)
+
+        pppId += 1;
+	notify_debates = feedhelper.getPoliticsTodayCount();
+
+        if(notify_debates > 0) {
+		NotificationCompat.Builder mBuilder =
+ 		       new NotificationCompat.Builder(this)
+ 		       .setSmallIcon(R.drawable.ppp_status_icon)
+ 		       .setContentTitle("PPP")
+ 		       .setContentText(readable_debates + " matching debates taking place today.");
+
+		NotificationManager mNotificationManager =
+			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(pppId, mBuilder.getNotification());
+	}
+      	
+	// Finally, notify user about any debates today they've marked as
+
 	feedhelper.close();
 	triggershelper.close();
 	dbadaptor.close();

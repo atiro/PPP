@@ -18,7 +18,7 @@
 android:id="@android:id/empty"
 android:layout_width="fill_parent"
 android:layout_height="wrap_content"
-android:text="\n\nYou haven't added any debates nor set any alerts yet, so your calendar is empty.\n\n Try looking in the Debates tab for debates, select committee hearings or discussions you would like to track, and note them; they will then be shown here.\n\n Or if you have a particular interest in some topics such as 'europe', 'science', etc, go to the Alerts tab and add them there; then all matching debates will be shown here."/>
+android:text="\n\nYou haven't added any debates nor set any alerts yet, so your planner is empty.\n\n Try looking in the Debates tab for debates, select committee hearings or discussions you would like to track, and note them; they will then be shown here.\n\n Or if you have a particular interest in some topics such as 'europe', 'science', etc, go to the Alerts tab and add them there; then all matching debates will be shown here."/>
 
 </LinearLayout>
 

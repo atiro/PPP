@@ -324,6 +324,24 @@ class TriggersDBHelper {
 
 		return triggers;
 	}
+
+	public List<String> lords_debates_triggers() {
+		List<String> triggers = new ArrayList<String>();
+
+		Cursor c = this.mDb.rawQuery("SELECT match from triggers WHERE lords = 1", null);
+
+		c.moveToFirst();
+
+		// Join results in string with '|'
+		while(c.isAfterLast() == false) {
+			triggers.add(c.getString(0));
+			c.moveToNext();
+		}
+
+		c.close();
+
+		return triggers;
+	}
 			
 	public void remove(Cursor c) {
 		String id = c.getString(0);

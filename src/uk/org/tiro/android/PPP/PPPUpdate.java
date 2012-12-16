@@ -23,6 +23,7 @@ public class PPPUpdate extends WakefulIntentService {
 	private int pppId = 1;
 
 	private int alerts = 0;
+	private int readable_debates = 0;
 
 	public PPPUpdate() {
 		super("PPPUpdate");
@@ -52,6 +53,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// from app or scheduled run. Need to have a "Last Updated" notice
 	// somewhere
 
+	// NB These two mark all existing debates in their House as old, needed
+	// for notifications to work.
+
 	com_selectupdate();
 	lords_selectupdate();
 
@@ -60,14 +64,15 @@ public class PPPUpdate extends WakefulIntentService {
 
 	lords_grandupdate();
 
-	// Do last as will catch all commons/lords debates with triggers
+	// Do next two last so we catch all commons/lords debates with
+	// triggers, regardless of which chamber it was in.
 
 	commonsupdate();
 	lordsupdate();
 
 	billsupdate(); // Retrieve bills
 	actsupdate();
-	// siupdate(); // Stat. Instruments not my flatmate
+	// siupdate(); // Stat. Instruments not flatmate
 
 
 	/* TODO - using theyworkforyou API
@@ -76,9 +81,6 @@ public class PPPUpdate extends WakefulIntentService {
 
 	*/
 
-	feedhelper.close();
-	triggershelper.close();
-	dbadaptor.close();
 
 	if(alerts > 0) {
 		NotificationCompat.Builder mBuilder =
@@ -101,9 +103,25 @@ public class PPPUpdate extends WakefulIntentService {
 		mNotificationManager.notify(pppId, mBuilder.getNotification());
       }
 
+      pppId += 1;
+      // Retrieve debates from yesterday that are available to read.
+      readable_debates = feedhelper.getReadyCount();
 
+      if(readable_debates > 0) {
+		NotificationCompat.Builder mBuilder =
+ 		       new NotificationCompat.Builder(this)
+ 		       .setSmallIcon(R.drawable.ppp_status_icon)
+ 		       .setContentTitle("PPP")
+ 		       .setContentText(readable_debates + " debates available to read");
 
-
+		NotificationManager mNotificationManager =
+			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(pppId, mBuilder.getNotification());
+	}
+      	
+	feedhelper.close();
+	triggershelper.close();
+	dbadaptor.close();
 		
 	}
 
@@ -137,7 +155,6 @@ public class PPPUpdate extends WakefulIntentService {
         	        for(Integer bill: triggerbills) {
 				// TODO put proper trigger_id in
                 	        feedhelper.insert_bill(trigger, 0, bill, false);
-				alerts += 1;
                 	}
 		}
 	
@@ -186,6 +203,7 @@ public class PPPUpdate extends WakefulIntentService {
 	
 		debates = parser.parse();
 
+
 		for(CommonsDebate debate : debates) {
 			//Log.v("PPP", "Inserting commons debate: " + debate.getTitle() );
 			commonshelper.insert(debate);
@@ -214,6 +232,8 @@ public class PPPUpdate extends WakefulIntentService {
 	// CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_select_committee.rss", "");
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_select_committee.rss", "");
 
+	commonshelper.markAllOld();
+
 	if(parser == null) {
 		return;
 	}
@@ -233,10 +253,13 @@ public class PPPUpdate extends WakefulIntentService {
 
     protected void lordsupdate() {
     	List<LordsDebate> debates;
+	List<String> triggers = new ArrayList<String>();
 	LordsDBHelper lordshelper = new LordsDBHelper(this).open();
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_main_chamber.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_main_chamber.rss", "");
 	
+	lordshelper.markAllOld();
+
 	if(parser == null) {
 		return;
 	}
@@ -247,6 +270,20 @@ public class PPPUpdate extends WakefulIntentService {
 	for(LordsDebate debate : debates) {
 		//Log.v("PPP", "Inserting lords debate: " + debate.getTitle() );
 		lordshelper.insert(debate);
+	}
+
+	triggers = triggershelper.lords_debates_triggers();
+
+	// quick check if any new bills, if not don't bother scanning
+	// for each trigger.
+
+	for(String trigger: triggers) {
+		List<Integer> triggerdebates = lordshelper.getDebatesFiltered(trigger, true, true);
+		for(Integer debate: triggerdebates) {
+			// TODO put proper trigger_id in
+			feedhelper.insert_lords_debate(trigger, 0, debate, false);
+			alerts += 1;
+		}
 	}
 
 	lordshelper.close();

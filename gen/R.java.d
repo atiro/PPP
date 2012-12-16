@@ -613,6 +613,7 @@
 /home/richard/Projects/Phone/PPP/PPP/res/layout/bill_fragment.xml \
 /home/richard/Projects/Phone/PPP/PPP/res/layout/trigger_new.xml \
 /home/richard/Projects/Phone/PPP/PPP/res/layout/row_item.xml \
+/home/richard/Projects/Phone/PPP/PPP/res/layout/reader_fragment.xml \
 /home/richard/Projects/Phone/PPP/PPP/res/layout/row_debate_commons.xml \
 /home/richard/Projects/Phone/PPP/PPP/res/layout/debates_fragment.xml \
 /home/richard/Projects/Phone/PPP/PPP/res/layout/triggers_fragment.xml \

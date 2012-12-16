@@ -21,7 +21,7 @@ public class PPPAlarm implements WakefulIntentService.AlarmListener {
 		// TODO user should be able to set time(s)
 
 		alarm.set(Calendar.HOUR_OF_DAY, 6);
-		alarm.set(Calendar.MINUTE, 15); // TODO Randomize
+		alarm.set(Calendar.MINUTE, 30); // TODO Randomize
 		alarm.set(Calendar.SECOND, 0); // TODO Randomize
 
 		mgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,

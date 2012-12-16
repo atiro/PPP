@@ -142,9 +142,9 @@ class CommonsDBHelper {
 		}
 
 		if(ignore_name == false) {
- 	               c = this.mDb.rawQuery("SELECT _id,title,subject from commons WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+ 	               c = this.mDb.rawQuery("SELECT _id,title,subject from commons WHERE title LIKE ? OR subject LIKE ? AND new = 1 ORDER BY date desc", args);
 		} else {
- 	               c = this.mDb.rawQuery("SELECT _id,subject from commons WHERE subject LIKE ? ORDER BY date desc", short_args);
+ 	               c = this.mDb.rawQuery("SELECT _id,subject from commons WHERE subject LIKE ? AND new = 1 ORDER BY date desc", short_args);
 		}
 
                 c.moveToFirst();
@@ -241,10 +241,8 @@ class CommonsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE _id = ?", args));
 	}
 
-	public void markChase(String guid) {
-		String [] args = {guid};
-
-		this.mDb.rawQuery("UPDATE commons SET chase = 1 WHERE guid = ?", args);
+	public void markAllOld() {
+		this.mDb.execSQL("UPDATE commons SET new = 0");
 	}
 
 	private boolean checkDebateByGUID(String guid) {

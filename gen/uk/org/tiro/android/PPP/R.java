@@ -1100,19 +1100,20 @@ containing a value of this type.
         public static final int menu_fragment=0x7f030022;
         public static final int politicsfeed_fragment=0x7f030023;
         public static final int ppp_main=0x7f030024;
-        public static final int row_act=0x7f030025;
-        public static final int row_bill=0x7f030026;
-        public static final int row_debate=0x7f030027;
-        public static final int row_debate_commons=0x7f030028;
-        public static final int row_debate_lords=0x7f030029;
-        public static final int row_item=0x7f03002a;
-        public static final int row_news=0x7f03002b;
-        public static final int row_trigger=0x7f03002c;
-        public static final int row_trigger_count=0x7f03002d;
-        public static final int sherlock_spinner_dropdown_item=0x7f03002e;
-        public static final int sherlock_spinner_item=0x7f03002f;
-        public static final int trigger_new=0x7f030030;
-        public static final int triggers_fragment=0x7f030031;
+        public static final int reader_fragment=0x7f030025;
+        public static final int row_act=0x7f030026;
+        public static final int row_bill=0x7f030027;
+        public static final int row_debate=0x7f030028;
+        public static final int row_debate_commons=0x7f030029;
+        public static final int row_debate_lords=0x7f03002a;
+        public static final int row_item=0x7f03002b;
+        public static final int row_news=0x7f03002c;
+        public static final int row_trigger=0x7f03002d;
+        public static final int row_trigger_count=0x7f03002e;
+        public static final int sherlock_spinner_dropdown_item=0x7f03002f;
+        public static final int sherlock_spinner_item=0x7f030030;
+        public static final int trigger_new=0x7f030031;
+        public static final int triggers_fragment=0x7f030032;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

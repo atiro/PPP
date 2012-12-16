@@ -36,6 +36,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DebatesFragment extends SherlockListFragment {
 
@@ -154,6 +157,12 @@ public class DebatesFragment extends SherlockListFragment {
 			final String subject;
 			final String content;
 			final String url;
+			final Date date;
+			Date today = new Date();
+
+			today.setDate(today.getDate() - 1);
+			today.setMinutes(23);
+			today.setSeconds(59);
 
 			// Retrieve debate guid
 			model.moveToPosition(position);
@@ -163,18 +172,68 @@ public class DebatesFragment extends SherlockListFragment {
 				title = commonshelper.getTitle(model);
 				subject = commonshelper.getSubject(model);
 				url = commonshelper.getURL(model);
+				date = commonshelper.getDate(model);
 			} else {
 				debate = commonshelper.getId(model);
 				guid = lordshelper.getGUID(model);
 				title = lordshelper.getTitle(model);
 				subject = lordshelper.getTitle(model);
 				url = lordshelper.getURL(model);
+				date = commonshelper.getDate(model);
 			}
 				
 			content = subject;
 			feedhelper = new PoliticsFeedDBHelper(acxt).open();
 
-			new AlertDialog.Builder(acxt)
+			if(today.compareTo(date) > 0) {
+			  Log.v("PPP", "Today: " + today + " Debate: " + date);
+			  if(chamber == Chamber.MAIN) {
+			    new AlertDialog.Builder(acxt)
+				.setTitle(title)
+				.setMessage(subject)
+
+                                .setNegativeButton("Cancel", null)
+				.setNeutralButton("Read", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd", Locale.UK);
+						String date_ymd = sdf.format(date);
+						String debate_url;
+						
+						feedhelper.close();
+						Intent i = new Intent(Intent.ACTION_VIEW);
+						if(house == House.COMMONS) {
+							debate_url = "http://www.publications.parliament.uk/pa/cm201213/cmhansrd/cm" + date_ymd + "/debindx/" + date_ymd + "-x.htm";
+						} else {
+							debate_url = "http://www.publications.parliament.uk/pa/ld201213/ldhansrd/index/" + date_ymd + ".html";
+						}
+						i.setData(Uri.parse(debate_url));
+						Log.v("PPP", "Launching browser with URL:" + url);
+						startActivity(i);
+					}}).show();
+			  } else {
+			    new AlertDialog.Builder(acxt)
+				.setTitle(title)
+				.setMessage(subject)
+
+                                .setNegativeButton("Cancel", null)
+				.setNeutralButton("Read", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg, int sumthing) {
+
+
+						// Insert into politicsfeed.
+						if(house == House.COMMONS) {
+							feedhelper.insert_commons_debate("", 0L, debate, true);
+						} else {
+							feedhelper.insert_lords_debate("", 0L, debate, true);
+						}
+						feedhelper.close();
+						Toast.makeText(acxt, "Added", Toast.LENGTH_SHORT).show();
+
+					}}).show();
+			  }
+
+			} else {
+			  new AlertDialog.Builder(acxt)
 				.setTitle(title)
 				.setMessage(subject)
 
@@ -189,6 +248,7 @@ public class DebatesFragment extends SherlockListFragment {
 						} else {
 							feedhelper.insert_lords_debate("", 0L, debate, true);
 						}
+						feedhelper.close();
 						Toast.makeText(acxt, "Added", Toast.LENGTH_SHORT).show();
 
 					}
@@ -221,6 +281,9 @@ public class DebatesFragment extends SherlockListFragment {
 			i.putExtras(b);
 			startActivity(i);
 */
+
+		}
+
 	}
 
 	@Override

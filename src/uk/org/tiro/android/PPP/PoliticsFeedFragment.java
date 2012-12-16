@@ -128,15 +128,51 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 		final String title;
 		final String subject;
 		final String url;
+		final Trigger type;
+		final Integer item_id;
 
 		// Retrieve debate guid
 		model.moveToPosition(position);
 
+		type = feedhelper.getTriggerType(model);
 		title =  feedhelper.getHouse(model);
 		subject = feedhelper.getMessage(model);
 		url = feedhelper.getURL(model);
+		item_id = feedhelper.getId(model);
 
-		new AlertDialog.Builder(acxt)
+		if(type == Trigger.MAIN) {
+			// We can notify when transcript available following day
+		  new AlertDialog.Builder(acxt)
+//			.setTitle(title)
+			.setMessage(subject)
+			.setPositiveButton("Share", new DialogInterface.
+OnClickListener() {
+                               public void onClick(DialogInterface dlg, int sumthing) {
+				Intent sendIntent = new Intent();
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.putExtra(Intent.EXTRA_TEXT, subject);
+				sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+				sendIntent.setType("text/plain");
+				startActivity(Intent.createChooser(sendIntent, "Share with..."));
+
+			      }
+                                })
+				.setNeutralButton("Monitor", new DialogInterface. OnClickListener() {
+					public void onClick(DialogInterface dlg,int sumthing) {
+					Log.v("PPP", "Marking " + item_id + "as post to read");
+					feedhelper.markReader(item_id);
+
+					Toast.makeText(acxt, "Monitoring in Reader", Toast.LENGTH_SHORT).show();
+
+					}
+				})
+				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dlg,int sumthing) {
+					}
+				}).show();
+
+		} else {
+		  new AlertDialog.Builder(acxt)
 //			.setTitle(title)
 			.setMessage(subject)
 			.setPositiveButton("Share", new DialogInterface.
@@ -163,6 +199,7 @@ OnClickListener() {
 					}
 				})
 				.show();
+		}
 
 	}
 

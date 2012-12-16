@@ -134,9 +134,9 @@ class LordsDBHelper {
                 }
 
 		if(ignore_name == false) {
- 	               c = this.mDb.rawQuery("SELECT _id,title,subject from lords WHERE title LIKE ? OR subject LIKE ? ORDER BY date desc", args);
+ 	               c = this.mDb.rawQuery("SELECT _id,title,subject from lords WHERE title LIKE ? OR subject LIKE ? AND new = 1 ORDER BY date desc", args);
 		} else {
- 	               c = this.mDb.rawQuery("SELECT _id,subject from lords WHERE subject LIKE ? ORDER BY date desc", short_args);
+ 	               c = this.mDb.rawQuery("SELECT _id,subject from lords WHERE subject LIKE ? AND new = 1 ORDER BY date desc", short_args);
 		}
 
                 c.moveToFirst();
@@ -226,10 +226,8 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE guid = ?", args));
 	}
 
-	public void markChase(String guid) {
-		String [] args = {guid};
-
-		this.mDb.rawQuery("UPDATE lords SET chase = 1 WHERE guid = ?", args);
+	public void markAllOld() {
+		this.mDb.execSQL("UPDATE lords SET new = 0");
 	}
 
 	private boolean checkDebateByGUID(String guid) {

@@ -19,10 +19,10 @@ class PoliticsFeedDBHelper {
 	static final String TRIGGER_TYPE="trigger_type";
 	static final String ITEM_ID="item_id";
 	static final String HOUSE="house";
-	static final String HIGHLIGHT="highlight";
-	static final String READ="read";
+	static final String HIGHLIGHT="highlight"; // Alert coming debate
+	static final String READ="read";	   // Notify available to read
 	static final String NEW="new";
-	static final String DATE="date";
+	static final String DATE="date";	   // Date of debate
 
 	private DatabaseHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -433,7 +433,7 @@ class PoliticsFeedDBHelper {
 			  d.moveToFirst();
 			  msg = "'" + lordshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
-			  msg += "'" + lordshelper.getTitle(d) + ";.";
+			  msg += "'" + lordshelper.getTitle(d) + "'.";
 			}
 		} else if (trigger == Trigger.SELECT) {
 			// Need to get house
@@ -492,10 +492,37 @@ class PoliticsFeedDBHelper {
 		this.mDb.delete("politicsfeed", "trigger_id = ?", args);
 	}
 
+	// Get all talks marked as wanted to be read and older than yesterday
+	public Cursor getReady() {
+		// Bit of a kludge, just assume anything from yesterday or before is online.
+		// TODO need to make this work ith scroll-on-demand list
+		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE read = 1 AND date < strftime('%s', 'now', '-1 day') ORDER BY date desc LIMIT 50", null));
+	}
+
+	// Show talks from yesterday that are marked as wanting to be read
+	public Integer getReadyCount() {
+		Integer ready_count = -1;
+		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE read = 1 AND date < strftime('%s', 'now', '-1 day') and date > strftime('%s', 'now', '-2 day') LIMIT 50", null);
+		c.moveToFirst();
+		ready_count = c.getInt(0);
+		return ready_count ;
+	}
+
+	public void markReader(Integer debate_id) {
+		String [] args = {debate_id.toString()};
+		
+		this.mDb.execSQL("UPDATE politicsfeed SET read = 1 WHERE _id = " + debate_id.toString());
+		
+	}
+
 	public void markFeedOld() {
 		this.mDb.execSQL("UPDATE politicsfeed SET new = 0");
 	}
 
+	public int getId(Cursor c) {
+		
+		return(c.getInt(0));
+	}
 
 	public String getMatch(Cursor c) {
 		
@@ -553,6 +580,12 @@ class PoliticsFeedDBHelper {
 	public int getDate(Cursor c) {
 
 		return(c.getInt(9));
+	}
+
+	public Date getDateLong(Cursor c) {
+                Long timestamp = c.getLong(9) * 1000;
+
+                return(new Date(timestamp));
 	}
 
 	public void onDestroy() {

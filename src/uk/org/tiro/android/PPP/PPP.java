@@ -109,6 +109,10 @@ int sumthing) {
 				.show();
 
 	} else { // TODO get current version and display update message
+
+		// Update scheduled daily update (if wi-fi available)
+		WakefulIntentService.cancelAlarms(this);
+		WakefulIntentService.scheduleAlarms(new PPPAlarm(), this, false);
                 SharedPreferences.Editor edit = prefs.edit();
 		Time now = new Time();
 		now.setToNow();
@@ -128,9 +132,13 @@ int sumthing) {
 //	ActionBar bar = getActionBar();
 
 
-	String tabs[] = new String[] { "Calendar", "Debates", "Bills", "Acts", "Alerts" };
+	String tabs[] = new String[] { "Reader", "Planner", "Debates", "Bills", "Acts", "Alerts" };
+				// Toadd - News, Reports, 
+
 	//String tabs[] = new String[] { "Debates" };
-	Fragment frags[] = new Fragment[] { new PoliticsFeedFragment(),
+	Fragment frags[] = new Fragment[] { 
+					    new ReaderFragment(),
+					    new PoliticsFeedFragment(),
 					    new Debates(),
 					    new BillsListFragment(),
 					    new ActsListFragment(),
@@ -179,7 +187,7 @@ R.drawable.ic_menu_refresh);
 			case MENU_ABOUT:
 			new AlertDialog.Builder(this)
 				.setTitle("About PPP")
-			.setMessage("Written by Richard Palmer <richard@tiro.org.uk> using:\n\n   Parliament RSS Feeds\n\n   ActionBarSherlock by Jake Wharton\n\n    CommonsGuy components by Mark Murphy\n\n")
+			.setMessage("Written by Richard Palmer <richard@tiro.org.uk> using:\n\n   Parliament RSS Feeds\n\n   ActionBarSherlock by Jake Wharton\n\n    CommonsGuy components by Mark Murphy\n\nVersion: 0.2-autumnstatement")
 				.setNeutralButton("Aye", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg,
 int sumthing) {
@@ -221,7 +229,7 @@ int sumthing) {
    	private PPP pAct;
 	private Fragment pFrag;
 	private boolean firstDisplay = true;
-	private String[] tabNames = new String[] {"Calendar", "Debates", "Bills", "Acts", "alerts"};
+	private String[] tabNames = new String[] {"Reader", "Planner", "Debates", "Bills", "Acts", "Alerts"};
 
 	public PPPTabListener(PPP act, Fragment frag) {
 		pAct = act;
@@ -243,14 +251,16 @@ int sumthing) {
 			if(preInitFragment != null) {
 				xaction.attach(preInitFragment);
 			} else if(pos == 0) {
-			  xaction.add(R.id.content, pFrag, "Calendar");
+			  xaction.add(R.id.content, pFrag, "Reader");
 			} else if(pos == 1) {
-			  xaction.add(R.id.content, pFrag, "Debates");
+			  xaction.add(R.id.content, pFrag, "Planner");
 			} else if(pos == 2) {
-			  xaction.add(R.id.content, pFrag, "Bills");
+			  xaction.add(R.id.content, pFrag, "Debates");
 			} else if(pos == 3) {
-			  xaction.add(R.id.content, pFrag, "Acts");
+			  xaction.add(R.id.content, pFrag, "Bills");
 			} else if(pos == 4) {
+			  xaction.add(R.id.content, pFrag, "Acts");
+			} else if(pos == 5) {
 			  xaction.add(R.id.content, pFrag, "Alerts");
 			}
 			firstDisplay = false;

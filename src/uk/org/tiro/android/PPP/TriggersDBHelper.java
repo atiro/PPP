@@ -172,6 +172,8 @@ class TriggersDBHelper {
 
 		triggers_count = c.getInt(0);
 
+		c.close();
+
 		return triggers_count;
 	}
 
@@ -187,6 +189,8 @@ class TriggersDBHelper {
 		c.moveToFirst();
 
 		triggers_count = c.getInt(0);
+
+		c.close();
 
 		return triggers_count;
 	}
@@ -204,6 +208,8 @@ class TriggersDBHelper {
 
 		triggers_count = c.getInt(0);
 
+		c.close();
+
 		return triggers_count;
 	}
 	
@@ -219,6 +225,8 @@ class TriggersDBHelper {
 		c.moveToFirst();
 
 		triggers_count = c.getInt(0);
+
+		c.close();
 
 		return triggers_count;
 	}
@@ -236,6 +244,8 @@ class TriggersDBHelper {
 
 		triggers_count = c.getInt(0);
 
+		c.close();
+
 		return triggers_count;
 	}
 
@@ -252,6 +262,8 @@ class TriggersDBHelper {
 
 		triggers_count = c.getInt(0);
 
+		c.close();
+
 		return triggers_count;
 	}
 
@@ -262,6 +274,8 @@ class TriggersDBHelper {
 		c.moveToFirst();
 
 		triggers_count = c.getInt(0);
+
+		c.close();
 
 		return triggers_count ;
 	}

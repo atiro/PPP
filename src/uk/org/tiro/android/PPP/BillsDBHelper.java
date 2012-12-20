@@ -89,6 +89,8 @@ class BillsDBHelper {
 				//Log.v("PPP", "Bill changed house, updating");
 			}
 
+			c.close();
+
 			// If neither, ignore.
 		} else {
 			// Add new bill
@@ -211,6 +213,8 @@ class BillsDBHelper {
 			this.mDb.execSQL("PRAGMA case_sensitive_like = false");
 		} 
 
+		c.close();
+
 		return bills;
 	}
 
@@ -235,6 +239,8 @@ class BillsDBHelper {
 		c.moveToFirst();
 
 		count = c.getInt(0);
+
+		c.close();
 
 		return count;
 	}

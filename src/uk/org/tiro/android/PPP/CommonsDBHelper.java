@@ -210,6 +210,8 @@ class CommonsDBHelper {
 			this.mDb.execSQL("PRAGMA case_sensitive_like = false");
 		}
 
+		c.close();
+
                 return debates;
         }
 

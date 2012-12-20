@@ -357,6 +357,7 @@ class PoliticsFeedDBHelper {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= ? AND date < ?", args);
 		c.moveToFirst();
 		nf_count = c.getInt(0);
+		c.close();
 		return nf_count ;
 	}
 
@@ -389,23 +390,24 @@ class PoliticsFeedDBHelper {
 	public String getURL(Cursor c) {
 		Trigger trigger = getTriggerType(c);
 		String url = "";
+		Cursor d = null;
 
 		if(trigger == Trigger.ACT) {
-			Cursor d = actshelper.getAct(getItemID(c));
+			d = actshelper.getAct(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			url = actshelper.getURL(d);
 		} else if (trigger == Trigger.BILL) {
-			Cursor d = billshelper.getBill(getItemID(c));
+			d = billshelper.getBill(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			url = billshelper.getURL(d);
 		} else if (trigger == Trigger.MAIN) {
 			House house = getHouseRaw(c);
 			if(house == House.COMMONS) {
-			  Cursor d = commonshelper.getDebate(getItemID(c));
+			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = commonshelper.getURL(d);
 			} else {
-			  Cursor d = lordshelper.getDebate(getItemID(c));
+			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = lordshelper.getURL(d);
 			}
@@ -413,27 +415,32 @@ class PoliticsFeedDBHelper {
 			// Need to get house
 			House house = getHouseRaw(c);
 			if(house == House.COMMONS) {
-			  Cursor d = commonshelper.getDebate(getItemID(c));
+			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = commonshelper.getURL(d);
 			} else {
-			  Cursor d = lordshelper.getDebate(getItemID(c));
+			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = lordshelper.getURL(d);
 			}
 		} else if (trigger == Trigger.WESTMINSTER) {
-			Cursor d = commonshelper.getDebate(getItemID(c));
+			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			url = commonshelper.getURL(d);
 		} else if (trigger == Trigger.GRAND) {
-			Cursor d = lordshelper.getDebate(getItemID(c));
+			d = lordshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			url = lordshelper.getURL(d);
 		} else if (trigger == Trigger.GENERAL) {
-			Cursor d = commonshelper.getDebate(getItemID(c));
+			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			url = commonshelper.getURL(d);
 		}
+
+		if(d != null) {
+			d.close();
+		}
+
 			
 		return url;
 	}
@@ -443,26 +450,27 @@ class PoliticsFeedDBHelper {
 		// Need to do some work here
 		Trigger trigger = getTriggerType(c);
 		String msg = "";
+		Cursor d = null;
 
 		if(trigger == Trigger.ACT) {
-			Cursor d = actshelper.getAct(getItemID(c));
+			d = actshelper.getAct(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			msg = actshelper.getTitle(d) + " is now an Act.";
 		} else if (trigger == Trigger.BILL) {
-			Cursor d = billshelper.getBill(getItemID(c));
+			d = billshelper.getBill(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			msg = "'" + billshelper.getTitle(d) + "' now at " + billshelper.getStage(d).toString() + " stage.";
 		} else if (trigger == Trigger.MAIN) {
 			// Need to get house
 			House house = getHouseRaw(c);
 			if(house == House.COMMONS) {
-			  Cursor d = commonshelper.getDebate(getItemID(c));
+			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + commonshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
 			  msg += "'" + commonshelper.getTitle(d) + "'.";
 			} else {
-			  Cursor d = lordshelper.getDebate(getItemID(c));
+			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + lordshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
@@ -473,7 +481,7 @@ class PoliticsFeedDBHelper {
 			House house = getHouseRaw(c);
 			String subject;
 			if(house == House.COMMONS) {
-			  Cursor d = commonshelper.getDebate(getItemID(c));
+			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  subject = commonshelper.getSubject(d).trim();
 			  if(subject == null || "".equals(subject)) {
@@ -484,7 +492,7 @@ class PoliticsFeedDBHelper {
 			  }
 			  msg += commonshelper.getTitle(d) + " committee.";
 			} else {
-			  Cursor d = lordshelper.getDebate(getItemID(c));
+			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  subject = lordshelper.getSubject(d).trim();
 			  if(subject == null || "".equals(subject)) {
@@ -496,21 +504,25 @@ class PoliticsFeedDBHelper {
 			  msg += lordshelper.getTitle(d) + " committee.";
 			}
 		} else if (trigger == Trigger.WESTMINSTER) {
-			Cursor d = commonshelper.getDebate(getItemID(c));
+			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
 			msg += " will be debated.";
 		} else if (trigger == Trigger.GRAND) {
-			Cursor d = lordshelper.getDebate(getItemID(c));
+			d = lordshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + lordshelper.getTitle(d) + "'";
 			msg += " will be debated.";
 		} else if (trigger == Trigger.GENERAL) {
-			Cursor d = commonshelper.getDebate(getItemID(c));
+			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
 			msg += " will be discussed by the ";
 			msg += commonshelper.getCommittee(d) + ".";
+		}
+
+		if(d != null) {
+			d.close();
 		}
 
 		// SI, Draft SI, Reports...
@@ -538,6 +550,7 @@ class PoliticsFeedDBHelper {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE read = 1 AND date < strftime('%s', 'now', '-1 day') and date > strftime('%s', 'now', '-2 day') LIMIT 50", null);
 		c.moveToFirst();
 		ready_count = c.getInt(0);
+		c.close();
 		return ready_count ;
 	}
 

@@ -1,6 +1,7 @@
 package uk.org.tiro.android.PPP;
 
 import android.content.Intent;
+import android.app.PendingIntent;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
@@ -82,16 +83,20 @@ public class PPPUpdate extends WakefulIntentService {
 
 	*/
 
+	Intent pppIntent = new Intent(this, PPP.class);
+	PendingIntent ppppIntent = PendingIntent.getActivity(this, 0, pppIntent, 0);
 
+	Log.v("PPP", "Alerts - " + alerts );
 	if(alerts > 0) {
+
 		NotificationCompat.Builder mBuilder =
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
- 		       .setContentText(alerts + " new matching debates");
+		       .setContentIntent(ppppIntent)
+ 		       .setContentText(alerts + " new scheduled debate matching your interests.");
 		       
 		       /*
-		Intent pppIntent = new Intent(this, PPP.class);
 
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
 		stackBuilder.addParentStack(PPP.class);
@@ -108,12 +113,15 @@ public class PPPUpdate extends WakefulIntentService {
       // Retrieve debates from yesterday that are available to read.
       readable_debates = feedhelper.getReadyCount();
 
+      Log.v("PPP", "Redeable Debates - " + readable_debates );
+
       if(readable_debates > 0) {
 		NotificationCompat.Builder mBuilder =
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
- 		       .setContentText(readable_debates + " debates available to read");
+		       .setContentIntent(ppppIntent)
+ 		       .setContentText(readable_debates + " debates now available to read.");
 
 		NotificationManager mNotificationManager =
 			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -127,12 +135,15 @@ public class PPPUpdate extends WakefulIntentService {
         pppId += 1;
 	notify_debates = feedhelper.getPoliticsTodayCount();
 
+        Log.v("PPP", "Notify Debates - " + notify_debates );
+
         if(notify_debates > 0) {
 		NotificationCompat.Builder mBuilder =
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
- 		       .setContentText(readable_debates + " matching debates taking place today.");
+		       .setContentIntent(ppppIntent)
+ 		       .setContentText(notify_debates + " matching debates taking place today.");
 
 		NotificationManager mNotificationManager =
 			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -145,6 +156,7 @@ public class PPPUpdate extends WakefulIntentService {
 	triggershelper.close();
 	dbadaptor.close();
 		
+	Log.v("PPP", "Finished updating PPP Feeds");
 	}
 
 	protected void billsupdate() {

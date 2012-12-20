@@ -108,6 +108,8 @@ class ActsDBHelper {
 
 		acts_count = c.getInt(0);
 
+		c.close();
+
 		return acts_count ;
 	}
 
@@ -175,6 +177,8 @@ class ActsDBHelper {
                 if(ignore_case == false) {
                        this.mDb.execSQL("PRAGMA case_sensitive_like = false");
                 }
+
+		c.close();
 
                 return acts;
         }

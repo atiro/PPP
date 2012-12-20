@@ -109,15 +109,17 @@ int sumthing) {
 				.show();
 
 	} else { // TODO get current version and display update message
+        	Log.v("PPP", "Not first run");
 
 		// Update scheduled daily update (if wi-fi available)
 		WakefulIntentService.cancelAlarms(this);
-		WakefulIntentService.scheduleAlarms(new PPPAlarm(), this, false);
+
+		WakefulIntentService.scheduleAlarms(new PPPAlarm(), this, true);
                 SharedPreferences.Editor edit = prefs.edit();
 		Time now = new Time();
 		now.setToNow();
                 edit.putLong("lastRun", now.toMillis(true));
-                edit.putInt("version", 4); // TODO get from manifest ?
+                edit.putInt("version", 7); // TODO get from manifest ?
                 edit.commit();
 	}
 

@@ -147,6 +147,7 @@ OnClickListener() {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if(model != null) { model.close(); }
 		triggershelper.close();
 	}
 	

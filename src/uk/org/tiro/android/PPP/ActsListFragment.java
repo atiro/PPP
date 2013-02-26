@@ -71,7 +71,6 @@ public class ActsListFragment extends SherlockListFragment {
 		//Log.v("PPP", "Creating Acts view");
 
 		filterText = (EditText) v.findViewById(R.id.search_box);
-		filterText.addTextChangedListener(filterTextWatcher);
 
 		return v;
 
@@ -139,9 +138,56 @@ public class ActsListFragment extends SherlockListFragment {
 		}
 	};
 
+        @Override
+        public void onPause() {
+                super.onPause();
+
+                Log.v("PPP", "ActsHelper - onPause");
+
+		if(filterText != null) {
+			filterText.removeTextChangedListener(filterTextWatcher);
+		}
+
+                if(model != null) {
+                        model.close();
+			model = null;
+                }
+
+                if(actshelper != null) {
+                        actshelper.close();
+			actshelper = null;
+                }
+
+        }
+
+
+
+        @Override
+        public void onResume() {
+                super.onResume();
+                Log.v("PPP", "ActsHelper - onResume");
+                //WakefulIntentService.sendWakefulWork(cxt, PPPRefresh.class);
+                if(actshelper == null) {
+                	actshelper = new ActsDBHelper(cxt).open();
+                }
+                if(model == null) {
+                	model = actshelper.getAllActs();
+                }
+
+                adaptor = new ActsAdaptor(model);
+
+                // TODO Memory leak from old adaptor ?
+                setListAdapter(adaptor);
+
+		filterText.addTextChangedListener(filterTextWatcher);
+        }
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if(model != null) {
+			model.close();
+		}
 		if(actshelper != null) {
 			actshelper.close();
 		}

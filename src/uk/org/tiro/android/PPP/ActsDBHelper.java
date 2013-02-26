@@ -115,7 +115,10 @@ class ActsDBHelper {
 
 	public int getNewActsCount() {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE new = 1", null);
-		return(c.getInt(0));
+		int count = c.getInt(0);
+		c.close();
+
+		return(count);
 	}
 
 
@@ -196,7 +199,9 @@ class ActsDBHelper {
 
 	public int getChasedActsCount() {
 		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from acts WHERE chase = 1", null);
-		return(c.getInt(0));
+		int count = c.getInt(0);
+		c.close();
+		return(count);
 	}
 
 	public Cursor getChasedActsFiltered(String match) {

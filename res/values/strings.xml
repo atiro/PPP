@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PPP</string>
+
+
+	<!-- Settings -->
+
+    <string name="pref_ppp_notifications_title">Notifications</string>
+    <string name="pref_title_note_newdebates">New Matching Debates</string>
+    <string name="pref_title_note_readable">New Transcripts</string>
+    <string name="pref_title_note_today">Daily Matching Debates</string>
+    <string name="pref_summary_note_newdebates">Receive daily notifications about new matching debates.</string>
+    <string name="pref_summary_note_readable">Receive daily notifications about newly readable debate transcripts.</string>
+    <string name="pref_summary_note_today">Receive daily notifications about debates of interest taking place each day.</string>
+
+    <string name="menu_planner">Planner</string>
+    <string name="menu_reader">Reader</string>
+    <string name="menu_rules">Rules</string>
+    <string name="menu_settings">Settings</string>
 </resources>

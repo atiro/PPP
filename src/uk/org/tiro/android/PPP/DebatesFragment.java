@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 
 import android.widget.Gallery;
 import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.CursorAdapter;
 import android.widget.ArrayAdapter;
@@ -75,17 +76,23 @@ public class DebatesFragment extends SherlockListFragment {
 		chamber = Chamber.MAIN;
 		date = 0;
 
-		//Log.v("PPP", "creating DebatesFragment");
+		Log.v("PPP", "creating DebatesFragment");
 
 		// date
 
 		cxt = getActivity().getApplicationContext();
 		acxt = getActivity();
 
-		dbadaptor = new DBAdaptor(cxt).open();
+//		dbadaptor = new DBAdaptor(cxt).open();
 
-		setList();
+//		setList();
 
+	}
+
+	public void updateAll(House house, Chamber chamber, Integer date) {
+		this.house = house;
+		this.chamber = chamber;
+		this.date = date;
 	}
 
 	public void updateHouse(House house) {
@@ -105,17 +112,21 @@ public class DebatesFragment extends SherlockListFragment {
 
 	private void setList() {
 		if(house == House.COMMONS) {
-			commonshelper = new CommonsDBHelper(cxt).open();
 			if(model != null) { model.close(); }
 			if(commonsadaptor != null) { commonsadaptor = null; }
+			if(commonshelper == null) {
+				commonshelper = new CommonsDBHelper(cxt).open();
+			}
 
 			model = commonshelper.getDebatesChamber(chamber, date);
  	            	commonsadaptor = new CommonsDebatesAdaptor(cxt, model);
 
 		} else {
-			lordshelper = new LordsDBHelper(cxt).open();
 			if(model != null) { model.close(); }
 			if(lordsadaptor != null) { lordsadaptor = null; }
+			if(lordshelper == null) {
+				lordshelper = new LordsDBHelper(cxt).open();
+			}
 
 			model = lordshelper.getDebatesChamber(chamber, date);
  	                lordsadaptor = new LordsDebatesAdaptor(cxt, model);
@@ -126,12 +137,10 @@ public class DebatesFragment extends SherlockListFragment {
 	   	    //Log.v("PPP", "Setting commons adaptor");
 		    setListAdapter(commonsadaptor);
 		    commonsadaptor.notifyDataSetChanged();
-		    commonshelper.close();
 		} else {
 	   	    //Log.v("PPP", "Setting lords adaptor");
 		    setListAdapter(lordsadaptor);
 		    lordsadaptor.notifyDataSetChanged();
-		    lordshelper.close();
 		}
 
 	}
@@ -144,6 +153,7 @@ public class DebatesFragment extends SherlockListFragment {
 		lv = (ListView) v.findViewById(android.R.id.list);
 		//Log.v("PPP", "Creating DebatesFragment view");
 
+	//	setList();
 
 		return v;
 	}
@@ -174,12 +184,12 @@ public class DebatesFragment extends SherlockListFragment {
 				url = commonshelper.getURL(model);
 				date = commonshelper.getDate(model);
 			} else {
-				debate = commonshelper.getId(model);
+				debate = lordshelper.getId(model);
 				guid = lordshelper.getGUID(model);
 				title = lordshelper.getTitle(model);
 				subject = lordshelper.getTitle(model);
 				url = lordshelper.getURL(model);
-				date = commonshelper.getDate(model);
+				date = lordshelper.getDate(model);
 			}
 				
 			content = subject;
@@ -238,7 +248,7 @@ public class DebatesFragment extends SherlockListFragment {
 				.setMessage(subject)
 
                                 .setNegativeButton("Cancel", null)
-				.setNeutralButton("Monitor", new DialogInterface.OnClickListener() {
+				.setNeutralButton("Highlight", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dlg, int sumthing) {
 
 
@@ -249,7 +259,7 @@ public class DebatesFragment extends SherlockListFragment {
 							feedhelper.insert_lords_debate("", 0L, debate, true);
 						}
 						feedhelper.close();
-						Toast.makeText(acxt, "Added", Toast.LENGTH_SHORT).show();
+						Toast.makeText(acxt, "Added to Highlights", Toast.LENGTH_SHORT).show();
 
 					}
 				})
@@ -287,11 +297,53 @@ public class DebatesFragment extends SherlockListFragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		Log.v("PPP", "DebatesFragment - onResume");
+/*
+		if(dbadaptor == null) {
+			dbadaptor = new DBAdaptor(cxt).open();
+		}
+
+		setList();
+*/
+	}
+
+        @Override
+        public void onPause() {
+                super.onPause();
+                Log.v("PPP", "DebatesFragment - onPause");
+/*
+		if(model != null) { model.close(); }
+
+		if(commonshelper != null) { 
+			commonshelper.close(); 
+			commonshelper = null;
+		}
+
+		if(lordshelper != null) {
+			lordshelper.close();
+			lordshelper = null;
+		}
+
+		// Is this needed ? XXX
+		if(commonsadaptor != null) { commonsadaptor = null; }
+
+		if(dbadaptor != null) {
+			dbadaptor.close();
+			dbadaptor = null;
+		}
+*/
+        }
+
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if(model != null) { model.close(); }
 		if(lordshelper != null) { lordshelper.close(); }
 		if(commonshelper != null) { commonshelper.close(); }
-		dbadaptor.close();
+//		if(dbadaptor != null) { dbadaptor.close(); }
 	}
 
 
@@ -300,6 +352,7 @@ public class DebatesFragment extends SherlockListFragment {
 	private TextView time = null;
     	private TextView committee = null;
     	private TextView subject = null;
+    	private ImageView new_img = null;
 	private View row = null;
 
 	CommonsDebatesHolder(View row) {
@@ -308,12 +361,19 @@ public class DebatesFragment extends SherlockListFragment {
 		time = (TextView)row.findViewById(R.id.time);
 		committee = (TextView)row.findViewById(R.id.committee);
 		subject = (TextView)row.findViewById(R.id.subject);
+		new_img = (ImageView)row.findViewById(R.id.new_img);
 	}
 
 	void populateFrom(Cursor c, CommonsDBHelper helper) {
 		time.setText(helper.getTime(c));
 		committee.setText(helper.getCommittee(c));
 		subject.setText(helper.getSubject(c));
+
+		if(helper.getNew(c)) {
+			new_img.setVisibility(View.VISIBLE);
+		}
+			
+			
 	}
 
     }

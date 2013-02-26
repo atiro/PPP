@@ -1,5 +1,7 @@
 package uk.org.tiro.android.PPP;
 
+import android.app.Application;
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.SQLException;
@@ -20,8 +22,8 @@ class PoliticsFeedDBHelper {
 	static final String ITEM_ID="item_id";
 	static final String HOUSE="house";
 	static final String HIGHLIGHT="highlight"; // Alert coming debate
-	static final String READ="read";	   // Notify available to read
-	static final String NEW="new";
+	static final String READ="read";  // 2 - readable&new, 1 = unread,0-old
+	static final String NEW="new"; // 2 - new, 1 = unread, 0 - old
 	static final String DATE="date";	   // Date of debate
 
 	private DatabaseHelper mDbHelper;
@@ -55,24 +57,27 @@ class PoliticsFeedDBHelper {
 	}
 
 	public PoliticsFeedDBHelper open() throws SQLException {
-		//Log.v("PPP", "Creating PoliticsFeedDB Helper");
+		Log.v("PPP", "Creating PoliticsFeedDB Helper");
 		this.mDbHelper = new DatabaseHelper(this.mCtx);
 		this.mDb = this.mDbHelper.getWritableDatabase();
-
-		commonshelper = new CommonsDBHelper(this.mCtx).open();
-		lordshelper = new LordsDBHelper(this.mCtx).open();
-		billshelper = new BillsDBHelper(this.mCtx).open();
-		actshelper = new ActsDBHelper(this.mCtx).open();
-
+//		PPPApp pppApp = (PPPApp)((Activity)this.mCtx).getApplication();
+//		this.mDb = ((PPPApp)(((Activity)this.mCtx).getApplication())).dbadaptor.mDb;
+//		this.mDb = pppApp.dbadaptor.mDb;
+		
 		return this;
+
 	}
 
 	public void close() {
-		actshelper.close();
-		billshelper.close();
-		commonshelper.close();
-		lordshelper.close();
-		this.mDbHelper.close();
+		Log.v("PPP", "Closing PoliticsFeedDB Helper");
+
+		if(this.mDb != null) {
+			this.mDb.close();
+		}
+
+		if(this.mDbHelper != null) {
+			this.mDbHelper.close();
+		}
 	}
 
 
@@ -126,11 +131,12 @@ class PoliticsFeedDBHelper {
 			cv.put(TRIGGER_ID, trigger_id);
 			cv.put(TRIGGER_TYPE, Trigger.BILL.ordinal());
 			cv.put(HOUSE, House.NEITHER.ordinal());
-			cv.put(HIGHLIGHT, 0);
+			c = Calendar.getInstance();
+			cv.put(HIGHLIGHT, c.getTimeInMillis() / 1000);
 			cv.put(READ, 0);
 
 			if(new_trigger) {
-				cv.put(NEW, 1);
+				cv.put(NEW, 2);
 			} else {
 				cv.put(NEW, 0);
 			}
@@ -171,10 +177,11 @@ class PoliticsFeedDBHelper {
 			cv.put(TRIGGER_ID, trigger_id);
 			cv.put(TRIGGER_TYPE, Trigger.ACT.ordinal());
 			cv.put(HOUSE, House.NEITHER.ordinal());
-			cv.put(HIGHLIGHT, 0);
+			c = Calendar.getInstance();
+			cv.put(HIGHLIGHT, c.getTimeInMillis() / 1000);
 			cv.put(READ, 0);
 			if(new_trigger) {
-				cv.put(NEW, 1);
+				cv.put(NEW, 2);
 			} else {
 				cv.put(NEW, 0);
 			}
@@ -216,36 +223,39 @@ class PoliticsFeedDBHelper {
 			trigger_type = Trigger.GENERAL;
 		}
 		
-		commonshelper.close();
+
 
 
 		// TODO Check trigger doesn't already exist 
 
 			cv.put(MATCH, trigger);
-//			Calendar c = Calendar.getInstance();
 //			c.set(Calendar.HOUR, 0);
 //			c.set(Calendar.MINUTE, 0);
 //			c.set(Calendar.SECOND, 0);
 //			c.set(Calendar.MILLISECOND, 0);
-//			cv.put(DATE, c.getTimeInMillis() / 1000);
 			cv.put(DATE, commonshelper.getDateLong(curs));
 			cv.put(TRIGGER_ID, trigger_id);
 			cv.put(TRIGGER_TYPE, trigger_type.ordinal());
 			cv.put(ITEM_ID, commons_id);
 			cv.put(HOUSE, House.COMMONS.ordinal());
-			cv.put(HIGHLIGHT, 0);
+			Calendar c = Calendar.getInstance();
+			cv.put(HIGHLIGHT, c.getTimeInMillis() / 1000);
 			cv.put(READ, 0);
 			if(new_trigger) {
-				cv.put(NEW, 1);
+				cv.put(NEW, 2);
 			} else {
 				cv.put(NEW, 0);
 			}
 			// ADDED - getdate
 
 			this.mDb.insert("politicsfeed", MATCH, cv);
+			
+		 	curs.close();
+			commonshelper.close();
 		} else {
 			//Log.v("PPP", "ALready in feed");
 		}
+
 	}
 
 	public void insert_lords_debate(String trigger, long trigger_id, Integer lords_id, boolean new_trigger) {
@@ -253,7 +263,7 @@ class PoliticsFeedDBHelper {
 		if(checkExists(lords_id, House.LORDS) == false) {
 		Trigger trigger_type;
 		ContentValues cv = new ContentValues();
-		LordsDBHelper lordshelper = new LordsDBHelper(this.mCtx).open();
+		lordshelper = new LordsDBHelper(this.mCtx).open();
 
 		//Log.v("PPP", "Adding feed entry for debate : " + lords_id.toString());
 		Cursor curs = lordshelper.getDebate(lords_id);
@@ -277,7 +287,6 @@ class PoliticsFeedDBHelper {
 		}
 		
 
-		lordshelper.close();
 
 		// TODO Check trigger doesn't already exist 
 
@@ -293,18 +302,24 @@ class PoliticsFeedDBHelper {
 //			c.set(Calendar.MILLISECOND, 0);
 //			cv.put(DATE, c.getTimeInMillis() / 1000);
 			cv.put(DATE, lordshelper.getDateLong(curs));
-			cv.put(HIGHLIGHT, 0);
+			Calendar c = Calendar.getInstance();
+			cv.put(HIGHLIGHT, c.getTimeInMillis() / 1000);
 			cv.put(READ, 0);
 			if(new_trigger) {
-				cv.put(NEW, 1);
+				cv.put(NEW, 2);
 			} else {
 				cv.put(NEW, 0);
 			}
 
 			this.mDb.insert("politicsfeed", MATCH, cv);
+
+			curs.close();
+
+			lordshelper.close();
 		} else {
 			//Log.v("PPP", "Already exists, skipping");
 		}
+
 	}
 
 	public Cursor getPoliticsFeed() {
@@ -320,11 +335,21 @@ class PoliticsFeedDBHelper {
 		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE date >= ? ORDER BY DATE asc, _id asc", args));
 	}
 
-	public Integer getPoliticsFeedCount() {
+	public Integer getPoliticsFeedCount(House house) {
+		String [] args = {house.toOrdinal()};
+
 		Integer nf_count = -1;
-		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed", null);
+		Cursor c;
+		if(house == House.COMMONS) {
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND house = ?", args);
+		} else if(house == House.LORDS) {
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND house = ?", args);
+		} else {
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now'))", null);
+		}
 		c.moveToFirst();
 		nf_count = c.getInt(0);
+		c.close();
 		return nf_count ;
 	}
 
@@ -361,6 +386,18 @@ class PoliticsFeedDBHelper {
 		return nf_count ;
 	}
 
+	public Cursor getPoliticsLatest() {
+		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed ORDER BY date desc, _id asc LIMIT 20", null));
+	}
+
+	public Integer getPoliticsLatestCount() {
+		Integer nf_count = -1;
+		Cursor c= this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE new > 0", null);
+		c.moveToFirst();
+		nf_count = c.getInt(0);
+		c.close();
+		return nf_count;
+	}
 
 /*
 	public Cursor getpoliticsfeedFiltered(String match) {
@@ -393,48 +430,76 @@ class PoliticsFeedDBHelper {
 		Cursor d = null;
 
 		if(trigger == Trigger.ACT) {
+			actshelper = new ActsDBHelper(this.mCtx).open();
 			d = actshelper.getAct(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			url = actshelper.getURL(d);
+			d.close();
+			actshelper.close();
 		} else if (trigger == Trigger.BILL) {
+			billshelper = new BillsDBHelper(this.mCtx).open();
 			d = billshelper.getBill(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			url = billshelper.getURL(d);
+			d.close();
+			billshelper.close();
 		} else if (trigger == Trigger.MAIN) {
 			House house = getHouseRaw(c);
 			if(house == House.COMMONS) {
+		          commonshelper = new CommonsDBHelper(this.mCtx).open();
 			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = commonshelper.getURL(d);
+			  d.close();
+			  commonshelper.close();
 			} else {
+			  lordshelper = new LordsDBHelper(this.mCtx).open();
 			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = lordshelper.getURL(d);
+			  d.close();
+			  lordshelper.close();
 			}
 		} else if (trigger == Trigger.SELECT) {
 			// Need to get house
 			House house = getHouseRaw(c);
 			if(house == House.COMMONS) {
+		          commonshelper = new CommonsDBHelper(this.mCtx).open();
 			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = commonshelper.getURL(d);
+			  d.close();
+			  commonshelper.close();
 			} else {
+			  lordshelper = new LordsDBHelper(this.mCtx).open();
 			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  url = lordshelper.getURL(d);
+			  d.close();
+			  lordshelper.close();
 			}
 		} else if (trigger == Trigger.WESTMINSTER) {
+		        commonshelper = new CommonsDBHelper(this.mCtx).open();
 			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			url = commonshelper.getURL(d);
+			d.close();
+			commonshelper.close();
 		} else if (trigger == Trigger.GRAND) {
+			lordshelper = new LordsDBHelper(this.mCtx).open();
+			d = lordshelper.getDebate(getItemID(c));
 			d = lordshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			url = lordshelper.getURL(d);
+	  	        d.close();
+		        lordshelper.close();
 		} else if (trigger == Trigger.GENERAL) {
+		        commonshelper = new CommonsDBHelper(this.mCtx).open();
 			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			url = commonshelper.getURL(d);
+			d.close();
+			commonshelper.close();
 		}
 
 		if(d != null) {
@@ -453,34 +518,47 @@ class PoliticsFeedDBHelper {
 		Cursor d = null;
 
 		if(trigger == Trigger.ACT) {
+			actshelper = new ActsDBHelper(this.mCtx).open();
 			d = actshelper.getAct(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			msg = actshelper.getTitle(d) + " is now an Act.";
+			d.close();
+			actshelper.close();
 		} else if (trigger == Trigger.BILL) {
+			billshelper = new BillsDBHelper(this.mCtx).open();
 			d = billshelper.getBill(getItemID(c));
 			d.moveToFirst(); // TODO check got result
 			msg = "'" + billshelper.getTitle(d) + "' now at " + billshelper.getStage(d).toString() + " stage.";
+			d.close();
+			billshelper.close();
 		} else if (trigger == Trigger.MAIN) {
 			// Need to get house
 			House house = getHouseRaw(c);
 			if(house == House.COMMONS) {
+		          commonshelper = new CommonsDBHelper(this.mCtx).open();
 			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + commonshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
 			  msg += "'" + commonshelper.getTitle(d) + "'.";
+			  d.close();
+			  commonshelper.close();
 			} else {
+			  lordshelper = new LordsDBHelper(this.mCtx).open();
 			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  msg = "'" + lordshelper.getSubject(d) + "'";
 			  msg += " will be debated at ";
 			  msg += "'" + lordshelper.getTitle(d) + "'.";
+			  d.close();
+			  lordshelper.close();
 			}
 		} else if (trigger == Trigger.SELECT) {
 			// Need to get house
 			House house = getHouseRaw(c);
 			String subject;
 			if(house == House.COMMONS) {
+		          commonshelper = new CommonsDBHelper(this.mCtx).open();
 			  d = commonshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  subject = commonshelper.getSubject(d).trim();
@@ -491,7 +569,10 @@ class PoliticsFeedDBHelper {
 			    msg += " will be discussed at the ";
 			  }
 			  msg += commonshelper.getTitle(d) + " committee.";
+			  d.close();
+			  commonshelper.close();
 			} else {
+			  lordshelper = new LordsDBHelper(this.mCtx).open();
 			  d = lordshelper.getDebate(getItemID(c));
 			  d.moveToFirst();
 			  subject = lordshelper.getSubject(d).trim();
@@ -502,23 +583,34 @@ class PoliticsFeedDBHelper {
 			    msg += " will be discussed at the ";
 			  }
 			  msg += lordshelper.getTitle(d) + " committee.";
+			  d.close();
+			  lordshelper.close();
 			}
 		} else if (trigger == Trigger.WESTMINSTER) {
+		        commonshelper = new CommonsDBHelper(this.mCtx).open();
 			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
 			msg += " will be debated.";
+			d.close();
+			commonshelper.close();
 		} else if (trigger == Trigger.GRAND) {
+			lordshelper = new LordsDBHelper(this.mCtx).open();
 			d = lordshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + lordshelper.getTitle(d) + "'";
 			msg += " will be debated.";
+			d.close();
+			lordshelper.close();
 		} else if (trigger == Trigger.GENERAL) {
+		        commonshelper = new CommonsDBHelper(this.mCtx).open();
 			d = commonshelper.getDebate(getItemID(c));
 			d.moveToFirst();
 			msg = "'" + commonshelper.getSubject(d) + "'";
 			msg += " will be discussed by the ";
 			msg += commonshelper.getCommittee(d) + ".";
+			d.close();
+			commonshelper.close();
 		}
 
 		if(d != null) {
@@ -537,32 +629,44 @@ class PoliticsFeedDBHelper {
 		this.mDb.delete("politicsfeed", "trigger_id = ?", args);
 	}
 
+	public Cursor getReadable() {
 	// Get all talks marked as wanted to be read and older than yesterday
-	public Cursor getReady() {
-		// Bit of a kludge, just assume anything from yesterday or before is online.
-		// TODO need to make this work ith scroll-on-demand list
-		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE read = 1 AND date < strftime('%s', 'now', '-1 day') ORDER BY date desc LIMIT 50", null));
+		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE read > 0 AND date < strftime('%s', 'now', '-1 day') ORDER BY date desc LIMIT 50", null));
 	}
 
 	// Show talks from yesterday that are marked as wanting to be read
-	public Integer getReadyCount() {
+	public Integer getReadableCount(House house, Integer days_back) {
+		String [] args = {house.toOrdinal()};
+
 		Integer ready_count = -1;
-		Cursor c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE read = 1 AND date < strftime('%s', 'now', '-1 day') and date > strftime('%s', 'now', '-2 day') LIMIT 50", null);
+		Cursor c;
+		if(house == House.COMMONS || house == House.LORDS) {
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE read > 0 AND date < strftime('%s', 'now') and date > strftime('%s', 'now', '-" + days_back.toString() + " day') AND house = ? LIMIT 50", args);
+		} else {
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE read > 0 AND date < strftime('%s', 'now') and date > strftime('%s', 'now', '-" + days_back.toString() + " day') LIMIT 50", null);
+		}
 		c.moveToFirst();
 		ready_count = c.getInt(0);
 		c.close();
 		return ready_count ;
 	}
 
-	public void markReader(Integer debate_id) {
+	public void markToRead(Integer debate_id) {
 		String [] args = {debate_id.toString()};
 		
-		this.mDb.execSQL("UPDATE politicsfeed SET read = 1 WHERE _id = " + debate_id.toString());
+		this.mDb.execSQL("UPDATE politicsfeed SET read = 2 WHERE _id = " + debate_id.toString());
 		
 	}
 
+	public void markFeedUnread() {
+		this.mDb.execSQL("UPDATE politicsfeed SET read = 1 WHERE read = 2");
+	}
+	public void markFeedStale() { // Searching for the right word...
+		this.mDb.execSQL("UPDATE politicsfeed SET new = 1 WHERE new = 2");
+	}
+
 	public void markFeedOld() {
-		this.mDb.execSQL("UPDATE politicsfeed SET new = 0");
+		this.mDb.execSQL("UPDATE politicsfeed SET new = 0 WHERE new = 1");
 	}
 
 	public int getId(Cursor c) {
@@ -639,5 +743,7 @@ class PoliticsFeedDBHelper {
 		billshelper.close();
 		commonshelper.close();
 		lordshelper.close();
+		this.mDb.close();
+		this.mDbHelper.close();
 	}
 }

@@ -152,7 +152,7 @@
   	android:id="@+id/ok"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:text="Add New Trigger"
+	android:text="Add New Rule"
 	android:gravity="center"
 	android:layout_gravity="bottom"
 	android:layout_below="@id/match_si"

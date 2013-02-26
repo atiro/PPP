@@ -7,7 +7,7 @@
     >
 
   <TextView
-  	android:text="Alerts"
+  	android:text="Highlighter Rules"
   	android:layout_width="fill_parent"
   	android:layout_height="wrap_content"
 	android:layout_gravity="center"
@@ -27,13 +27,13 @@
   	android:id="@android:id/empty"
   	android:layout_width="fill_parent"
   	android:layout_height="wrap_content"
-  	android:text="\n\nPPP can alert you to upcoming debates that match your interests by looking for trigger words; these are scanned against debates, bills, select committee meetings and other business of Parliament (where feeds available).\n\nYou can add new alerts by clicking the button below.\n\n"/>
+  	android:text="\n\nPPP can automatically highlight upcoming debates matching your interests by creating text matching rules. These rules are run against debates, bills, select committee meetings and other business of Parliament (where feeds available).\n\nYou can add a new rule by clicking the button below.\n\n"/>
 
   <Button android:id="@+id/add_trigger"
   	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:gravity="center"
 	android:layout_gravity="center"
-	android:text="Add Alert"/>
+	android:text="Add Rule"/>
 
 </LinearLayout>

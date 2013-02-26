@@ -8,6 +8,9 @@
 package uk.org.tiro.android.PPP;
 
 public final class R {
+    public static final class array {
+        public static final int ppp_array=0x7f0c0000;
+    }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -685,10 +688,13 @@ containing a value of this type.
         public static final int abs__bright_foreground_inverse_holo_dark=0x7f070006;
         public static final int abs__bright_foreground_inverse_holo_light=0x7f070007;
         public static final int abs__holo_blue_light=0x7f070008;
-        public static final int abs__primary_text_disable_only_holo_dark=0x7f070009;
-        public static final int abs__primary_text_disable_only_holo_light=0x7f07000a;
-        public static final int abs__primary_text_holo_dark=0x7f07000b;
-        public static final int abs__primary_text_holo_light=0x7f07000c;
+        public static final int abs__primary_text_disable_only_holo_dark=0x7f07000c;
+        public static final int abs__primary_text_disable_only_holo_light=0x7f07000d;
+        public static final int abs__primary_text_holo_dark=0x7f07000e;
+        public static final int abs__primary_text_holo_light=0x7f07000f;
+        public static final int testcol1=0x7f070009;
+        public static final int testcol2=0x7f07000a;
+        public static final int testcol3=0x7f07000b;
     }
     public static final class dimen {
         /**  Default height of an action bar. 
@@ -917,36 +923,47 @@ containing a value of this type.
         public static final int abs__textfield_searchview_holo_light=0x7f02006c;
         public static final int abs__textfield_searchview_right_holo_dark=0x7f02006d;
         public static final int abs__textfield_searchview_right_holo_light=0x7f02006e;
-        public static final int circle_count=0x7f02006f;
-        public static final int curved_row=0x7f020070;
-        public static final int curved_row_debate=0x7f020071;
-        public static final int curved_row_debate_commons=0x7f020072;
-        public static final int curved_row_debate_lords=0x7f020073;
-        public static final int ic_launcher_ppp=0x7f020074;
-        public static final int ic_menu_info_details=0x7f020075;
-        public static final int ic_menu_refresh=0x7f020076;
-        public static final int icon=0x7f020077;
-        public static final int item_divider=0x7f020078;
-        public static final int list_row=0x7f020079;
-        public static final int menu_about=0x7f02007a;
-        public static final int menu_acts=0x7f02007b;
-        public static final int menu_bills=0x7f02007c;
-        public static final int menu_diary=0x7f02007d;
-        public static final int menu_diary2=0x7f02007e;
-        public static final int menu_diary3=0x7f02007f;
-        public static final int menu_notices=0x7f020080;
-        public static final int menu_watching=0x7f020081;
-        public static final int ppp_status_icon=0x7f020082;
-        public static final int sample_0=0x7f020083;
-        public static final int sample_1=0x7f020084;
-        public static final int sample_2=0x7f020085;
-        public static final int sample_3=0x7f020086;
-        public static final int sample_4=0x7f020087;
-        public static final int sample_5=0x7f020088;
-        public static final int sample_6=0x7f020089;
-        public static final int sample_7=0x7f02008a;
-        public static final int sample_images=0x7f02008b;
-        public static final int text_select_handle_middle=0x7f02008c;
+        public static final int agenda=0x7f02006f;
+        public static final int bill=0x7f020070;
+        public static final int calendar=0x7f020071;
+        public static final int circle_count=0x7f020072;
+        public static final int clock=0x7f020073;
+        public static final int curved_row=0x7f020074;
+        public static final int curved_row_debate=0x7f020075;
+        public static final int curved_row_debate_commons=0x7f020076;
+        public static final int curved_row_debate_lords=0x7f020077;
+        public static final int eye=0x7f020078;
+        public static final int ic_launcher_ppp=0x7f020079;
+        public static final int ic_menu_info_details=0x7f02007a;
+        public static final int ic_menu_preferences=0x7f02007b;
+        public static final int ic_menu_refresh=0x7f02007c;
+        public static final int icon=0x7f02007d;
+        public static final int item_divider=0x7f02007e;
+        public static final int list_row=0x7f02007f;
+        public static final int menu_about=0x7f020080;
+        public static final int menu_acts=0x7f020081;
+        public static final int menu_bills=0x7f020082;
+        public static final int menu_diary=0x7f020083;
+        public static final int menu_diary2=0x7f020084;
+        public static final int menu_diary3=0x7f020085;
+        public static final int menu_notices=0x7f020086;
+        public static final int menu_watching=0x7f020087;
+        public static final int new_icon=0x7f020088;
+        public static final int person=0x7f020089;
+        public static final int ppp_status_icon=0x7f02008a;
+        public static final int sample_0=0x7f02008b;
+        public static final int sample_1=0x7f02008c;
+        public static final int sample_2=0x7f02008d;
+        public static final int sample_3=0x7f02008e;
+        public static final int sample_4=0x7f02008f;
+        public static final int sample_5=0x7f020090;
+        public static final int sample_6=0x7f020091;
+        public static final int sample_7=0x7f020092;
+        public static final int sample_images=0x7f020093;
+        public static final int settings=0x7f020094;
+        public static final int share=0x7f020095;
+        public static final int star=0x7f020096;
+        public static final int text_select_handle_middle=0x7f020097;
     }
     public static final class id {
         public static final int abs__action_bar=0x7f050022;
@@ -989,18 +1006,23 @@ containing a value of this type.
         public static final int abs__title=0x7f05001b;
         public static final int abs__titleDivider=0x7f05001c;
         public static final int abs__up=0x7f05000b;
-        public static final int act_summary=0x7f05004e;
-        public static final int act_title=0x7f05004d;
+        public static final int act_summary=0x7f05006a;
+        public static final int act_title=0x7f050069;
+        public static final int acts_bills=0x7f05005f;
         public static final int add_trigger=0x7f050047;
+        public static final int alert_img=0x7f050073;
         public static final int bill=0x7f050034;
-        public static final int bill_description=0x7f050050;
-        public static final int bill_stage=0x7f050051;
-        public static final int bill_title=0x7f05004f;
+        public static final int bill_description=0x7f05006c;
+        public static final int bill_img=0x7f050077;
+        public static final int bill_stage=0x7f05006d;
+        public static final int bill_title=0x7f05006b;
+        public static final int bills_published=0x7f05005a;
+        public static final int bills_watching=0x7f050059;
         public static final int chamber=0x7f05003e;
         public static final int chamber_gallery=0x7f05003a;
-        public static final int committee=0x7f050053;
-        public static final int content=0x7f05004c;
-        public static final int count=0x7f05005c;
+        public static final int committee=0x7f05006f;
+        public static final int content=0x7f050067;
+        public static final int count=0x7f05007e;
         public static final int date=0x7f05003f;
         public static final int date_gallery=0x7f05003b;
         public static final int debate=0x7f05003c;
@@ -1008,55 +1030,88 @@ containing a value of this type.
         public static final int disableHome=0x7f050009;
         public static final int edit_query=0x7f050027;
         public static final int feed=0x7f05004a;
+        public static final int future_here=0x7f050066;
         public static final int homeAsUp=0x7f050006;
         public static final int house=0x7f05003d;
         public static final int house_gallery=0x7f050039;
-        public static final int ignorecase=0x7f050069;
-        public static final int ignorename=0x7f05006a;
-        public static final int label=0x7f050058;
-        public static final int label1=0x7f05005d;
-        public static final int label2=0x7f05005f;
-        public static final int label3=0x7f050068;
-        public static final int last=0x7f05005b;
+        public static final int ignorecase=0x7f05008b;
+        public static final int ignorename=0x7f05008c;
+        public static final int important_img=0x7f050076;
+        public static final int label=0x7f05007a;
+        public static final int label1=0x7f05007f;
+        public static final int label2=0x7f050081;
+        public static final int label3=0x7f05008a;
+        public static final int last=0x7f05007d;
+        public static final int latest_debates=0x7f050052;
         public static final int listMode=0x7f050002;
         public static final int list_legislation=0x7f050043;
         public static final int list_triggers=0x7f050045;
         public static final int main_frag_container=0x7f050040;
-        public static final int match=0x7f050059;
-        public static final int match_acts=0x7f050062;
-        public static final int match_bills=0x7f050060;
-        public static final int match_commons=0x7f050061;
-        public static final int match_draft_bills=0x7f050066;
-        public static final int match_dsi=0x7f050065;
-        public static final int match_lords=0x7f050063;
-        public static final int match_news=0x7f050067;
-        public static final int match_si=0x7f050064;
+        public static final int match=0x7f05007b;
+        public static final int match_acts=0x7f050084;
+        public static final int match_bills=0x7f050082;
+        public static final int match_commons=0x7f050083;
+        public static final int match_draft_bills=0x7f050088;
+        public static final int match_dsi=0x7f050087;
+        public static final int match_lords=0x7f050085;
+        public static final int match_news=0x7f050089;
+        public static final int match_si=0x7f050086;
         public static final int menu=0x7f05004b;
-        public static final int msg=0x7f050057;
-        public static final int new_trigger=0x7f05005e;
+        public static final int menu_planner=0x7f05008f;
+        public static final int menu_reader=0x7f050090;
+        public static final int menu_rules=0x7f050091;
+        public static final int menu_settings=0x7f050092;
+        public static final int msg=0x7f050071;
+        public static final int new_img=0x7f050072;
+        public static final int new_trigger=0x7f050080;
         public static final int normal=0x7f050001;
-        public static final int notify=0x7f05006b;
-        public static final int ok=0x7f05006c;
+        public static final int notify=0x7f05008d;
+        public static final int ok=0x7f05008e;
         public static final int page_viewer=0x7f050041;
+        public static final int person_img=0x7f050074;
+        public static final int planner_title=0x7f05004c;
+        public static final int readable_acts=0x7f05005b;
+        public static final int readable_acts_val=0x7f05005d;
+        public static final int readable_bills=0x7f05005c;
+        public static final int readable_bills_val=0x7f05005e;
+        public static final int readable_commons=0x7f050061;
+        public static final int readable_commons_val=0x7f050063;
+        public static final int readable_debates=0x7f050065;
+        public static final int readable_lords=0x7f050062;
+        public static final int readable_lords_val=0x7f050064;
+        public static final int readable_match=0x7f050060;
+        public static final int reader_title=0x7f050068;
+        public static final int relevant_commons=0x7f050055;
+        public static final int relevant_commons_val=0x7f050057;
+        public static final int relevant_lords=0x7f050056;
+        public static final int relevant_lords_val=0x7f050058;
         public static final int search_box=0x7f050033;
-        public static final int separator=0x7f050055;
+        public static final int separator=0x7f050078;
         public static final int showCustom=0x7f050008;
         public static final int showHome=0x7f050005;
         public static final int showTitle=0x7f050007;
         public static final int stage=0x7f050037;
-        public static final int subject=0x7f050054;
+        public static final int subject=0x7f050070;
         public static final int tabMode=0x7f050003;
-        public static final int time=0x7f050052;
+        public static final int time=0x7f05006e;
         public static final int title=0x7f050035;
         public static final int title_news=0x7f050042;
         public static final int title_politicsfeed=0x7f050049;
         public static final int title_triggers=0x7f050044;
-        public static final int trigger=0x7f050056;
+        public static final int trigger=0x7f050079;
         public static final int type=0x7f050038;
-        public static final int types=0x7f05005a;
+        public static final int types=0x7f05007c;
+        public static final int upcoming_debates=0x7f05004d;
+        public static final int upcoming_debates_match=0x7f050053;
+        public static final int upcoming_debates_match_coming=0x7f050054;
+        public static final int upcoming_total_commons=0x7f05004e;
+        public static final int upcoming_total_commons_val=0x7f050050;
+        public static final int upcoming_total_lords=0x7f05004f;
+        public static final int upcoming_total_lords_val=0x7f050051;
         public static final int updated=0x7f050048;
         public static final int useLogo=0x7f050004;
         public static final int view_calendar=0x7f050046;
+        public static final int watching_img=0x7f050075;
         public static final int wrap_content=0x7f050000;
     }
     public static final class integer {
@@ -1095,25 +1150,32 @@ containing a value of this type.
         public static final int debate_fragment=0x7f03001d;
         public static final int debates=0x7f03001e;
         public static final int debates_fragment=0x7f03001f;
-        public static final int legislation=0x7f030020;
-        public static final int main=0x7f030021;
-        public static final int menu_fragment=0x7f030022;
-        public static final int politicsfeed_fragment=0x7f030023;
-        public static final int ppp_main=0x7f030024;
-        public static final int reader_fragment=0x7f030025;
-        public static final int row_act=0x7f030026;
-        public static final int row_bill=0x7f030027;
-        public static final int row_debate=0x7f030028;
-        public static final int row_debate_commons=0x7f030029;
-        public static final int row_debate_lords=0x7f03002a;
-        public static final int row_item=0x7f03002b;
-        public static final int row_news=0x7f03002c;
-        public static final int row_trigger=0x7f03002d;
-        public static final int row_trigger_count=0x7f03002e;
-        public static final int sherlock_spinner_dropdown_item=0x7f03002f;
-        public static final int sherlock_spinner_item=0x7f030030;
-        public static final int trigger_new=0x7f030031;
-        public static final int triggers_fragment=0x7f030032;
+        public static final int latest_fragment=0x7f030020;
+        public static final int legislation=0x7f030021;
+        public static final int main=0x7f030022;
+        public static final int menu_fragment=0x7f030023;
+        public static final int politicsfeed_fragment=0x7f030024;
+        public static final int ppp_lobby_fragment=0x7f030025;
+        public static final int ppp_lobby_latest=0x7f030026;
+        public static final int ppp_main=0x7f030027;
+        public static final int reader_fragment=0x7f030028;
+        public static final int row_act=0x7f030029;
+        public static final int row_bill=0x7f03002a;
+        public static final int row_debate=0x7f03002b;
+        public static final int row_debate_brief=0x7f03002c;
+        public static final int row_debate_commons=0x7f03002d;
+        public static final int row_debate_lords=0x7f03002e;
+        public static final int row_item=0x7f03002f;
+        public static final int row_news=0x7f030030;
+        public static final int row_trigger=0x7f030031;
+        public static final int row_trigger_count=0x7f030032;
+        public static final int sherlock_spinner_dropdown_item=0x7f030033;
+        public static final int sherlock_spinner_item=0x7f030034;
+        public static final int trigger_new=0x7f030035;
+        public static final int triggers_fragment=0x7f030036;
+    }
+    public static final class menu {
+        public static final int options=0x7f0d0000;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1162,10 +1224,26 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0a0009;
         public static final int app_name=0x7f0a000f;
+        public static final int menu_planner=0x7f0a0017;
+        public static final int menu_reader=0x7f0a0018;
+        public static final int menu_rules=0x7f0a0019;
+        public static final int menu_settings=0x7f0a001a;
+        /**  Settings 
+         */
+        public static final int pref_ppp_notifications_title=0x7f0a0010;
+        public static final int pref_summary_note_newdebates=0x7f0a0014;
+        public static final int pref_summary_note_readable=0x7f0a0015;
+        public static final int pref_summary_note_today=0x7f0a0016;
+        public static final int pref_title_note_newdebates=0x7f0a0011;
+        public static final int pref_title_note_readable=0x7f0a0012;
+        public static final int pref_title_note_today=0x7f0a0013;
     }
     public static final class style {
         public static final int DialogWindowTitle_Sherlock=0x7f0b0036;
         public static final int DialogWindowTitle_Sherlock_Light=0x7f0b0037;
+        public static final int MyTheme=0x7f0b0059;
+        public static final int MyTheme_ActionBar_TitleTextStyle=0x7f0b005b;
+        public static final int MyTheme_ActionBarStyle=0x7f0b005a;
         public static final int Sherlock___TextAppearance_Small=0x7f0b004a;
         public static final int Sherlock___Theme=0x7f0b004e;
         public static final int Sherlock___Theme_DarkActionBar=0x7f0b0050;
@@ -1255,7 +1333,8 @@ containing a value of this type.
         public static final int Widget_Sherlock_TextView_SpinnerItem=0x7f0b0032;
     }
     public static final class xml {
-        public static final int wakeful=0x7f040000;
+        public static final int preferences=0x7f040000;
+        public static final int wakeful=0x7f040001;
     }
     public static final class styleable {
         /** Attributes that can be used with a Menu.

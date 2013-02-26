@@ -9,6 +9,10 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.app.PendingIntent;
 import android.app.NotificationManager;
+import android.text.format.Time;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
@@ -27,6 +31,10 @@ public class PPPUpdate extends WakefulIntentService {
 	private int readable_debates = 0;
 	private int notify_debates = 0;
 
+	private boolean notify_today = false;
+	private boolean notify_readable = false;
+	private boolean notify_new = false;
+
 	public PPPUpdate() {
 		super("PPPUpdate");
 	}
@@ -40,14 +48,33 @@ public class PPPUpdate extends WakefulIntentService {
 		// scan for matching text
 		// add to feed matches
 		// notify matches marked as important
+	// Hack - for some reason we are being called each time app is started
+	// (presumably for code setting alarm). Try to ensure we only run once
+	// a day. Will stop forced updates working for the moment
 
-	Log.v("PPP", "Updating PPP Feeds");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+	long lastrun_time = prefs.getLong("lastRun", 0);
+
+        Time now = new Time();
+	now.setToNow();
+	long cur_time = now.toMillis(true);
+	long time_diff = cur_time - lastrun_time;
+
+	/* 82800000 us 23 hours in milliseconds */
+	if(lastrun_time > 0 && (time_diff < 82800000)) {
+	   /* Must have run in last 23 hours. Ignore call */
+	   Log.v("PPP", "Ignoring PPPUpdate call, last run within 23 hours");
+	   return;
+	}
+
+	Log.v("PPP", "Updating PPP Feeds (last ran: " + time_diff + " )");
 
 	dbadaptor = new DBAdaptor(this).open();
 	triggershelper = new TriggersDBHelper(this).open();
 	feedhelper = new PoliticsFeedDBHelper(this).open();
 
-	feedhelper.markFeedOld();
+	feedhelper.markFeedStale();
 
 	// Do first as first thing on display
 
@@ -86,14 +113,22 @@ public class PPPUpdate extends WakefulIntentService {
 	Intent pppIntent = new Intent(this, PPP.class);
 	PendingIntent ppppIntent = PendingIntent.getActivity(this, 0, pppIntent, 0);
 
+	NotificationManager mNotificationManager =
+		(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+	mNotificationManager.cancelAll(); // Remove any hanging around from before
 	Log.v("PPP", "Alerts - " + alerts );
-	if(alerts > 0) {
+
+	notify_today = prefs.getBoolean("pref_key_note_newdebates", false);
+
+	if((notify_today == true) && (alerts > 0)) {
 
 		NotificationCompat.Builder mBuilder =
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
 		       .setContentIntent(ppppIntent)
+		       .setAutoCancel(true)
  		       .setContentText(alerts + " new scheduled debate matching your interests.");
 		       
 		       /*
@@ -104,27 +139,26 @@ public class PPPUpdate extends WakefulIntentService {
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(resultPendingIntent);
 		*/
-		NotificationManager mNotificationManager =
-			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(pppId, mBuilder.getNotification());
       }
 
       pppId += 1;
       // Retrieve debates from yesterday that are available to read.
-      readable_debates = feedhelper.getReadyCount();
+      readable_debates = feedhelper.getReadableCount(House.BOTH, 2);
 
       Log.v("PPP", "Redeable Debates - " + readable_debates );
 
-      if(readable_debates > 0) {
+      notify_readable = prefs.getBoolean("pref_key_note_readable", false);
+
+      if((notify_readable == true) && (readable_debates > 0)) {
 		NotificationCompat.Builder mBuilder =
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
 		       .setContentIntent(ppppIntent)
+		       .setAutoCancel(true)
  		       .setContentText(readable_debates + " debates now available to read.");
 
-		NotificationManager mNotificationManager =
-			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(pppId, mBuilder.getNotification());
 	}
       	
@@ -137,16 +171,17 @@ public class PPPUpdate extends WakefulIntentService {
 
         Log.v("PPP", "Notify Debates - " + notify_debates );
 
-        if(notify_debates > 0) {
+        notify_today = prefs.getBoolean("pref_key_note_today", false);
+
+        if((notify_today == true) && (notify_debates > 0)) {
 		NotificationCompat.Builder mBuilder =
  		       new NotificationCompat.Builder(this)
  		       .setSmallIcon(R.drawable.ppp_status_icon)
  		       .setContentTitle("PPP")
 		       .setContentIntent(ppppIntent)
+		       .setAutoCancel(true)
  		       .setContentText(notify_debates + " matching debates taking place today.");
 
-		NotificationManager mNotificationManager =
-			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(pppId, mBuilder.getNotification());
 	}
       	
@@ -156,6 +191,14 @@ public class PPPUpdate extends WakefulIntentService {
 	triggershelper.close();
 	dbadaptor.close();
 		
+	// Update time
+
+	SharedPreferences.Editor edit = prefs.edit();
+	now = new Time();
+	now.setToNow();
+	edit.putLong("lastRun", now.toMillis(true));
+	edit.commit();
+
 	Log.v("PPP", "Finished updating PPP Feeds");
 	}
 
@@ -249,7 +292,7 @@ public class PPPUpdate extends WakefulIntentService {
                 // for each trigger.
 
                 for(String trigger: triggers) {
-                        List<Integer> triggerdebates = commonshelper.getDebatesFiltered(trigger, true, true);
+                        List<Integer> triggerdebates = commonshelper.getDebatesFiltered(trigger, true, true, 14);
                         for(Integer debate: triggerdebates) {
                                 // TODO put proper trigger_id in
                                 feedhelper.insert_commons_debate(trigger, 0, debate, false);
@@ -266,7 +309,7 @@ public class PPPUpdate extends WakefulIntentService {
 	// CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_select_committee.rss", "");
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_select_committee.rss", "");
 
-	commonshelper.markAllOld();
+	commonshelper.markAllOld(14);
 
 	if(parser == null) {
 		return;
@@ -292,7 +335,7 @@ public class PPPUpdate extends WakefulIntentService {
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_main_chamber.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_main_chamber.rss", "");
 	
-	lordshelper.markAllOld();
+	lordshelper.markAllOld(14);
 
 	if(parser == null) {
 		return;
@@ -312,7 +355,7 @@ public class PPPUpdate extends WakefulIntentService {
 	// for each trigger.
 
 	for(String trigger: triggers) {
-		List<Integer> triggerdebates = lordshelper.getDebatesFiltered(trigger, true, true);
+		List<Integer> triggerdebates = lordshelper.getDebatesFiltered(trigger, true, true, 14);
 		for(Integer debate: triggerdebates) {
 			// TODO put proper trigger_id in
 			feedhelper.insert_lords_debate(trigger, 0, debate, false);

@@ -46,6 +46,7 @@ public class BillsListFragment extends SherlockListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.v("PPP", "Creating Bills Fragment");
 
 		cxt = getActivity().getApplicationContext();
 		acxt = getActivity();
@@ -67,7 +68,6 @@ public class BillsListFragment extends SherlockListFragment {
 		Log.v("PPP", "Creating Bills view");
 
 		filterText = (EditText) v.findViewById(R.id.search_box);
-		filterText.addTextChangedListener(filterTextWatcher);
 
 		return v;
 
@@ -103,8 +103,46 @@ public class BillsListFragment extends SherlockListFragment {
 
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		Log.v("PPP", "BillsFragment - onResume ");
+		if(billshelper == null) {
+			billshelper = new BillsDBHelper(cxt).open();
+		}
+		if(model == null) {
+			model = billshelper.getAllBills(House.COMMONS);
+		}
+
+                adaptor = new BillsAdaptor(model);
+
+                setListAdapter(adaptor);
+
+
+		filterText.addTextChangedListener(filterTextWatcher);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.v("PPP", "BillsFragment - onPause ");
+		if(model != null) {
+			model.close();
+			model = null;
+		}
+		if(billshelper != null) {
+			billshelper.close();
+			billshelper = null;
+		}
+
+		filterText.removeTextChangedListener(filterTextWatcher);
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if(model != null) {
+			model.close();
+		}
 		if(billshelper != null) {
 			billshelper.close();
 		}

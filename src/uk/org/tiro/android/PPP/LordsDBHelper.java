@@ -120,7 +120,7 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee, subject,date,guid,chamber,url from lords ORDER BY date desc", null));
 	}
 
-        public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name) {
+        public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name, Integer days_ahead) {
 		String[] matches = match.split("\\s+");
                 String filter = new String('%' + match + '%');
                 String [] args = {filter, filter};
@@ -134,9 +134,11 @@ class LordsDBHelper {
                 }
 
 		if(ignore_name == false) {
- 	               c = this.mDb.rawQuery("SELECT _id,title,subject from lords WHERE title LIKE ? OR subject LIKE ? AND new = 1 ORDER BY date desc", args);
+		       String query = "SELECT _id,title,subject from lords WHERE title LIKE ? OR subject LIKE ? AND new = 1 AND date < strftime('%s', 'now', '+" + days_ahead + " day') ORDER BY date desc";
+ 	               c = this.mDb.rawQuery(query, args);
 		} else {
- 	               c = this.mDb.rawQuery("SELECT _id,subject from lords WHERE subject LIKE ? AND new = 1 ORDER BY date desc", short_args);
+		       String query = "SELECT _id,subject from lords WHERE subject LIKE ? AND new = 1 AND date < strftime('%s', 'now', '+" + days_ahead + " day') ORDER BY date desc";
+ 	               c = this.mDb.rawQuery(query, short_args);
 		}
 
                 c.moveToFirst();
@@ -228,8 +230,23 @@ class LordsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from lords WHERE guid = ?", args));
 	}
 
-	public void markAllOld() {
-		this.mDb.execSQL("UPDATE lords SET new = 0");
+	public void markAllOld(Integer days_ahead) {
+
+                String query = "UPDATE lords SET new = 0 WHERE date < strftime('%s', 'now', '+" + days_ahead + " day')";
+
+		this.mDb.execSQL(query);
+	}
+
+	public Integer countFutureDebates(Integer days_ahead) {
+		String [] args = {days_ahead.toString()};
+		Integer nf_count = -1;
+
+		String query = "SELECT COUNT(*) FROM lords WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND date < strftime('%s', 'now', '+" + days_ahead + " day')";
+		Cursor c = this.mDb.rawQuery(query, null);
+		c.moveToFirst();
+		nf_count = c.getInt(0);
+		c.close();
+		return nf_count;
 	}
 
 	private boolean checkDebateByGUID(String guid) {

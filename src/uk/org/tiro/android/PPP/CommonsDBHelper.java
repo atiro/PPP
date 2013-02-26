@@ -127,7 +127,7 @@ class CommonsDBHelper {
 	}
 
 
-        public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name) {
+        public List<Integer> getDebatesFiltered(String match, boolean ignore_case, boolean ignore_name, Integer days_ahead) {
 		String[] matches = match.split("\\s+");
                 String filter = new String('%' + matches[0] + '%');
 		String [] args = {filter, filter};
@@ -141,10 +141,13 @@ class CommonsDBHelper {
 			this.mDb.execSQL("PRAGMA case_sensitive_like = true");
 		}
 
+
 		if(ignore_name == false) {
- 	               c = this.mDb.rawQuery("SELECT _id,title,subject from commons WHERE title LIKE ? OR subject LIKE ? AND new = 1 ORDER BY date desc", args);
+		       String query = "SELECT _id,title,subject from commons WHERE title LIKE ? OR subject LIKE ? AND new = 1 AND date < strftime('%s', 'now', '+" + days_ahead + " day') ORDER BY date desc";
+ 	               c = this.mDb.rawQuery(query, args);
 		} else {
- 	               c = this.mDb.rawQuery("SELECT _id,subject from commons WHERE subject LIKE ? AND new = 1 ORDER BY date desc", short_args);
+		       String query = "SELECT _id,subject from commons WHERE subject LIKE ? AND new = 1 AND date < strftime('%s', 'now', '+" + days_ahead + " day') ORDER BY date desc";
+ 	               c = this.mDb.rawQuery(query, short_args);
 		}
 
                 c.moveToFirst();
@@ -221,11 +224,11 @@ class CommonsDBHelper {
 		String query;
 
 		if(date < 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url,new from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '" + date + " day')) ORDER BY _id asc";
 		} else if(date > 0) {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url,new from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d', 'now', '+" + date + " day')) ORDER BY _id asc";
 		} else {
-			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
+			query = "SELECT _id,title,committee,subject,date,time,guid,chamber,url,new from commons WHERE chamber = ? AND date = strftime('%s', strftime('%Y-%m-%d')) ORDER BY _id asc";
 		}
 			
 		return(this.mDb.rawQuery(query, args));
@@ -243,9 +246,26 @@ class CommonsDBHelper {
 		return(this.mDb.rawQuery("SELECT _id,title,committee,subject,date,time,guid,chamber,url from commons WHERE _id = ?", args));
 	}
 
-	public void markAllOld() {
-		this.mDb.execSQL("UPDATE commons SET new = 0");
+	public void markAllOld(Integer days_ahead) {
+
+		/* Set the next X days articles as old */
+
+		String query = "UPDATE commons SET new = 0 WHERE date < strftime('%s', 'now', '+" + days_ahead + " day')";
+		this.mDb.execSQL(query);
 	}
+
+	public Integer countFutureDebates(Integer days_ahead) {
+		Integer nf_count = -1;
+
+		String query = "SELECT COUNT(*) FROM commons WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND date < strftime('%s', 'now', '" + days_ahead + " day')";
+		Cursor c = this.mDb.rawQuery(query, null);
+		c.moveToFirst();
+		nf_count = c.getInt(0);
+		c.close();
+		return nf_count;
+	}
+
+	/* Private functions */
 
 	private boolean checkDebateByGUID(String guid) {
 		String [] args = {guid};
@@ -261,7 +281,9 @@ class CommonsDBHelper {
 			r.close();
 			return false;
 		}
-		}
+	}
+
+	/* Value helper functions */
 
 	public int getId(Cursor c) {
 		return(c.getInt(0));
@@ -329,4 +351,14 @@ class CommonsDBHelper {
 		return url;
 	}
 
+	public Boolean getNew(Cursor c) {
+		int new_debate = c.getInt(9);
+
+		if(new_debate == 1) { 
+			return true;
+		} else {
+			return false;
+
+		}
+	}
 }

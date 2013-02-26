@@ -40,9 +40,12 @@ public class DBAdaptor {
 	private static final String CREATE_TABLE_POLITICSFEED =
 		"CREATE TABLE politicsfeed (_id INTEGER PRIMARY KEY AUTOINCREMENT, match TEXT, trigger_id INTEGER, trigger_type INTEGER, item_id INTEGER, house INTEGER, highlight INTEGER, new INTEGER, read INTEGER, date INTEGER);";
 
+//	private static final String UPDATE_TABLE_POLITICSFEED_V1 =
+//		"ALTER TABLE politicsfeed ADD COLUMN notify_alert INTEGER DEFAULT 0; ALTER TABLE politicsfeed ADD COLUMN notify_monitor INTEGER DEFAULT 0; ALTER TABLE politicsfeed ADD COLUMN notify_person DEFAULT 0; ALTER TABLE politicsfeed ADD COLUMN notify_important INTEGER DEFAULT 0; ALTER TABLE politicsfeed ADD COLUMN notify_bill INTEGER DEFAULT 0; ALTER TABLE politicsfeed ADD COLUMN notify_future INTEGER DEFAULT 0;";
+
 	private final Context context;
 	private DatabaseHelper DBHelper;
-	private SQLiteDatabase db;
+	public SQLiteDatabase mDb;
 
 	public DBAdaptor(Context ctx) {
 		//Log.v("PPP", "Creating DBAdaptor");
@@ -70,12 +73,19 @@ public class DBAdaptor {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			// upgrades go here
+			switch(oldVersion) {
+			case 1:
+				// db.execSQL(UPDATE_TABLE_POLITICSFEED_V1);
+				break;
+			case 2:
+				break;
+			}
 		}
 	}
 
 	public DBAdaptor open() throws SQLException {
 		//Log.v("PPP", "Opening DBAdaptor");
-		this.db = this.DBHelper.getWritableDatabase();
+		this.mDb = this.DBHelper.getWritableDatabase();
 		return this;
 	}
 

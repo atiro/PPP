@@ -66,10 +66,22 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		//Log.v("PPP", "creating PoliticsFeedFragment");
+		Log.v("PPP", "creating PoliticsFeedFragment");
 
 		// date
 
+
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
+				Bundle savedInstanceState) {
+
+		Log.v("PPP", "Creating PoliticsFeedFragment view");
+		View v = inflater.inflate(R.layout.politicsfeed_fragment, container, false);
+		// lv = (ListView) v.findViewById(android.R.id.list);
+		lv = (ListView) v.findViewById(android.R.id.list);
 		cxt = getActivity().getApplicationContext();
 
 		acxt = getActivity();
@@ -82,24 +94,22 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 
 		setListAdapter(feedadaptor);
 
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
-				Bundle savedInstanceState) {
-
-		View v = inflater.inflate(R.layout.politicsfeed_fragment, container, false);
-		lv = (ListView) v.findViewById(android.R.id.list);
-		// lv = (ListView) v.findViewById(android.R.id.list);
-		//Log.v("PPP", "Creating PoliticsFeedFragment view");
 		return v;
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+                Log.v("PPP", "PoliticsFeedFragment - onDestroy");
+
+		if(model != null) {
+			model.close();
+			model = null;
+		}
+
 		if(feedhelper != null) {
 			feedhelper.close();
+			feedhelper = null;
 		}
 	}
 
@@ -108,12 +118,42 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 	public void onResume() {
 		super.onResume();
 		//WakefulIntentService.sendWakefulWork(cxt, PPPRefresh.class);
-		model.requery();
-		// TODO Memory leak from old adaptor ?
-		feedadaptor = new PoliticsFeedAdaptor(cxt, model);
-		setListAdapter(feedadaptor);
-		//lv.invalidateViews();
+		boolean tab_switch = false;
+		if(feedhelper == null) {
+			feedhelper = new PoliticsFeedDBHelper(cxt).open();
+			tab_switch = true;
+		}
+
+		if(model == null) {
+			model = feedhelper.getPoliticsFeed();
+			tab_switch = true;
+		}
+
+		if(tab_switch == true) {
+			//model.requery();
+			// TODO Memory leak from old adaptor ?
+			feedadaptor = new PoliticsFeedAdaptor(cxt, model);
+
+			lv.setAdapter(feedadaptor);
+			lv.invalidateViews();
+		}
 	}
+
+        @Override
+        public void onPause() {
+                super.onPause();
+
+                Log.v("PPP", "PoliticsFeedFragment - onPause");
+
+                if(model != null) {
+                        model.close();
+                }
+
+                if(feedhelper != null) {
+                        feedhelper.close();
+                }
+
+        }
 
 	public void refresh() {
 		model.requery();
@@ -157,12 +197,12 @@ OnClickListener() {
 
 			      }
                                 })
-				.setNeutralButton("Monitor", new DialogInterface. OnClickListener() {
+				.setNeutralButton("Read", new DialogInterface. OnClickListener() {
 					public void onClick(DialogInterface dlg,int sumthing) {
 					Log.v("PPP", "Marking " + item_id + "as post to read");
-					feedhelper.markReader(item_id);
+					feedhelper.markToRead(item_id);
 
-					Toast.makeText(acxt, "Monitoring in Reader", Toast.LENGTH_SHORT).show();
+					Toast.makeText(acxt, "Added to Reader", Toast.LENGTH_SHORT).show();
 
 					}
 				})

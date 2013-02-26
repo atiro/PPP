@@ -118,7 +118,7 @@ public class TriggerNew extends Activity {
 		if(chk_com.isChecked()) {
 	  	  commonshelper = new CommonsDBHelper(this).open();
 
-		  commons = commonshelper.getDebatesFiltered(match, ignore_case, ignore_name);
+		  commons = commonshelper.getDebatesFiltered(match, ignore_case, ignore_name, 14);
 
 		  for(Integer common: commons) {
 			//Log.v("PPP", "Found matching debate for trigger: " + match);
@@ -134,7 +134,7 @@ public class TriggerNew extends Activity {
 		if(chk_lords.isChecked()) {
 		  lordshelper = new LordsDBHelper(this).open();
 
-		  lords = lordshelper.getDebatesFiltered(match, ignore_case, ignore_name);
+		  lords = lordshelper.getDebatesFiltered(match, ignore_case, ignore_name, 14);
 
 		  for(Integer lord: lords) {
 			//Log.v("PPP", "Found matching debate for trigger: " + match);

@@ -59,13 +59,19 @@ public class BrowseFragment extends SherlockFragment {
 		View v = inflater.inflate(R.layout.browse_fragment, container, false);
 		Context c = getActivity().getApplicationContext();
 
+		Log.v("PPP", "Creating BrowseFragment");
+
+		Bundle args = getArguments();
+
+		browse_house = House.values()[args.getInt("house", 0)];
+		browse_chamber = Chamber.values()[args.getInt("chamber", 0)];
+		browse_date = args.getInt("date", 0);
 		
 		ArrayAdapter<String> house_adaptor = new ArrayAdapter<String>(c, android.R.layout.simple_gallery_item, houses);
 		ArrayAdapter<String> chamber_adaptor = new ArrayAdapter<String>(c, android.R.layout.simple_gallery_item, chambers_commons);
 
 		// TODO - move to correct position ?
 
-		Log.v("PPP", "Creating BrowseFragment");
 
 		house_gallery = (Gallery)v.findViewById(R.id.house_gallery);
 		house_gallery.setAdapter(house_adaptor);
@@ -151,7 +157,7 @@ public class BrowseFragment extends SherlockFragment {
 
 		day_gallery = (Gallery) v.findViewById(R.id.date_gallery);
 		day_gallery.setAdapter(day_adaptor);
-		day_gallery.setSelection(14);
+		day_gallery.setSelection(browse_date + 14);
 
 		day_gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
@@ -169,6 +175,33 @@ public class BrowseFragment extends SherlockFragment {
 		});
 
 		return v;
+	}
+
+        @Override
+        public void onPause() {
+                super.onPause();
+                Log.v("PPP", "BrowseFragment - onPause");
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+                Log.v("PPP", "BrowseFragment - saveInstanceState");
+		outState.putInt("house", browse_house.ordinal());
+		outState.putInt("chamber", browse_chamber.ordinal());
+		outState.putInt("date", browse_date);
+	}
+
+	public House getHouse() {
+		return browse_house;
+	}
+
+	public Chamber getChamber() {
+		return browse_chamber;
+	}
+
+	public Integer getDate() {
+		return browse_date;
 	}
 
 }

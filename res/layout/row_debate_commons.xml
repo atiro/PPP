@@ -27,7 +27,7 @@
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	  android:orientation="vertical"
 	  android:layout_marginLeft="5dp"
-	  android:layout_weight="2"
+	  android:layout_weight="3"
 	  android:layout_width="0dip"
 	  android:layout_height="wrap_content">
 
@@ -52,6 +52,82 @@
 		android:textSize="10sp" />
 
 	  </LinearLayout>
+	</LinearLayout>
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:orientation="horizontal"
+	  android:layout_marginLeft="3dp"
+	  android:layout_weight="1"
+	  android:layout_width="0dip"
+	  android:layout_height="wrap_content">
+	  
+	 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="vertical"
+	    android:layout_weight="1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+
+	 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_weight="1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+
+
+	    <ImageView
+	    	android:id="@+id/new_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		android:src="@drawable/new_icon"/>
+
+	    <ImageView
+	    	android:id="@+id/alert_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		android:src="@drawable/clock"/>
+
+	    <ImageView
+	    	android:id="@+id/person_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		android:src="@drawable/person"/>
+
+	  </LinearLayout>
+
+	 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="horizontal"
+	    android:layout_weight="1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+
+
+	    <ImageView
+	    	android:id="@+id/watching_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		android:src="@drawable/eye"/>
+
+	    <ImageView
+	    	android:id="@+id/important_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		android:src="@drawable/star"/>
+
+	    <ImageView
+	    	android:id="@+id/bill_img"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="invisible"
+		android:src="@drawable/bill"/>
+
+	  </LinearLayout>
+	 </LinearLayout>
+
 	</LinearLayout>
 
 </LinearLayout>

@@ -103,6 +103,10 @@ public class DebateFragment extends SherlockFragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if(model != null) {
+			model.close();
+		}
+
 		if(commonshelper != null) {
 			commonshelper.close();
 		}

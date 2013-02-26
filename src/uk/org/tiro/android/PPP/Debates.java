@@ -47,6 +47,8 @@ public class Debates extends SherlockFragment {
 	private static final int MENU_LEGISLATION = Menu.FIRST+2;
 
 	private boolean detailsInline = false;
+	private DebatesFragment debatesFrag = null;
+	private BrowseFragment browseFrag = null;
 
 	House house;
 	Chamber chamber;
@@ -100,26 +102,33 @@ public class Debates extends SherlockFragment {
 		house = House.values()[savedInstanceState.getInt("house")];
 		chamber = Chamber.values()[savedInstanceState.getInt("chamber")];
 		date = savedInstanceState.getInt("date");
-	} 
+	} else {
 
-	Log.v("PPP", "Debates onCreateView Day = " + date);
+		Log.v("PPP", "Debates onCreateView Day = " + date);
+		Log.v("PPP", "Debates onCreateView house = " + house);
+		Log.v("PPP", "Debates onCreateView chamber = " + chamber);
 
-	BrowseFragment browseFrag = new BrowseFragment();
-	args = new Bundle();
-	args.putInt("house", house.ordinal());
-	args.putInt("chamber", chamber.ordinal());
-	args.putInt("date", date);
+		browseFrag = new BrowseFragment();
+		args = new Bundle();
+		args.putInt("house", house.ordinal());
+		args.putInt("chamber", chamber.ordinal());
+		args.putInt("date", date);
 
-	browseFrag.setArguments(args);
+		browseFrag.setArguments(args);
 //	browseFrag.setRetainInstance(true);
 
-	ft.add(R.id.main_frag_container, browseFrag, "browse");
-	DebatesFragment debatesFrag = new DebatesFragment();
-	ft.add(R.id.main_frag_container, debatesFrag, "debates");
+		ft.add(R.id.main_frag_container, browseFrag, "browse");
+		debatesFrag = new DebatesFragment();
+		ft.add(R.id.main_frag_container, debatesFrag, "debates");
 //	debatesFrag.setRetainInstance(true);
 
 
-	ft.commit();
+		ft.commit();
+
+		if((house.ordinal() != 0) && (chamber.ordinal() != 0) && date != 0) {
+			debatesFrag.updateAll(house, chamber, date);
+		}
+	}
 
 	return v;
 
@@ -174,7 +183,38 @@ public class Debates extends SherlockFragment {
 	*/
 		
 	@Override
+	public void onPause() {
+		super.onPause();
+		Log.v("PPP", "Debates onPause()");
+
+		if(browseFrag != null) {
+			house = browseFrag.getHouse();
+			chamber = browseFrag.getChamber();
+			date = browseFrag.getDate();
+
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			FragmentTransaction ft = fm.beginTransaction();
+			if(debatesFrag != null) {
+				ft.remove(debatesFrag);
+				debatesFrag = null;
+			}
+			if(browseFrag != null) {
+				ft.remove(browseFrag);
+				browseFrag = null;
+			}
+			ft.commit();
+		}
+	}
+
+	@Override
+	public void onResume() {
+		Log.v("PPP", "Debates onResume()");
+		super.onResume();
+	}
+
+	@Override
 	public void onDestroy() {
+		Log.v("PPP", "Debates onDestroy()");
 		super.onDestroy();
 	}
 

@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.org.tiro.android.PPP"
-      android:versionCode="7"
-      android:versionName="0.2-autumnstatement">
+      android:versionCode="12"
+      android:versionName="0.3-eastleigh-byelection2">
       <uses-sdk android:minSdkVersion="5" android:targetSdkVersion="11"/>
       <uses-permission android:name="android.permission.INTERNET"/>
       <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
       <uses-permission android:name="android.permission.WAKE_LOCK"/>
       <uses-library android:name="com.actionbarsherlock"/>
 
-    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher_ppp" android:theme="@style/Theme.Sherlock">
+    <application android:label="@string/app_name" android:icon="@drawable/ic_launcher_ppp" android:theme="@style/MyTheme" android:name=".PPPApp">
         <activity android:name="PPP"
+		  android:launchMode="singleTop"
+		  android:configChanges="orientation|keyboardHidden|screenSize"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-	<activity android:name="Bills"/>
-	<activity android:name="Acts"/>
-	<activity android:name="Debates"/>
-	<activity android:name="TriggersList"/>
-	<activity android:name="TriggerNew"/>
-	<activity android:name="Legislation"/>
 	<activity android:name="DebateView"/>
 	<activity android:name="BillView"/>
 	<activity android:name="PPPRefresh"/>
+	<activity android:name="PPPApp"/>
+	<activity android:name="PPPSettings"/>
+	<activity android:name="TriggerNew"/>
 
 	<receiver android:name="com.commonsware.cwac.wakeful.AlarmReceiver">
 		<intent-filter>

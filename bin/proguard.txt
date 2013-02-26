@@ -63,50 +63,42 @@
 # view res/layout/abs__search_view.xml #generated:84
 -keep class com.actionbarsherlock.widget.SearchView$SearchAutoComplete { <init>(...); }
 
-# view AndroidManifest.xml #generated:30
+# view AndroidManifest.xml #generated:29
 -keep class com.commonsware.cwac.wakeful.AlarmReceiver { <init>(...); }
-
-# view AndroidManifest.xml #generated:21
--keep class uk.org.tiro.android.PPP.Acts { <init>(...); }
 
 # view res/layout/bill.xml #generated:8
 -keep class uk.org.tiro.android.PPP.BillFragment { <init>(...); }
 
-# view AndroidManifest.xml #generated:27
+# view AndroidManifest.xml #generated:23
 -keep class uk.org.tiro.android.PPP.BillView { <init>(...); }
-
-# view AndroidManifest.xml #generated:20
--keep class uk.org.tiro.android.PPP.Bills { <init>(...); }
 
 # view res/layout/debate.xml #generated:8
 -keep class uk.org.tiro.android.PPP.DebateFragment { <init>(...); }
 
-# view AndroidManifest.xml #generated:26
--keep class uk.org.tiro.android.PPP.DebateView { <init>(...); }
-
 # view AndroidManifest.xml #generated:22
--keep class uk.org.tiro.android.PPP.Debates { <init>(...); }
-
-# view AndroidManifest.xml #generated:25
--keep class uk.org.tiro.android.PPP.Legislation { <init>(...); }
+-keep class uk.org.tiro.android.PPP.DebateView { <init>(...); }
 
 # view AndroidManifest.xml #generated:13
 -keep class uk.org.tiro.android.PPP.PPP { <init>(...); }
 
-# view AndroidManifest.xml #generated:28
+# view AndroidManifest.xml #generated:12
+# view AndroidManifest.xml #generated:25
+-keep class uk.org.tiro.android.PPP.PPPApp { <init>(...); }
+
+# view AndroidManifest.xml #generated:24
 -keep class uk.org.tiro.android.PPP.PPPRefresh { <init>(...); }
 
-# view AndroidManifest.xml #generated:40
+# view AndroidManifest.xml #generated:26
+-keep class uk.org.tiro.android.PPP.PPPSettings { <init>(...); }
+
+# view AndroidManifest.xml #generated:39
 -keep class uk.org.tiro.android.PPP.PPPUpdate { <init>(...); }
 
 # view res/layout/main.xml #generated:111
 -keep class uk.org.tiro.android.PPP.PoliticsFeedFragment { <init>(...); }
 
-# view AndroidManifest.xml #generated:24
+# view AndroidManifest.xml #generated:27
 -keep class uk.org.tiro.android.PPP.TriggerNew { <init>(...); }
-
-# view AndroidManifest.xml #generated:23
--keep class uk.org.tiro.android.PPP.TriggersList { <init>(...); }
 
 # onClick res/layout/main.xml #generated:76
 -keepclassmembers class * { *** addAlert(...); }
@@ -116,4 +108,16 @@
 
 # onClick res/layout/main.xml #generated:66
 -keepclassmembers class * { *** viewCalendar(...); }
+
+# onClick res/layout/ppp_lobby_fragment.xml #generated:109
+-keepclassmembers class * { *** viewDebates(...); }
+
+# onClick res/layout/ppp_lobby_fragment.xml #generated:200
+-keepclassmembers class * { *** viewLatestDebates(...); }
+
+# onClick res/layout/ppp_lobby_fragment.xml #generated:295
+-keepclassmembers class * { *** viewLegislation(...); }
+
+# onClick res/layout/ppp_lobby_fragment.xml #generated:391
+-keepclassmembers class * { *** viewReadableDebates(...); }
 

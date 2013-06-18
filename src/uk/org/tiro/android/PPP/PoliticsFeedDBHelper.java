@@ -322,30 +322,42 @@ class PoliticsFeedDBHelper {
 
 	}
 
-	public Cursor getPoliticsFeed() {
-			Calendar c = Calendar.getInstance();
-			c.set(Calendar.HOUR, 0);
-			c.set(Calendar.MINUTE, 0);
-			c.set(Calendar.SECOND, 0);
-			c.set(Calendar.MILLISECOND, 0);
-			// Try to ensure we include bills/acts with today's
-			// date by adding half-day leeway.
-			Long today = (c.getTimeInMillis() / 1000) - 43200;
-			String[] args = {today.toString()};
-		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE date >= ? ORDER BY DATE asc, _id asc", args));
+	public Cursor getPoliticsFeed(Integer days_ahead, Boolean is_new) {
+//		Calendar c = Calendar.getInstance();
+//		c.set(Calendar.HOUR, 0);
+//		c.set(Calendar.MINUTE, 0);
+//		c.set(Calendar.SECOND, 0);
+//		c.set(Calendar.MILLISECOND, 0);
+		// Try to ensure we include bills/acts with today's
+		// date by adding half-day leeway.
+//		Long today = (c.getTimeInMillis() / 1000) - 43200;
+//		Long ahead = today + (days_ahead * 24 * 60 * 60);
+//		String[] args = {today.toString()};
+		String date_clause = "date >= strftime('%s', strftime('%Y-%m-%d', 'now')) and date <= strftime('%s', strftime('%Y-%m-%d', 'now', '+" + days_ahead + " days'))";
+
+		if(is_new == true) {
+			date_clause += " AND new = 1";
+		}
+
+		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE " + date_clause + " ORDER BY DATE asc, _id asc", null));
 	}
 
-	public Integer getPoliticsFeedCount(House house) {
+	public Integer getPoliticsFeedCount(House house, Integer days_ahead, Boolean is_new) {
 		String [] args = {house.toOrdinal()};
 
 		Integer nf_count = -1;
 		Cursor c;
+		String date_clause = "date >= strftime('%s', strftime('%Y-%m-%d', 'now')) and date <= strftime('%s', strftime('%Y-%m-%d', 'now', '+" + days_ahead + " days'))";
+		if(is_new == true) {
+			date_clause += " AND new = 1";
+		}
+
 		if(house == House.COMMONS) {
-			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND house = ?", args);
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE " + date_clause + " AND house = ?", args);
 		} else if(house == House.LORDS) {
-			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND house = ?", args);
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE " + date_clause + " AND house = ?", args);
 		} else {
-			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now'))", null);
+			c = this.mDb.rawQuery("SELECT COUNT(*) from politicsfeed WHERE " + date_clause, null);
 		}
 		c.moveToFirst();
 		nf_count = c.getInt(0);
@@ -629,9 +641,11 @@ class PoliticsFeedDBHelper {
 		this.mDb.delete("politicsfeed", "trigger_id = ?", args);
 	}
 
-	public Cursor getReadable() {
+	public Cursor getReadable(Integer days_back) {
 	// Get all talks marked as wanted to be read and older than yesterday
-		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE read > 0 AND date < strftime('%s', 'now', '-1 day') ORDER BY date desc LIMIT 50", null));
+		String date_query = "read > 0 AND date < strftime('%s', 'now', '-1 day') AND date > strftime('%s', 'now', '-" + days_back.toString() + " day')";
+
+		return(this.mDb.rawQuery("SELECT _id, match, trigger_id, trigger_type, item_id, house, highlight, read, new, date from politicsfeed WHERE " + date_query + " ORDER BY date desc LIMIT 100", null));
 	}
 
 	// Show talks from yesterday that are marked as wanting to be read

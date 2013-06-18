@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+  	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+
+<TextView
+	android:id="@+id/reader_title"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:textSize="16dp"
+	android:text="Politics Reader"/>
+
+<ListView
+	android:id="@android:id/list"
+	android:layout_width="fill_parent"
+	android:layout_height="0dip"
+	android:layout_weight="1.0"
+	android:layout_marginTop="5dp"
+	android:drawable="@drawable/item_divider"
+	android:dividerHeight="10px"/>
+
+<TextView
+android:id="@android:id/empty"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:text="\n\nYou haven't yet noted any debates you would like to read, so your reader is empty.\n\nTry adding some debates to your Planner, or adding some rules to highlight particular topics of interest.\n\nYou can then mark in the Planner those debates you'd like to be notified about when the transcript is available to read."/>
+
+</LinearLayout>
+

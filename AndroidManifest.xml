@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.org.tiro.android.PPP"
-      android:versionCode="12"
-      android:versionName="0.3-eastleigh-byelection2">
+      android:versionCode="14"
+      android:versionName="0.3-g8summit">
       <uses-sdk android:minSdkVersion="5" android:targetSdkVersion="11"/>
       <uses-permission android:name="android.permission.INTERNET"/>
       <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

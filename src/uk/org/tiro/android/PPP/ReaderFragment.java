@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 
 import android.widget.Gallery;
 import android.widget.TextView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.CursorAdapter;
 import android.widget.ArrayAdapter;
@@ -33,6 +32,7 @@ import android.view.MenuItem;
 import java.util.Date;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import android.widget.Toast;
 import android.app.AlertDialog;
@@ -43,29 +43,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import android.graphics.Color;
 
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class PoliticsFeedFragment extends SherlockListFragment {
+public class ReaderFragment extends SherlockListFragment {
 
 	ListView lv = null;
 
 	PoliticsFeedDBHelper feedhelper = null;
 	PoliticsFeedAdaptor feedadaptor = null;
 
-	SharedPreferences prefs;
-	Integer debates_visible;
-
 	Cursor model = null;
 	Context cxt = null;
 	Context acxt = null;
-
 
 	private static final int MENU_REFRESH = Menu.FIRST+1;
 	private static final int MENU_DEBATES = Menu.FIRST+2;
@@ -74,9 +67,11 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Log.v("PPP", "creating PoliticsFeedFragment");
+		//Log.v("PPP", "creating ReaderFragment");
 
 		// date
+
+
 
 	}
 
@@ -84,34 +79,39 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 				Bundle savedInstanceState) {
 
+		Log.v("PPP", "Creating ReaderFragment view");
 
-		Log.v("PPP", "Creating PoliticsFeedFragment view");
-		View v = inflater.inflate(R.layout.politicsfeed_fragment, container, false);
-		// lv = (ListView) v.findViewById(android.R.id.list);
-		lv = (ListView) v.findViewById(android.R.id.list);
+		View v = inflater.inflate(R.layout.reader_fragment, container, false);
+		//lv = (ListView) v.findViewById(android.R.id.list);
+
 		cxt = getActivity().getApplicationContext();
 
 		acxt = getActivity();
 
-	        prefs = PreferenceManager.getDefaultSharedPreferences(cxt);
-		debates_visible = Integer.parseInt(prefs.getString("debates_visible", "2"));
-		debates_visible *= 7;
+	//	feedhelper = new PoliticsFeedDBHelper(cxt).open();
 
-		feedhelper = new PoliticsFeedDBHelper(cxt).open();
+			// TODO this will just show debates with Hansard to 
+			//	read, scrapbook should cover more than this.
+			//	Also, how much to show ? (could scroll down
+			//	for past. But annoying if looking for old
+			//	debate)
+			//	Also, where do acts/bills fit in. Not in stream
+			//	anymore as non-chronological, but need some
+			//	way to fit them in.
 
-		model = feedhelper.getPoliticsFeed(debates_visible, false);
+	//	model = feedhelper.getReadable();
 
-		feedadaptor = new PoliticsFeedAdaptor(cxt, model);
+	//	feedadaptor = new PoliticsFeedAdaptor(cxt, model);
 
-		setListAdapter(feedadaptor);
-
+	//	setListAdapter(feedadaptor);
+		// lv = (ListView) v.findViewById(android.R.id.list);
 		return v;
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-                Log.v("PPP", "PoliticsFeedFragment - onDestroy");
+		Log.v("PPP", "ReaderFragment - onDestroy");
 
 		if(model != null) {
 			model.close();
@@ -126,47 +126,44 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		//WakefulIntentService.sendWakefulWork(cxt, PPPRefresh.class);
-		boolean tab_switch = false;
-		if(feedhelper == null) {
-			feedhelper = new PoliticsFeedDBHelper(cxt).open();
-			tab_switch = true;
+	public void onPause() {
+		super.onPause();
+
+		Log.v("PPP", "ReaderFragment - onPause");
+
+		if(model != null) {
+			model.close();
+			model = null;
 		}
 
-		if(model == null) {
-			debates_visible = Integer.parseInt(prefs.getString("debates_visible", "2"));
-			debates_visible *= 7;
-			model = feedhelper.getPoliticsFeed(debates_visible, false);
-			tab_switch = true;
+		if(feedhelper != null) {
+			feedhelper.close();
+			feedhelper = null;
 		}
 
-		if(tab_switch == true) {
-			//model.requery();
-			// TODO Memory leak from old adaptor ?
-			feedadaptor = new PoliticsFeedAdaptor(cxt, model);
-
-			lv.setAdapter(feedadaptor);
-			lv.invalidateViews();
-		}
 	}
 
-        @Override
-        public void onPause() {
-                super.onPause();
+	@Override
+	public void onResume() {
+		super.onResume();
+		Log.v("PPP", "ReaderFragment - onResume");
+		//WakefulIntentService.sendWakefulWork(cxt, PPPRefresh.class);
+		if(feedhelper == null) {
+			feedhelper = new PoliticsFeedDBHelper(cxt).open();
+		}
+		if(model == null) {
+			model = feedhelper.getReadable(14);
+		}
 
-                Log.v("PPP", "PoliticsFeedFragment - onPause");
+		// Mark all read=2 as read=1 (i.e. no longer new but not read)
+		feedhelper.markFeedUnread();
 
-                if(model != null) {
-                        model.close();
-                }
+		// TODO Memory leak from old adaptor ?
+		feedadaptor = new PoliticsFeedAdaptor(cxt, model);
 
-                if(feedhelper != null) {
-                        feedhelper.close();
-                }
-
-        }
+		setListAdapter(feedadaptor);
+		//lv.invalidateViews();
+	}
 
 	public void refresh() {
 		model.requery();
@@ -181,78 +178,45 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 		final String title;
 		final String subject;
 		final String url;
-		final Trigger type;
-		final Integer item_id;
+		final House house;
+		final Date date;
+
+		// TODO - Retrieve from Hansard/TWFY and display
 
 		// Retrieve debate guid
 		model.moveToPosition(position);
 
-		type = feedhelper.getTriggerType(model);
 		title =  feedhelper.getHouse(model);
 		subject = feedhelper.getMessage(model);
+		house = feedhelper.getHouseRaw(model);
 		url = feedhelper.getURL(model);
-		item_id = feedhelper.getId(model);
+		date = feedhelper.getDateLong(model);
 
-		if(type == Trigger.MAIN) {
-			// We can notify when transcript available following day
-		  new AlertDialog.Builder(acxt)
-//			.setTitle(title)
+
+		  //if(chamber == Chamber.MAIN) {
+		    new AlertDialog.Builder(acxt)
+			.setTitle(title)
 			.setMessage(subject)
-			.setPositiveButton("Share", new DialogInterface.
-OnClickListener() {
-                               public void onClick(DialogInterface dlg, int sumthing) {
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent.putExtra(Intent.EXTRA_TEXT, subject);
-				sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share with..."));
 
-			      }
-                                })
-				.setNeutralButton("Read", new DialogInterface. OnClickListener() {
-					public void onClick(DialogInterface dlg,int sumthing) {
-					Log.v("PPP", "Marking " + item_id + "as post to read");
-					feedhelper.markToRead(item_id);
-
-					Toast.makeText(acxt, "Added to Reader", Toast.LENGTH_SHORT).show();
-
-					}
-				})
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dlg,int sumthing) {
-					}
-				}).show();
-
-		} else {
-		  new AlertDialog.Builder(acxt)
-//			.setTitle(title)
-			.setMessage(subject)
-			.setPositiveButton("Share", new DialogInterface.
-OnClickListener() {
-                               public void onClick(DialogInterface dlg, int sumthing) {
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent.putExtra(Intent.EXTRA_TEXT, subject);
-				sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, "Share with..."));
-
-			      }
-                                })
-				.setNeutralButton("View", new DialogInterface. OnClickListener() {
-					public void onClick(DialogInterface dlg,int sumthing) {
-
-                                         Intent sendIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                         startActivity(sendIntent);
-					}
-				})
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dlg,int sumthing) {
-					}
-				})
-				.show();
-		}
+                        .setNegativeButton("Cancel", null)
+			.setNeutralButton("Read", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dlg, int sumthing) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd", Locale.UK);
+				String date_ymd = sdf.format(date);
+				String debate_url;
+						
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				if(house == House.COMMONS) {
+					debate_url = "http://www.publications.parliament.uk/pa/cm201213/cmhansrd/cm" + date_ymd + "/debindx/" + 
+date_ymd + "-x.htm";
+				} else {
+					debate_url = "http://www.publications.parliament.uk/pa/ld201213/ldhansrd/index/" + date_ymd + ".html";
+				}
+				i.setData(Uri.parse(debate_url));
+				Log.v("PPP", "Launching browser with URL:" + url);
+				startActivity(i);
+			}}).show();
+		//}
 
 	}
 
@@ -262,7 +226,6 @@ OnClickListener() {
 	private TextView trigger = null;
 	private TextView msg = null;
 	private TextView separator = null;
-	private ImageView img_read = null;
 	private View row = null;
 	private int latest = 0;
 
@@ -272,8 +235,6 @@ OnClickListener() {
 		msg = (TextView)row.findViewById(R.id.msg);
 		type = (TextView)row.findViewById(R.id.type);
 		trigger = (TextView)row.findViewById(R.id.trigger);
-		img_read = (ImageView)row.findViewById(R.id.read_img);
-
 		separator = (TextView)row.findViewById(R.id.separator);
 	}
 
@@ -294,10 +255,6 @@ OnClickListener() {
 			type.setTextColor(Color.parseColor("#62B367"));
 		} else {
 			type.setTextColor(Color.parseColor("#DA5254"));
-		}
-
-		if(helper.getRead(c) > 0) {
-			img_read.setVisibility(View.VISIBLE);
 		}
 	}
 

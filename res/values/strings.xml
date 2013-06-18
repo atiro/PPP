@@ -6,6 +6,7 @@
 	<!-- Settings -->
 
     <string name="pref_ppp_notifications_title">Notifications</string>
+    <string name="pref_ppp_general_title">General Settings</string>
     <string name="pref_title_note_newdebates">New Matching Debates</string>
     <string name="pref_title_note_readable">New Transcripts</string>
     <string name="pref_title_note_today">Daily Matching Debates</string>

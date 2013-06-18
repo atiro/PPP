@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,8 +51,11 @@ public class BrowseFragment extends SherlockFragment {
 	House browse_house = null;
 	Chamber browse_chamber = null;
 	Integer browse_date = 0;
+	Integer days_visible = 2;
 
 	Context c = null;
+
+	SharedPreferences prefs;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +67,10 @@ public class BrowseFragment extends SherlockFragment {
 		Log.v("PPP", "Creating BrowseFragment");
 
 		Bundle args = getArguments();
+
+        	prefs = PreferenceManager.getDefaultSharedPreferences(c);
+		days_visible = Integer.parseInt(prefs.getString("debates_visible", "2"));
+		days_visible *= 7; // Turn weeks to days
 
 		browse_house = House.values()[args.getInt("house", 0)];
 		browse_chamber = Chamber.values()[args.getInt("chamber", 0)];
@@ -136,7 +145,7 @@ public class BrowseFragment extends SherlockFragment {
 		days.add("Yesterday");
 		days.add("Today");
 		days.add("Tomorrow");
-		for(int i = 2; i < 14; i++) {
+		for(int i = 2; i < days_visible; i++) {
 			String month;
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DAY_OF_YEAR, i);

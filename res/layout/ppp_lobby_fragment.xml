@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:gravity="center"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<TextView android:id="@+id/title"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textColor="#fefefe"
+		android:textSize="16sp"
+		android:text="Your Politics"/>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:gravity="center"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+<!--
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:gravity="center">
+
+	<TextView android:id="@+id/your_politics"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="12dp"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textColor="#5B5BFF"
+		android:textSize="16dp"
+		android:layout_marginTop="2dp"
+		android:text="Your Politics"/>
+
+  </TableRow>
+-->
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:gravity="center">
+
+	<TextView
+ 	   android:id="@+id/tbl_header1"
+         android:layout_width="0dip"
+         android:layout_height="wrap_content"
+         android:background="@color/orange"
+         android:textColor="@color/white"
+	 android:layout_weight="1"
+		android:gravity="center"
+         android:text="Debates" />
+
+	<TextView
+ 	   android:id="@+id/tbl_header1"
+         android:layout_width="0dip"
+         android:layout_height="wrap_content"
+         android:background="@color/green"
+         android:textColor="@color/white"
+	 android:layout_weight="1"
+		android:gravity="center"
+         android:text="Commons" />
+
+	<TextView
+ 	   android:id="@+id/tbl_header1"
+         android:layout_width="0dip"
+         android:layout_height="wrap_content"
+         android:background="@color/red"
+         android:textColor="@color/white"
+	 android:layout_weight="1"
+		android:gravity="center"
+         android:text="Lords" />
+
+	<TextView
+ 	   android:id="@+id/tbl_header1"
+         android:layout_width="0dip"
+         android:layout_height="wrap_content"
+         android:background="@color/green"
+         android:textColor="@color/white"
+	 android:layout_weight="1"
+		android:gravity="center"
+         android:text="Action" />
+
+  </TableRow>
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:gravity="center">
+
+	<TextView android:id="@+id/upcoming_new_debates_match"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textColor="#5B5BFF"
+		android:textSize="12sp"
+	 android:layout_weight="1"
+		android:text="New"/>
+
+	<TextView android:id="@+id/relevant_new_commons_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:background="#000000"
+		android:textColor="#62B367"
+	 android:layout_weight="1"
+		android:text="-"/>
+
+	<TextView android:id="@+id/relevant_new_lords_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_marginLeft="12dp"
+		android:background="#000000"
+		android:textColor="#DA5254"
+		 android:layout_weight="1"
+		android:text="-"/>
+
+  	<Button
+  	android:id="@+id/latest_new_debates"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="0dip"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:layout_gravity="center"
+	android:layout_marginTop="2dp"
+	android:gravity="center"
+	android:text="Browse"
+	android:onClick="viewNewLatestDebates"/>
+
+  </TableRow>
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:gravity="center">
+
+	<TextView android:id="@+id/upcoming_debates_match_coming"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textColor="#5B5BFF"
+		android:textSize="12sp"
+		android:layout_weight="1"
+		android:text="Matching"/>
+
+	<TextView android:id="@+id/relevant_commons_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:background="#000000"
+		android:textColor="#62B367"
+		android:text="-"/>
+
+	<TextView android:id="@+id/relevant_lords_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:layout_marginLeft="12dp"
+		android:background="#000000"
+		android:textColor="#DA5254"
+		android:text="-"/>
+
+        <Button
+  	android:id="@+id/latest_debates"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="0dip"
+	android:layout_weight="1"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:layout_marginTop="2dp"
+	android:gravity="center"
+	android:text="Browse"
+	android:onClick="viewLatestDebates"
+  />
+
+  </TableRow>
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:gravity="center">
+
+	<TextView android:id="@+id/watching_debates"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textColor="#5B5BFF"
+		android:textSize="12sp"
+		android:layout_weight="1"
+		android:text="Watching"/>
+
+	<TextView android:id="@+id/watching_commons_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:background="#000000"
+		android:textColor="#62B367"
+	 android:layout_weight="1"
+		android:text="-"/>
+
+	<TextView android:id="@+id/watching_lords_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_marginLeft="12dp"
+		android:background="#000000"
+		android:textColor="#DA5254"
+		 android:layout_weight="1"
+		android:text="-"/>
+
+  	<Button
+  	android:id="@+id/watching_debates"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="0dip"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:layout_gravity="center"
+	android:layout_marginTop="2dp"
+	android:gravity="center"
+	android:text="Browse"
+	android:onClick="viewWatchingDebates"/>
+
+  </TableRow>
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:layout_gravity="center"
+	android:gravity="center">
+
+ 	<TextView android:id="@+id/readable_new_submatch"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:textColor="#5B5BFF"
+		android:gravity="center"
+		android:textSize="12dp"
+		android:text="Unread"/>
+
+	<TextView android:id="@+id/readable_new_commons_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:background="#000000"
+		android:textColor="#62B367"
+		android:text="-"/>
+
+	<TextView android:id="@+id/readable_new_lords_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:layout_marginLeft="12dp"
+		android:background="#000000"
+		android:textColor="#DA5254"
+		android:text="-"/>
+
+  	<Button
+  	android:id="@+id/readable_debates"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="0dip"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:layout_weight="1"
+	android:layout_marginTop="2dp"
+	android:gravity="center"
+	android:text="Read"
+	android:onClick="viewReadableNewDebates" />
+
+  </TableRow>
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:gravity="center">
+
+        <TextView android:id="@+id/readable_match"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:textColor="#5B5BFF"
+		android:gravity="center"
+		android:textSize="12dp"
+		android:text="Archived"/>
+
+	<TextView android:id="@+id/readable_commons_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:background="#000000"
+		android:textColor="#62B367"
+		android:text="-"/>
+
+	<TextView android:id="@+id/readable_lords_val"
+		android:layout_width="0dip"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:layout_marginLeft="12dp"
+		android:background="#000000"
+		android:textColor="#DA5254"
+		android:text="-"/>
+
+        <Button
+  	android:id="@+id/readable_debates"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="0dip"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:layout_marginTop="2dp"
+	android:layout_weight="1"
+	android:gravity="center"
+	android:text="Read"
+	android:onClick="viewReadableDebates"
+  />
+
+  </TableRow>
+
+
+<!--
+   <TextView android:id="@+id/all_politics"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="12dp"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textColor="#5B5BFF"
+		android:textSize="16dp"
+		android:layout_marginTop="2dp"
+		android:text="Parliamentary Business"/>
+-->
+</TableLayout>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:gravity="center"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:gravity="center"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+
+	<TextView android:id="@+id/upcoming_debates"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#000000"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:layout_marginTop="4dp"
+		android:textColor="#5B5BFF"
+		android:textSize="14dp"
+		android:text="Debates (All)"/>
+
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_gravity="center_horizontal"
+	android:gravity="center"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+
+  <TableRow>
+	<TextView android:id="@+id/upcoming_total_commons"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:background="#000000"
+		android:text="Commons"/>
+
+	<TextView android:id="@+id/upcoming_total_lords"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="12dp"
+		android:layout_weight="1"
+		android:background="#000000"
+		android:text="Lords"/>
+
+	</TableRow>
+
+  <TableRow
+  	android:layout_width="wrap_content"
+	android:layout_gravity="center"
+	android:gravity="center">
+
+
+	<TextView android:id="@+id/upcoming_total_commons_val"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:background="#000000"
+		android:textColor="#62B367"
+		android:text="-"/>
+
+	<TextView android:id="@+id/upcoming_total_lords_val"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_weight="1"
+		android:layout_marginLeft="12dp"
+		android:background="#000000"
+		android:textColor="#DA5254"
+		android:text="-"/>
+
+	</TableRow>
+	</TableLayout>
+
+  <Button
+  	android:id="@+id/latest_debates"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:layout_marginTop="2dp"
+	android:gravity="center"
+	android:text="Browse All"
+	android:onClick="viewDebates"/>
+
+</LinearLayout>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:gravity="center"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+  
+
+  <TextView android:id="@+id/bills_watching"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:layout_marginTop="8dp"
+		android:textSize="14dp"
+		android:textColor="#5B5BFF"
+		android:text="Legislation"/>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_gravity="center_horizontal"
+	android:gravity="center"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content">
+
+  <TableRow>
+	<TextView android:id="@+id/readable_acts"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:text="Acts"/>
+
+	<TextView android:id="@+id/readable_bills"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:layout_marginLeft="20dp"
+		android:background="#000000"
+		android:text="Bills"/>
+
+  </TableRow>
+
+  <TableRow
+  	android:layout_width="fill_parent"
+	android:layout_gravity="center"
+	android:gravity="center">
+
+	<TextView android:id="@+id/readable_acts_val"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:background="#000000"
+		android:text="-"/>
+
+	<TextView android:id="@+id/readable_bills_val"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:gravity="center"
+		android:layout_marginLeft="20dp"
+		android:background="#000000"
+		android:text="-"/>
+
+	</TableRow>
+	</TableLayout>
+
+  <Button
+  	android:id="@+id/acts_bills"
+	style="?android:attr/buttonStyleSmall"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:layout_marginTop="2dp"
+	android:gravity="center"
+	android:clickable="false"
+	android:enabled="false"
+	android:text="Browse Laws"
+	android:onClick="viewLegislation"
+  />
+
+  
+  </LinearLayout>
+</LinearLayout>
+
+</LinearLayout>

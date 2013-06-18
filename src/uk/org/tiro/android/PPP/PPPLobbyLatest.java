@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 
 import android.widget.Gallery;
 import android.widget.TextView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.CursorAdapter;
 import android.widget.ArrayAdapter;
@@ -43,63 +42,66 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import android.graphics.Color;
 
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
-public class PoliticsFeedFragment extends SherlockListFragment {
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockFragment;
+
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+public class PPPLobbyLatest extends SherlockListFragment {
 
 	ListView lv = null;
 
 	PoliticsFeedDBHelper feedhelper = null;
 	PoliticsFeedAdaptor feedadaptor = null;
 
-	SharedPreferences prefs;
-	Integer debates_visible;
-
 	Cursor model = null;
 	Context cxt = null;
 	Context acxt = null;
 
+	SharedPreferences prefs;
+	Integer debates_visible;
 
-	private static final int MENU_REFRESH = Menu.FIRST+1;
-	private static final int MENU_DEBATES = Menu.FIRST+2;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Log.v("PPP", "creating PoliticsFeedFragment");
+		Log.v("PPP", "creating PPPLatestDebates");
 
 		// date
-
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, 
 				Bundle savedInstanceState) {
 
-
-		Log.v("PPP", "Creating PoliticsFeedFragment view");
-		View v = inflater.inflate(R.layout.politicsfeed_fragment, container, false);
+		Log.v("PPP", "Creating PPPLobbyLatest view");
+		View v = inflater.inflate(R.layout.ppp_lobby_latest, container, false);
 		// lv = (ListView) v.findViewById(android.R.id.list);
 		lv = (ListView) v.findViewById(android.R.id.list);
 		cxt = getActivity().getApplicationContext();
 
 		acxt = getActivity();
 
-	        prefs = PreferenceManager.getDefaultSharedPreferences(cxt);
+		prefs = PreferenceManager.getDefaultSharedPreferences(cxt);
 		debates_visible = Integer.parseInt(prefs.getString("debates_visible", "2"));
 		debates_visible *= 7;
 
 		feedhelper = new PoliticsFeedDBHelper(cxt).open();
 
-		model = feedhelper.getPoliticsFeed(debates_visible, false);
+		model = feedhelper.getPoliticsFeed(debates_visible, true);
 
 		feedadaptor = new PoliticsFeedAdaptor(cxt, model);
 
@@ -138,7 +140,7 @@ public class PoliticsFeedFragment extends SherlockListFragment {
 		if(model == null) {
 			debates_visible = Integer.parseInt(prefs.getString("debates_visible", "2"));
 			debates_visible *= 7;
-			model = feedhelper.getPoliticsFeed(debates_visible, false);
+			model = feedhelper.getPoliticsFeed(debates_visible, true);
 			tab_switch = true;
 		}
 
@@ -256,13 +258,11 @@ OnClickListener() {
 
 	}
 
-
     static class PoliticsFeedHolder {
 	private TextView type = null;
 	private TextView trigger = null;
 	private TextView msg = null;
 	private TextView separator = null;
-	private ImageView img_read = null;
 	private View row = null;
 	private int latest = 0;
 
@@ -272,8 +272,6 @@ OnClickListener() {
 		msg = (TextView)row.findViewById(R.id.msg);
 		type = (TextView)row.findViewById(R.id.type);
 		trigger = (TextView)row.findViewById(R.id.trigger);
-		img_read = (ImageView)row.findViewById(R.id.read_img);
-
 		separator = (TextView)row.findViewById(R.id.separator);
 	}
 
@@ -294,10 +292,6 @@ OnClickListener() {
 			type.setTextColor(Color.parseColor("#62B367"));
 		} else {
 			type.setTextColor(Color.parseColor("#DA5254"));
-		}
-
-		if(helper.getRead(c) > 0) {
-			img_read.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -388,5 +382,6 @@ OnClickListener() {
     }
 
 }
+
 
 

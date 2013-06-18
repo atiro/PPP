@@ -257,7 +257,7 @@ class CommonsDBHelper {
 	public Integer countFutureDebates(Integer days_ahead) {
 		Integer nf_count = -1;
 
-		String query = "SELECT COUNT(*) FROM commons WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND date < strftime('%s', 'now', '" + days_ahead + " day')";
+		String query = "SELECT COUNT(*) FROM commons WHERE date >= strftime('%s', strftime('%Y-%m-%d', 'now')) AND date < strftime('%s', 'now', '+" + days_ahead + " day')";
 		Cursor c = this.mDb.rawQuery(query, null);
 		c.moveToFirst();
 		nf_count = c.getInt(0);

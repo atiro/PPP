@@ -69,6 +69,7 @@ public class PPP extends SherlockFragmentActivity implements OnNavigationListene
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+    	Bundle extras = getIntent().getExtras();
 
 	setTheme(R.style.Theme_Sherlock);
 
@@ -256,6 +257,14 @@ int sumthing) {
 	if(savedInstanceState!= null) {
        		Log.v("PPP", "Orientation change - really switching to correct tab - " + savedInstanceState.getInt("currentTab"));
 		getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt("currentTab"));
+	} else if(extras != null) {
+		if(extras.getInt("notification_start") == 1) {
+			viewNewLatestDebates(null);
+		} else if(extras.getInt("notification_start") == 2) {
+			viewReadableNewDebates(null);
+		} else if(extras.getInt("notification_start") == 3) {
+			// Not supported yet
+		}
 	}
     }
 
@@ -441,7 +450,39 @@ int sumthing) {
 		fragmentTransaction.commit();
 	}
 
+	public void viewReadableNewDebates(View v) {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		Fragment frag = (Fragment)fragmentManager.findFragmentById(R.id.content);
+		if(frag != null) {
+   			Log.v("PPP", "Removing existing fragment");
+			fragmentTransaction.detach(frag);
+		}
+		fragmentTransaction.replace(R.id.content, new ReaderNewFragment());
+		fragmentTransaction.commit();
+
+	}
+
 	public void viewLatestDebates(View v) {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		Fragment planner = (Fragment)fragmentManager.findFragmentByTag("Planner");
+		Fragment frag = (Fragment)fragmentManager.findFragmentById(R.id.content);
+		if(frag != null) {
+   			Log.v("PPP", "Removing existing fragment");
+			fragmentTransaction.detach(frag);
+		}
+		if(planner != null) {
+			fragmentTransaction.attach(planner);
+		} else {
+			fragmentTransaction.replace(R.id.content, frags_app.get(2), "Planner");
+		}
+   		Log.v("PPP", "Viewing new highlighted debates");
+		fragmentTransaction.commit();
+	}
+
+
+	public void viewNewLatestDebates(View v) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		Fragment frag = (Fragment)fragmentManager.findFragmentById(R.id.content);

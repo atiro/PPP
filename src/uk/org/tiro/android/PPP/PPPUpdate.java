@@ -31,6 +31,9 @@ public class PPPUpdate extends WakefulIntentService {
 	private int readable_debates = 0;
 	private int notify_debates = 0;
 
+	private Integer debates_visible;
+	private Integer old_debates_visible;
+
 	private boolean notify_today = false;
 	private boolean notify_readable = false;
 	private boolean notify_new = false;
@@ -69,6 +72,12 @@ public class PPPUpdate extends WakefulIntentService {
 	}
 
 	Log.v("PPP", "Updating PPP Feeds (last ran: " + time_diff + " )");
+
+	debates_visible = Integer.parseInt(prefs.getString("debates_visible", "2"));
+	old_debates_visible = Integer.parseInt(prefs.getString("old_debates_visible", "2"));
+
+	debates_visible *= 7;	// Turn weeks into number of days
+	old_debates_visible *= 7;	// Turn weeks into number of days
 
 	dbadaptor = new DBAdaptor(this).open();
 	triggershelper = new TriggersDBHelper(this).open();
@@ -111,6 +120,8 @@ public class PPPUpdate extends WakefulIntentService {
 	*/
 
 	Intent pppIntent = new Intent(this, PPP.class);
+	pppIntent.putExtra("notification_start", 1);
+
 	PendingIntent ppppIntent = PendingIntent.getActivity(this, 0, pppIntent, 0);
 
 	NotificationManager mNotificationManager =
@@ -144,6 +155,9 @@ public class PPPUpdate extends WakefulIntentService {
 
       pppId += 1;
       // Retrieve debates from yesterday that are available to read.
+
+      pppIntent.putExtra("notification_start", 2);
+
       readable_debates = feedhelper.getReadableCount(House.BOTH, 2);
 
       Log.v("PPP", "Redeable Debates - " + readable_debates );
@@ -166,6 +180,7 @@ public class PPPUpdate extends WakefulIntentService {
 	// being notified about (TODO at moment all today's debates in planner
 	// are retrieved)
 
+        pppIntent.putExtra("notification_start", 3);
         pppId += 1;
 	notify_debates = feedhelper.getPoliticsTodayCount();
 
@@ -197,6 +212,15 @@ public class PPPUpdate extends WakefulIntentService {
 	now = new Time();
 	now.setToNow();
 	edit.putLong("lastRun", now.toMillis(true));
+
+	// If old_debates_visible different to debates_visible, update it now
+	// (delayed to avoid losing debates if changed.
+
+	if(old_debates_visible != debates_visible) {
+		debates_visible /= 7; // Turn days to weeks
+		edit.putString("old_debates_visible", debates_visible.toString());
+	}
+
 	edit.commit();
 
 	Log.v("PPP", "Finished updating PPP Feeds");
@@ -260,7 +284,7 @@ public class PPPUpdate extends WakefulIntentService {
 		actshelper.insert(act);
 	  }
 
-	actshelper.markActsOld();
+	actshelper.markActsOld(); // No date for acts, can't pass period of days
 
 	actshelper.close();
      }
@@ -288,11 +312,9 @@ public class PPPUpdate extends WakefulIntentService {
 
                 triggers = triggershelper.com_debates_triggers();
 
-                // quick check if any new bills, if not don't bother scanning
-                // for each trigger.
-
+		// Check for any new debates matching triggers, if so add to feed
                 for(String trigger: triggers) {
-                        List<Integer> triggerdebates = commonshelper.getDebatesFiltered(trigger, true, true, 14);
+                        List<Integer> triggerdebates = commonshelper.getDebatesFiltered(trigger, true, true, debates_visible);
                         for(Integer debate: triggerdebates) {
                                 // TODO put proper trigger_id in
                                 feedhelper.insert_commons_debate(trigger, 0, debate, false);
@@ -309,7 +331,8 @@ public class PPPUpdate extends WakefulIntentService {
 	// CommonsFeedParser parser = new CommonsFeedParser("http://tiro.org.uk/mobile/commons_select_committee.rss", "");
 	CommonsFeedParser parser = new CommonsFeedParser("http://services.parliament.uk/calendar/commons_select_committee.rss", "");
 
-	commonshelper.markAllOld(14);
+	// This covers all debates (main, select, etc) in the commons
+	commonshelper.markAllOld(old_debates_visible);
 
 	if(parser == null) {
 		return;
@@ -335,7 +358,6 @@ public class PPPUpdate extends WakefulIntentService {
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_main_chamber.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_main_chamber.rss", "");
 	
-	lordshelper.markAllOld(14);
 
 	if(parser == null) {
 		return;
@@ -351,11 +373,10 @@ public class PPPUpdate extends WakefulIntentService {
 
 	triggers = triggershelper.lords_debates_triggers();
 
-	// quick check if any new bills, if not don't bother scanning
-	// for each trigger.
+	// Check for any new debates matching triggers, if so add to feed
 
 	for(String trigger: triggers) {
-		List<Integer> triggerdebates = lordshelper.getDebatesFiltered(trigger, true, true, 14);
+		List<Integer> triggerdebates = lordshelper.getDebatesFiltered(trigger, true, true, debates_visible);
 		for(Integer debate: triggerdebates) {
 			// TODO put proper trigger_id in
 			feedhelper.insert_lords_debate(trigger, 0, debate, false);
@@ -372,6 +393,9 @@ public class PPPUpdate extends WakefulIntentService {
 	// LordsFeedParser parser = new LordsFeedParser("http://tiro.org.uk/mobile/lords_select_committee.rss", "");
 	LordsFeedParser parser = new LordsFeedParser("http://services.parliament.uk/calendar/lords_select_committee.rss", "");
 	
+	// This covers all debates (main, select, etc) in the lords
+	lordshelper.markAllOld(old_debates_visible);
+
 	if(parser == null) {
 		return;
 	}

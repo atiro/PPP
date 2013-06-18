@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+ 
+    <color name="testcol1">#14a804</color>
+    <color name="testcol2">#118504</color>
+    <color name="testcol3">#97e08f</color>
+    <color name="red">#ff0000</color>
+    <color name="white">#ffffff</color>
+    <color name="green">#00ff00</color>
+    <color name="orange">#ffd000</color>
+ 
+</resources>

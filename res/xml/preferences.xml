@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory
+  	android:title="@string/pref_ppp_general_title"
+	android:key="pref_key_general_settings">
+	<ListPreference
+		android:key="debates_visible"
+		android:title="Debates Visible"
+		android:summary="How many weeks ahead to view"
+		android:defaultValue="2"
+		android:entries="@array/debatesVisible"
+		android:entryValues="@array/debatesVisibleValues"/>
+  </PreferenceCategory>
+
+  <PreferenceCategory
+  	android:title="@string/pref_ppp_notifications_title"
+	android:key="pref_key_notifications_settings">
+
+    <CheckBoxPreference
+    	android:key="pref_key_note_newdebates"
+	android:summary="@string/pref_summary_note_newdebates"
+	android:title="@string/pref_title_note_newdebates"
+	android:defaultValue="false"/>
+    <CheckBoxPreference
+    	android:key="pref_key_note_readable"
+	android:summary="@string/pref_summary_note_readable"
+	android:title="@string/pref_title_note_readable"
+	android:defaultValue="false"/>
+    <CheckBoxPreference
+    	android:key="pref_key_note_today"
+	android:summary="@string/pref_summary_note_today"
+	android:title="@string/pref_title_note_today"
+	android:defaultValue="false"/>
+
+  </PreferenceCategory>
+
+</PreferenceScreen>
+
+

@@ -1,0 +1,42 @@
+ReaderFragment -
+	Opens PoliticsFeedDBHelper
+		.getReady()
+
+	onPause
+		model.close
+		feedhelper.close()
+
+	onResume
+		feedhelper open
+		model open
+
+PoliticsFragment
+
+	Opens PoliticsFeedDbHelper
+		.getPoliticsFeed
+
+	onDestroy
+
+		model.close
+		feedhelper.close
+
+	onResume
+		
+		model.requery
+
+	
+BillsListFragment
+
+	opens BillsDBHelper
+		getAllBills
+
+	onPause
+		model.close
+		billshelper.close
+
+	onDestroy
+
+		model.close
+		billshelper.close
+
+

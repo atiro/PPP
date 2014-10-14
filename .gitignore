@@ -1,3 +1,7 @@
 *~
 *.swp
 *.jar
+gen/
+dev.*
+bin/
+ERRORS
